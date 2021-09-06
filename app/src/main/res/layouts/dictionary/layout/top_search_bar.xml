@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:theme="@style/Theme.PocketChinese"
+
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="?attr/colorPrimary"
+    android:paddingBottom="8dp"
+    android:paddingTop="8dp"
+    >
+
+    <EditText
+        android:id="@+id/top_bar_search_text"
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@drawable/shape_round"
+        android:drawableEnd="@drawable/ic_search"
+        android:drawableTint="?android:textColorPrimary"
+        android:drawablePadding="6dp"
+        android:ems="10"
+        android:hint="@string/search_hint"
+        android:gravity="center|start"
+        android:inputType="textPersonName"
+        android:paddingStart="21dp"
+        android:paddingEnd="6dp"
+        android:textColor="?android:textColorSecondary"
+        android:textSize="22sp" />
+</FrameLayout>

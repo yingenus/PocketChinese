@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.cardview.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginHorizontal="8dp"
+    android:layout_marginVertical="4dp"
+    android:elevation="3dp"
+    android:background="?android:attr/selectableItemBackground"
+
+    app:cardCornerRadius="5dp"
+    >
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="?android:attr/selectableItemBackground">
+
+        <View
+            android:id="@+id/background"
+            android:layout_width="wrap_content"
+            android:layout_height="0dp"
+
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:alpha="0.7"
+            tools:background="@color/success_color_3"
+            />
+
+        <CheckBox
+            android:id="@+id/notify"
+
+            android:checked="true"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:button="@drawable/on_off_notify"
+            android:clickable="false"
+            android:layout_marginStart="8dp"
+            android:buttonTint="?attr/colorSecondary"
+            android:background="@color/transparent"
+
+            android:visibility="gone"
+            tools:visibility="visible"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="@id/user_study_words_list_name"
+            app:layout_constraintBottom_toBottomOf="@id/user_study_words_list_name"
+
+            />
+
+        <TextView
+            android:id="@+id/user_study_words_list_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:maxWidth="180dp"
+            android:maxLines="1"
+            android:textAllCaps="false"
+            android:textColor="?android:textColorPrimary"
+            android:textSize="24sp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="4dp"
+            app:layout_constraintStart_toEndOf="@id/notify"
+            app:layout_constraintTop_toTopOf="parent"
+
+            tools:text="TextTest"
+            />
+
+        <TextView
+            android:id="@+id/text_view_success"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/success"
+            android:textSize="18sp"
+            android:layout_marginStart="8dp"
+            app:layout_constraintTop_toBottomOf="@id/user_study_words_list_name"
+            app:layout_constraintStart_toStartOf="parent"
+            android:textColor="?android:textColorPrimary"
+            android:layout_marginTop="5dp"
+            />
+
+        <TextView
+            android:id="@+id/user_study_words_success_value"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="@id/text_view_success"
+            app:layout_constraintStart_toEndOf="@id/text_view_success"
+            android:textColor="@color/text_color"
+
+            tools:text="TextTest"
+            />
+        <TextView
+            android:id="@+id/user_study_word_count_words"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/count_words_right"
+            android:textSize="18sp"
+            app:layout_constraintTop_toTopOf="@id/text_view_success"
+            app:layout_constraintEnd_toEndOf="parent"
+            android:layout_marginEnd="8dp"
+            android:textColor="?android:textColorPrimary"
+            />
+        <TextView
+            android:id="@+id/user_study_words_list_days"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textSize="12sp"
+            app:layout_constraintTop_toTopOf="@id/text_view_last_repeat"
+            app:layout_constraintStart_toEndOf="@id/text_view_last_repeat"
+            android:layout_marginEnd="5dp"
+            android:textColor="?android:textColorSecondary"
+
+            tools:text="TextTest"
+            />
+        <TextView
+            android:id="@+id/text_view_last_repeat"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/last_repeat"
+            android:textSize="12sp"
+            app:layout_constraintTop_toBottomOf="@id/text_view_success"
+            app:layout_constraintStart_toStartOf="@id/text_view_success"
+            app:layout_constraintBottom_toBottomOf="parent"
+            android:layout_marginEnd="5dp"
+            android:layout_marginBottom="4dp"
+            android:textColor="?android:textColorSecondary"
+            android:layout_marginTop="5dp"/>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.cardview.widget.CardView>
+
+

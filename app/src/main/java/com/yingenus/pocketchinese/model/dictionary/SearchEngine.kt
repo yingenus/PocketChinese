@@ -1,0 +1,39 @@
+package com.yingenus.pocketchinese.model.dictionary
+
+
+import android.util.Log
+import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
+
+class SearchEngine(val queryHandler: Searcher, val sentenceExtractor: Extractor ){
+
+    private val maxLength = 100;
+
+    fun startSearch(query: String): List<ChinChar>{
+        Log.i("SearchEngine", "search")
+        val searcherResult = queryHandler.search(query)
+        Log.i("SearchEngine", "search finish")
+
+        return extractChins(searcherResult)
+    }
+
+    private fun extractChins(reqList: List<String>): List<ChinChar>{
+        Log.i("SearchEngine", "extract")
+        val extracted = mutableMapOf<Int, ChinChar>()
+
+        val cutedList = if (reqList.size > maxLength)
+            reqList.subList(0, maxLength)
+        else reqList
+
+        for (req in cutedList){
+
+            for (item in sentenceExtractor.extract(req)){
+
+                if (!extracted.containsKey(item.id)){
+                    extracted[item.id] = item
+                }
+            }
+        }
+        Log.i("SearchEngine", "extract finish, total: ${extracted.size}")
+        return extracted.values.toList()
+    }
+}

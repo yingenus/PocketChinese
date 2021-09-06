@@ -1,0 +1,104 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    >
+
+    <TextView
+        android:id="@+id/text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_us_list_msg"
+
+        android:layout_marginStart="60dp"
+
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="150dp"
+
+        android:textAlignment="textStart"
+        android:textStyle="italic"
+        android:lines="1"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="20sp"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="@id/image_view"
+        app:layout_constraintTop_toTopOf="@id/image_view"
+        app:layout_constraintBottom_toTopOf="@id/text_view_2"
+
+        />
+
+    <TextView
+        android:id="@+id/text_view_2"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_us_list_msg_2"
+        android:layout_marginStart="30dp"
+        android:textAlignment="textStart"
+        android:textStyle="italic"
+        android:maxLines="4"
+        android:lines="1"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="16sp"
+
+        app:layout_constraintStart_toStartOf="@id/text_view"
+
+        app:layout_constraintTop_toTopOf="@id/image_view"
+        app:layout_constraintBottom_toBottomOf="parent"
+
+        />
+
+    <TextView
+        android:id="@+id/text_view_2_next"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/start_us_list_msg_2_next"
+
+        android:textAlignment="textStart"
+        android:textStyle="italic"
+        android:maxLines="4"
+        android:lines="1"
+        android:textColor="?android:textColorPrimary"
+        android:textSize="16sp"
+        android:layout_marginStart="5dp"
+
+        app:layout_constraintStart_toEndOf="@id/imageView"
+        app:layout_constraintBaseline_toBaselineOf="@id/text_view_2"
+
+        />
+
+
+    <ImageView
+        android:id="@+id/imageView"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginStart="5dp"
+        app:layout_constraintBottom_toBottomOf="@id/text_view_2"
+
+        app:layout_constraintHorizontal_bias="0.5"
+        app:layout_constraintStart_toEndOf="@id/text_view_2"
+        app:layout_constraintTop_toTopOf="@id/text_view_2"
+        app:srcCompat="@drawable/ic_add"
+        app:tint= "?attr/colorPrimary"
+        app:tintMode ="src_in"
+        />
+
+    <ImageView
+        android:id="@+id/image_view"
+
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:rotation="300"
+        android:src="@drawable/ic_arrow2"
+        app:tint = "?android:textColorPrimary"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        android:layout_marginVertical="8dp"
+        android:layout_marginEnd="40dp"
+
+        />
+</androidx.constraintlayout.widget.ConstraintLayout>

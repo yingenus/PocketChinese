@@ -1,0 +1,479 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<FrameLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app = "http://schemas.android.com/apk/res-auto"
+    xmlns:tools = "http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    >
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:elevation="3dp"
+        android:id="@+id/fogging_view"
+        android:background="?attr/colorSurface"
+        android:visibility="gone"
+        android:alpha="0.4"
+        >
+
+        <com.google.android.material.progressindicator.CircularProgressIndicator
+            android:id="@+id/progress_dialog"
+            android:layout_gravity="center"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:indeterminate="false"
+            app:indicatorColor="@array/cat_custom_progress_colors"
+            app:showAnimationBehavior="outward"
+            app:hideAnimationBehavior="none"
+
+            />
+
+
+    </FrameLayout>
+
+
+
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        >
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:paddingHorizontal="8dp"
+            android:orientation="vertical"
+            android:paddingTop="16dp"
+            >
+
+            <TextView
+
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+                android:textColor="?android:textColorSecondary"
+
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="italic"
+
+                android:text="@string/add_words_choose_list"
+                android:textSize="20sp"
+                />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                android:layout_marginHorizontal="8dp"
+                app:cardCornerRadius="5dp"
+                android:elevation="2dp"
+
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    >
+                    <com.google.android.material.tabs.TabLayout
+                        style="@style/Style.PocketChinese.BlockTabLayout"
+
+                        android:id="@+id/list_tubs"
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+                        app:tabTextAppearance="@style/Style.PocketChinese.MineCustomTabText"
+                        app:tabIndicator="@drawable/tab_layout_pill"
+                        app:tabIndicatorColor="?attr/colorPrimary"
+                        app:tabIndicatorHeight="40dp"
+                        app:tabIndicatorGravity="center"
+                        app:tabMode="scrollable"
+                        app:tabContentStart="43dp"
+                        app:tabIndicatorFullWidth="true"
+                        app:tabGravity="center"
+                        app:tabInlineLabel="true"
+                        android:background="?attr/colorOnBackground"
+
+                        app:layout_constraintTop_toBottomOf="@id/list_spinner_layout"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        >
+                        <com.google.android.material.tabs.TabItem
+
+                            android:text="@string/add_words_exist_list"
+                            android:id="@+id/exist_list"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+                        <com.google.android.material.tabs.TabItem
+                            android:id="@+id/new_list"
+                            android:text="@string/add_words_new_list"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"/>
+
+                    </com.google.android.material.tabs.TabLayout>
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Style.PocketChinese.Rounded.ExposedDropdownMenu.Light"
+
+                            android:id="@+id/list_select_layout"
+                            android:layout_width="wrap_content"
+                            android:minWidth="250dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="12dp"
+                            android:layout_gravity="center_horizontal|top"
+                            android:hint="@string/study_list"
+                            android:paddingBottom="20dp"
+
+                            >
+                            <AutoCompleteTextView
+                                android:maxLines="1"
+                                android:id="@+id/list_select"
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:inputType="none"/>
+
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                        <com.google.android.material.textfield.TextInputLayout
+                            style="@style/Style.PocketChinese.Rounded.InputLayout.Light"
+
+                            android:id="@+id/new_list_layout"
+                            android:layout_width="280dp"
+                            android:layout_height="wrap_content"
+
+                            android:hint="@string/new_list"
+                            app:errorEnabled="true"
+                            app:helperTextEnabled="true"
+                            app:placeholderText="@string/enter_name_placeholder"
+
+                            android:layout_marginTop="12dp"
+                            android:layout_gravity="center_horizontal|top"
+
+
+                            android:visibility="gone"
+                            tools:visibility="visible"
+
+                            >
+                            <com.google.android.material.textfield.TextInputEditText
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"/>
+                        </com.google.android.material.textfield.TextInputLayout>
+
+                    </FrameLayout>
+                </LinearLayout>
+
+
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="italic"
+                android:textColor="?android:textColorSecondary"
+
+                android:text="@string/add_words_correct_words"
+                android:textSize="20sp"
+                />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                android:layout_marginHorizontal="8dp"
+
+                app:cardCornerRadius="5dp"
+                android:elevation="2dp"
+                >
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginHorizontal="8dp">
+
+                    <FrameLayout
+                        android:id="@+id/romanization_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:text="@string/add_words_correct_pinyin"
+                            android:textSize="18sp"
+                            android:textColor="?android:textColorPrimary"
+
+                            android:layout_gravity="center_vertical|start"
+
+                            />
+
+                        <CheckBox
+
+                            android:id="@+id/romanization_checkBox"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_margin="0dp"
+                            android:checked="false"
+
+                            android:padding="0dp"
+
+                            android:layout_gravity="center_vertical|end"
+
+                            />
+
+                    </FrameLayout>
+
+                    <RadioGroup
+                        android:id="@+id/romanization_type"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+                        android:layout_marginStart="16dp"
+                        tools:layout_height="wrap_content"
+                        >
+
+                        <RadioButton
+                            android:id="@+id/romanization_standard"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="@string/correct_pinyin_type_1"
+                            android:textSize="18sp"
+                            android:checked="true"
+                            android:textColor="?android:textColorPrimary"
+                            />
+                        <RadioButton
+                            android:id="@+id/romanization_simple"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:textColor="?android:textColorPrimary"
+                            android:text="@string/correct_pinyin_type_2"
+                            android:textSize="18sp"
+                            />
+
+                    </RadioGroup>
+
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="24dp"
+
+                android:fontFamily="sans-serif-medium"
+                android:textStyle="italic"
+                android:textColor="?android:textColorSecondary"
+
+                android:text="@string/add_words_insert_params"
+                android:textSize="20sp"
+                />
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginVertical="8dp"
+                android:layout_marginHorizontal="8dp"
+                app:cardCornerRadius="5dp"
+                android:elevation="2dp"
+
+                >
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    android:layout_marginHorizontal="8dp">
+
+                    <com.google.android.material.tabs.TabLayout
+                        style="@style/Style.PocketChinese.BlockTabLayout"
+
+                        android:background="@null"
+                        android:id="@+id/block_tub_layout"
+
+                        android:layout_width="match_parent"
+                        android:layout_height="50dp"
+
+                        app:tabTextAppearance="@style/Style.PocketChinese.MineCustomTabText"
+                        app:tabIndicator="@drawable/tab_layout_pill"
+                        app:tabIndicatorColor="?attr/colorPrimary"
+                        app:tabIndicatorHeight="40dp"
+                        app:tabIndicatorGravity="center"
+                        app:tabMode="scrollable"
+                        app:tabContentStart="16dp"
+                        app:tabIndicatorFullWidth="true"
+                        app:tabGravity="start"
+                        app:tabInlineLabel="true"
+
+                        app:layout_constraintTop_toBottomOf="@id/list_spinner_layout"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintEnd_toEndOf="parent"
+
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        />
+
+                    <FrameLayout
+                        android:id="@+id/split_Field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:text="@string/add_words_div_to_blocks"
+                            android:textColor="?android:textColorPrimary"
+                            android:textSize="18sp"
+
+                            android:layout_gravity="center_vertical|start"
+
+                            />
+
+                        <CheckBox
+                            android:id="@+id/split_checkbox"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_margin="0dp"
+                            android:checked="false"
+
+                            android:padding="0dp"
+
+                            android:layout_gravity="center_vertical|end"
+
+                            />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/item_count_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="0dp"
+
+                        android:layout_marginStart="16dp"
+                        android:layout_marginEnd="20dp"
+
+
+                        tools:layout_height="wrap_content"
+                        >
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:text="@string/add_words_words_in_block"
+                            android:textSize="18sp"
+                            android:textColor="?android:textColorPrimary"
+
+                            android:layout_gravity="center_vertical|start"
+
+                            />
+
+                        <EditText
+                            android:id="@+id/item_count_number"
+                            android:layout_width="80dp"
+                            android:layout_height="wrap_content"
+                            android:textAlignment="textEnd"
+                            android:textColor="?android:textColorPrimary"
+                            android:text="20"
+                            android:ems="3"
+                            android:inputType="number"
+                            android:layout_gravity="center_vertical|end"
+                            />
+
+                    </FrameLayout>
+
+                    <FrameLayout
+                        android:id="@+id/randomize_field"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        >
+
+                        <TextView
+
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+
+                            android:text="@string/add_words_mix_words"
+
+
+                            android:textSize="18sp"
+                            android:textColor="?android:textColorPrimary"
+
+                            android:layout_gravity="center_vertical|start"
+
+                            />
+
+                        <CheckBox
+                            android:id="@+id/randomize_check"
+                            android:layout_width="40dp"
+                            android:layout_height="40dp"
+                            android:layout_margin="0dp"
+                            android:checked="false"
+
+                            android:padding="0dp"
+
+                            android:layout_gravity="center_vertical|end"
+
+                            />
+
+                    </FrameLayout>
+
+
+
+                </LinearLayout>
+
+            </androidx.cardview.widget.CardView>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:layout_marginHorizontal="16dp"
+                android:layout_gravity="center"
+                android:layout_marginTop="16dp">
+
+
+
+                <Button
+                    style="@style/Style.PocketChinese.Rounded.Button.OutlinedButton.Gray"
+                    android:id="@+id/cancel_button"
+                    android:padding="4dp"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+
+                    android:text="@string/cancel"/>
+                <View
+                    android:layout_width="20dp"
+                    android:layout_height="wrap_content"/>
+
+                <Button
+                    style="@style/Style.PocketChinese.Rounded.Button"
+                    android:id="@+id/create_button"
+                    android:layout_width="130dp"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_horizontal"
+
+                    android:text="@string/create"/>
+
+            </LinearLayout>
+
+        </LinearLayout>
+
+    </ScrollView>
+
+</FrameLayout>
+

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <item name = "view_offset_helper" type="id"/>
+    <item name = "expanded_view_helper" type="id"/>
+    <item name = "holder_position" type="id"/>
+    <item name="user_answer" type="id"/>
+    <item name="was_disclosed" type="id"/>
+    <item name="repeat_words_notification" type="id"/>
+</resources>

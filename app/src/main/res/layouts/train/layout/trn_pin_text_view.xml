@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+    <com.yingenus.pocketchinese.view.pintext.PinTextView
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        android:id="@+id/pin_text_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textSize="30sp"
+        android:textStyle="italic"
+
+
+        app:ptv_itemHeight="50dp"
+        app:ptv_itemWight="40dp"
+        app:ptv_betweenItemHeight="6dp"
+        app:ptv_betweenItemWight="6dp"
+        app:ptv_charUnderlineHeight="4dp"
+        app:ptv_textSize="30sp"
+        app:ptv_textColor="?android:textColorPrimary"
+
+        app:ptv_itemBackgroundColor="?attr/colorOnBackground"
+        app:ptv_itemShadowColor="@color/color_on_surface_25"
+        app:ptv_itemBackgroundRound="4dp"
+        app:ptv_itemElevation="8dp"
+        app:ptv_charUnderlineBottomPadding="4dp"
+        >
+    </com.yingenus.pocketchinese.view.pintext.PinTextView>
+
+

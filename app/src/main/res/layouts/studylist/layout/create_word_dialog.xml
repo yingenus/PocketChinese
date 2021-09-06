@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical" android:layout_width="match_parent"
+    android:background="@drawable/main_fraim_shape"
+    android:layout_height="match_parent"
+    android:paddingBottom="8dp"
+    >
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/new_list"
+        android:textSize="24sp"
+        android:gravity="center"
+        android:textStyle="bold|italic"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"/>
+
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+        <TextView
+            android:id="@+id/study_list"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/study_list"
+            android:textSize="24sp"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            android:layout_marginStart="16dp"
+            />
+
+        <Spinner
+            android:id="@+id/study_list_spinner"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            app:layout_constraintStart_toEndOf="@id/study_list"
+            app:layout_constraintTop_toTopOf="@id/study_list"
+            app:layout_constraintBottom_toBottomOf="@id/study_list"/>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <Spinner
+        android:id="@+id/block_spinner"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:entries="@array/success_count"
+        android:paddingHorizontal="16dp"
+        android:paddingVertical="8dp"/>
+
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_chn"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:hint="@string/chinese"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPhonetic"/>
+
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_pin"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:hint="@string/pinyin"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPhonetic"/>
+
+    <androidx.appcompat.widget.AppCompatEditText
+        android:id="@+id/edit_trn"
+        android:layout_marginTop="8dp"
+        android:layout_marginHorizontal="16dp"
+        android:hint="@string/my_language"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:inputType="textPhonetic"/>
+    <TextView
+        android:id="@+id/edit_notifi_emt"
+        android:visibility="visible"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/notifi_empty_field"
+        android:layout_marginStart="16dp"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:textColor="@color/red"
+        />
+    <TextView
+        android:id="@+id/edit_notifi_invalid"
+        android:visibility="gone"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/nitify_invalid_chars"
+        android:layout_marginStart="16dp"
+        android:textSize="16sp"
+        android:textStyle="italic"
+        android:textColor="@color/red"
+        />
+
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/create_word_dialog_create"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/create"/>
+        <androidx.appcompat.widget.AppCompatButton
+            android:visibility="invisible"
+            android:id="@+id/create_word_dialog_cancel"
+            android:padding="4dp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="@string/cancel"/>
+
+    </LinearLayout>
+
+</LinearLayout>

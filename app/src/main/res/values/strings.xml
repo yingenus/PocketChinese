@@ -1,0 +1,225 @@
+
+<resources>
+    <string name="app_name">PocketChinese</string>
+    <string name="chinese">中文</string>>
+    <string name="pinyin">Pīnyīn</string>
+    <string name="my_language">Русский</string>
+    <string name="chinese_placeholder">Добавте слово</string>
+    <string name="pinyin_placeholder">Добавте романизацию</string>
+    <string name="my_language_placeholder">Добавте перевод</string>
+    <string name="search_hidden_search_format">Поиск</string>
+    <string name="search_hint">Русский, 汉语, Pīnyīn</string>
+    <string name="search_hidden_search_format_defolt">Нечеткий</string>
+    <string name="search_hidden_search_format_comple">Совпадение</string>
+    <string name="empty_search_result">Нет результатов...</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="menu_item_dictionary">Словарь</string>
+    <string name="menu_item_learn_words">Обучение</string>
+    <string name="menu_item_grammar">Грамматика</string>
+    <string name="menu_item_settings">Настройки</string>
+    <string name="learn_words_available">Доступные</string>
+    <string name="learn_words_my">Изучение</string>
+    <string name="learn_words_sorting">Сортировка</string>
+    <string name="delete">Удалить</string>
+    <string name="edit_name">Переиминовать</string>
+    <string name="learn_words_sorting_az">А-Я</string>
+    <string name="learn_words_sorting_za">Я-А</string>
+    <string name="learn_words_new_first">Показать сначала новые</string>
+    <string name="tags">Теги</string>
+    <string name="learn_words_add_new">Добавить новые</string>
+    <string name="count_words">Слов: </string>
+    <string name="success">Успешность: </string>
+    <string name="success_short">Усп: </string>
+    <string name="last_repeat">Последнее повторение: </string>
+    <string name="next_repeat">Следующие повторение: </string>
+    <string name="count_words_right">Слов</string>
+    <string name="activate">Активировать</string>
+    <string-array name="success_count">
+        <item>Не осв.</item>
+        <item>Не осв.</item>
+        <item>Не удов.</item>
+        <item>Не удов.</item>
+        <item>Удов.</item>
+        <item>Удов.</item>
+        <item>Хор.</item>
+        <item>Хор.</item>
+        <item>Отл.</item>
+        <item>Отл.</item>
+    </string-array>
+    <plurals name="words">
+        <item quantity="zero">%d Слов</item>
+        <item quantity="one">%d Слово</item>
+        <item quantity="few">%d Слова</item>
+        <item quantity="many">%d Слов</item>
+        <item quantity="other">%d Слов</item>
+    </plurals>
+    <plurals name="words_dc">
+        <item quantity="zero">%d слов</item>
+        <item quantity="one">%d слово</item>
+        <item quantity="few">%d слова</item>
+        <item quantity="many">%d слов</item>
+        <item quantity="other">%d слов</item>
+    </plurals>
+    <plurals name="lists">
+        <item quantity="zero">%d списках</item>
+        <item quantity="one">%d списке</item>
+        <item quantity="few">%d списках</item>
+        <item quantity="many">%d списках</item>
+        <item quantity="other">%d списках</item>
+    </plurals>
+    <string name="ago_suffix">назад</string>
+    <string name="aft_prefix">через</string>
+    <string name="need_repeat">Нужно повторить</string>
+    <plurals name="minuets">
+        <item quantity="zero">%d минут</item>
+        <item quantity="one">%d минуту</item>
+        <item quantity="few">%d минуты</item>
+        <item quantity="many">%d минут</item>
+        <item quantity="other">%d минут</item>
+    </plurals>
+    <plurals name="hours">
+        <item quantity="zero">%d часов</item>
+        <item quantity="one">%d час</item>
+        <item quantity="few">%d часа</item>
+        <item quantity="many">%d часов</item>
+        <item quantity="other">%d часов</item>
+    </plurals>
+    <plurals name="days">
+        <item quantity="zero">%d дней</item>
+        <item quantity="one">%d день</item>
+        <item quantity="few">%d дня</item>
+        <item quantity="many">%d дней</item>
+        <item quantity="other">%d дней</item>
+    </plurals>
+    <plurals name="weeks">
+        <item quantity="one">%d неделю </item>
+        <item quantity="few">%d недели</item>
+        <item quantity="many">%d недель</item>
+        <item quantity="other">%d недель</item>
+    </plurals>
+    <plurals name="month">
+        <item quantity="one">%d месяц</item>
+        <item quantity="few">%d месяца</item>
+        <item quantity="many">%d месяцев</item>
+        <item quantity="other">%d месяцев</item>
+    </plurals>
+    <string name="more_then_year">больше года назад</string>
+    <string name="more_then">больше</string>
+    <string name="create_new_list">Создать новый список</string>
+    <string name="statistics">Статистика</string>
+    <string name="block">Блок %d</string>
+    <string name="new_list">Новый список</string>
+    <string name="rename_list">Изменить имя</string>
+    <string name="change">Изменить</string>
+    <string name="new_word">Новое слово</string>
+    <string name="edit_word">Редактировать</string>
+    <string name="enter_name">Имя</string>
+    <string name="add_to_list">Добавить карточку</string>
+    <string name="enter_name_placeholder">Придумайте имя</string>
+    <string name="rename_placeholder">Введите новое имя</string>
+    <string name="create">Создать</string>
+    <string name="rename">Переиминовать</string>
+    <string name="cancel">Отмена</string>
+    <string name="items">элементов</string>
+    <string name="dialog_chose_block">Переместить</string>
+    <string name="dialog_chose_block_mes">В какой блок ?</string>
+    <string name="move">Переместить</string>
+    <string name="notifi_empty_list_name">У создаваемого списка дложнобыть имя !</string>
+    <string name="notifi_busy_list_name">Такое имя уже занято :(</string>
+    <string name="study_list">Список</string>
+    <string name="notifi_empty_field">Полье должно быть заполнено</string>
+    <string name="notifi_max_length">Привышена максимальная длинна</string>
+    <string name="Combine">ОбЪединить</string>
+    <string name="have_match">Найдено сопадение</string>
+    <string-array name="train_type">
+        <item>Русский - 汉字</item>
+        <item>汉字 - pīnyīn</item>
+        <item>汉字 - Русский</item>
+    </string-array>
+    <string name="skip">Пропустить</string>
+    <string name="next">Дальше</string>
+    <string name="give_up">Сдаться</string>
+    <string name="system_key_bord">Системная</string>
+    <string name="pocket_key_bord">Pocket</string>
+    <string name="nitify_invalid_chars">Поле содержит недопустимые симыолы: !#;:() итд.</string>
+    <string name="chose_type">Тип тренироки</string>
+    <string name="training">Тренирока</string>
+    <string name="chose_block">блок</string>
+    <string name="all">Все</string>
+    <string name="style_and_theme">Стиль и Тема</string>
+    <string name="dark_theme">Темная тема</string>
+    <string name="language_input">Язык и ввод</string>
+    <string name="use_app_keyboard">Использовать PocketKeyboard для ввода pinyin</string>
+    <string name="on_app_keyboard_as_default">Установить по умолчанию</string>
+    <string name="off_app_keyboard_as_default">Отключить по умолчанию</string>
+    <string name="repeat_type">Обучение</string>
+    <string name="ignore_chn">Повторять иероглифы</string>
+    <string name="ignore_pin">Повторять романизацию</string>
+    <string name="ignore_trn">Повторять перевод</string>
+    <string name="about_app">О программе</string>
+    <string name="about_app_text">PocketChinese- альфа верия словоря китайского языка и приложение для изучения китайских слов и грамматики</string>
+
+    <string name="lorem">
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit.
+		In mollis est vitae erat laoreet consectetur. Mauris dui mauris,
+		dictum vel egestas vel, porta sed ante. Phasellus congue viverra ipsum,
+		in elementum arcu ultricies nec.Morbi tincidunt nisl lacinia, placerat nisi eget, luctus tortor.
+		Morbi efficitur dictum leo, sit amet volutpat lorem sodales nec. Quisque et erat et turpis fringilla condimentum.
+		Lorem ipsum dolor sit amet, consectetur adipiscing elit. Mauris auctor vulputate libero vitae iaculis.
+		Curabitur id blandit quam. Praesent massa ante, pulvinar vitae sagittis commodo, scelerisque porttitor eros.
+		Mauris suscipit a enim nec congue. Mauris tristique cursus aliquet. Nunc quis hendrerit nunc. Praesent tristique tellus purus,
+		a pretium ex gravida id. Cras laoreet malesuada nulla, at bibendum metus ultricies a. Fusce eu ornare arcu. Proin ut molestie est.
+		Vestibulum quis vehicula erat. Nam sed tempus nibh. Sed tortor ante, maximus venenatis odio sed, ultricies maximus lectus.
+		Aliquam sed volutpat ligula. Integer bibendum, magna ac lacinia suscipit,
+		risus libero rutrum justo, sed tempus augue tellus eget est. Curabitur convallis augue nisl,
+		id efficitur urna posuere faucibus. Ut sed egestas nulla, eu finibus metus. Nunc a arcu ante.
+		Aenean ullamcorper dolor non condimentum congue. Aenean mauris nunc, pellentesque at placerat vitae,
+		aliquet quis orci. Curabitur maximus augue ut bibendum sagittis.
+	</string>
+
+    <string name="study_list_header">Всего слов:</string>
+    <string name="dictionary_header">Результат поиска</string>
+    <string name="dictionary_history_header">История</string>
+    <string name="given_header">Доступные списки</string>
+    <string name="repeated_header">Списки слов</string>
+    <string name="user_header">Мои списки</string>
+    <string name="dictionary_start_msg">
+        Введите какой-нибудь \n
+        запрос на \n
+        русском, 汉语 или pīnyīn</string>
+    <string name="dictionary_no_history_msg">Тут будет отображаться истори поиска</string>
+    <string name="start_us_list_msg">Создайте свой список</string>
+    <string name="start_us_list_msg_2">Нажмите: </string>
+    <string name="start_us_list_msg_2_next">в верху экрана </string>
+    <string name="transition">Перевод</string>
+    <string name="example">Примеры</string>
+    <string name="character">Иероглифы</string>
+    <string name="error_in_examples">Внимание: в переводе и романизации \n \ могут быть неточности</string>
+    <string name="add_words_choose_list">Выбор списка</string>
+    <string name="add_words_exist_list">Выбрать</string>
+    <string name="add_words_new_list">Создать</string>
+    <string name="add_words_correct_words">Опции</string>
+    <string name="add_words_correct_pinyin">Изменить романизацию</string>
+    <string name="correct_pinyin_type_1">pīnyīn</string>
+    <string name="correct_pinyin_type_2">pinyin</string>
+    <string name="add_words">Добавление слов</string>
+    <string name="add_words_insert_params">Пораметры вставки</string>
+    <string name="add_words_div_to_blocks">Разделять по блокам</string>
+    <string name="add_words_words_in_block">Слов в блоке</string>
+    <string name="add_words_mix_words">Перемешать слова</string>
+    <string name="error_insert_words">Что-то пошо не так</string>
+    <string name="success_insert_words">Слова успешно добавлены</string>
+    <string name="error_list_not_selected">Выберете список</string>
+    <string name="no_info">Нет данных</string>
+    <string name="remind_channel_name">Напоминания</string>
+    <string name="remind_channel_description">Напоминает о том, что нужно повторить слова</string>
+    <string name="repeatable_lists_title">Необходимо повторить</string>
+    <string name="remind_notify_title">Можно повторить слова</string>
+    <string name="remind_notify_text">Доуступно %1$s в %2$s</string>
+    <string name="activate_input_msg_1">
+        Пожайлуста!
+    </string>
+    <string name="activate_input_msg_2">
+        активируйте клавиатуру
+    </string>
+</resources>

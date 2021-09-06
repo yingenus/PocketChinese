@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <declare-styleable name="MultiColorProgressBar">
+        <attr name="mlt_textColor" format="color"/>
+        <attr name="mlt_textSize" format="dimension"/>
+        <attr name="mlt_specialColorForAllElements" format="boolean"/>
+        <attr name="mlt_showText" format="boolean"/>
+        <attr name="mlt_textType" format="enum">
+            <enum name="percents" value="0"/>
+            <enum name="truths" value="1"/>
+            <enum name="user" value="2"/>
+        </attr>
+        <attr name="mlt_enableAnimation" format="boolean"/>
+        <attr name="mlt_maxProgress" format="integer"/>
+        <attr name="mlt_elementTextSeparator" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="PinTextView">
+        <attr name="ptv_textColor" format="color"/>
+        <attr name="ptv_textSize" format="dimension"/>
+        <attr name="ptv_textElevation" format="dimension"/>
+        <attr name="ptv_itemHeight" format="dimension"/>
+        <attr name="ptv_itemWight" format="dimension"/>
+        <attr name="ptv_itemBackgroundColor" format="color"/>
+        <attr name="ptv_itemBackgroundRound" format="dimension"/>
+        <attr name="ptv_itemElevation" format="dimension"/>
+        <attr name="ptv_itemGravity" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="center" value="1"/>
+            <enum name="right" value="2"/>
+        </attr>
+        <attr name="ptv_betweenItemHeight" format="dimension"/>
+        <attr name="ptv_betweenItemWight" format="dimension"/>
+        <attr name="ptv_charUnderlineColor" format="color"/>
+        <attr name="ptv_blankCharUnderlineColor" format="color"/>
+        <attr name="ptv_charUnderlineHeight" format="dimension"/>
+        <attr name="ptv_maxRows" format="integer"/>
+        <attr name="ptv_maxColumns" format="integer"/>
+        <attr name="ptv_charUnderlineBottomPadding" format="dimension"/>
+        <attr name="ptv_itemShadowColor" format="color"/>
+        <attr name="ptv_charUnderlineElevation" format="dimension"/>
+        <attr name="ptv_text" format="string"/>
+    </declare-styleable>
+    <declare-styleable name="BubbleTabBarCust">
+        <attr format="reference" name="bubbletabcust_menuResource"/>
+        <attr format="color" name="bubbletabcust_disabled_icon_color"/>
+        <attr format="color" name="bubbletabcust_disabled_background_color"/>
+        <attr format="color" name="bubbletabcust_enabled_background_color"/>
+        <attr format="reference" name="bubbletabcust_custom_font"/>
+        <attr format="dimension" name="bubbletabcust_horizontal_padding"/>
+        <attr format="dimension" name="bubbletabcust_icon_padding"/>
+        <attr format="dimension" name="bubbletabcust_vertical_padding"/>
+        <attr format="dimension" name="bubbletabcust_icon_size"/>
+        <attr format="dimension" name="bubbletabcust_title_size"/>
+    </declare-styleable>
+    <declare-styleable name="MultipleLineProgressBar">
+        <attr name="mpb_animate" format="boolean"/>
+        <attr name="mpb_animationDuration" format="integer"/>
+        <attr name="mpb_progressSize" format="dimension"/>
+        <attr name="mpb_dividerSize" format="dimension"/>
+    </declare-styleable>
+    <declare-styleable name="MultipleLineProgressBarItem">
+        <attr name="mpb_progressColor" format="color"/>
+        <attr name="mpb_secondaryProgressColor" format="color"/>
+        <attr name="mpb_min" format="integer" />
+        <attr name="mpb_max" format="integer" />
+        <attr name="mpb_progress" format="integer" />
+        <attr name="mpb_secondaryProgress" format="integer" />
+        <attr name="mpb_orientation" format="enum">
+            <enum name="left" value="0"/>
+            <enum name="right" value="1"/>
+        </attr>
+    </declare-styleable>
+</resources>

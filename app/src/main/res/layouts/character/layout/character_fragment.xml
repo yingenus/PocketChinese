@@ -1,0 +1,226 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<androidx.core.widget.NestedScrollView
+
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:fillViewport="true"
+    >
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:background="@drawable/sheet_dialog_shape"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        >
+
+        <Button
+            style="@style/Style.PocketChinese.Button.TextButton.Secondary"
+
+            android:id="@+id/add_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="16dp"
+            android:text="@string/add_to_list"
+
+            app:icon="@drawable/ic_add"
+            app:iconGravity="textEnd"
+
+            android:layout_gravity="end"
+
+            />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+            <androidx.constraintlayout.widget.ConstraintLayout
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content">
+
+                <TextView
+                    android:id="@+id/character_chin_char"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom|clip_horizontal"
+                    android:scrollbarAlwaysDrawHorizontalTrack="true"
+                    android:textSize="72sp"
+                    android:textAlignment="center"
+                    android:textColor="?android:textColorSecondary"
+
+
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    tools:ignore="RtlCompat"
+                    tools:text="TextTest"/>
+
+                <TextView
+                    android:id="@+id/links_chin_char"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="bottom|clip_horizontal"
+                    android:scrollbarAlwaysDrawHorizontalTrack="true"
+                    android:textSize="46sp"
+                    android:textAlignment="center"
+                    android:visibility="gone"
+                    android:textColor="?android:textColorSecondary"
+
+                    app:layout_constraintHorizontal_bias="0.5"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    app:layout_constraintRight_toRightOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/character_chin_char"
+
+
+                    android:layout_marginTop="4dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    tools:ignore="RtlCompat"
+                    tools:text="(Links)"
+                    tools:visibility="visible"/>
+
+                <TextView
+                    android:id="@+id/character_pinyin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textAlignment="center"
+                    android:textColor="?android:textColorSecondary"
+
+                    app:layout_constraintTop_toBottomOf="@+id/links_chin_char"
+                    app:layout_constraintLeft_toLeftOf="@+id/character_chin_char"
+                    app:layout_constraintRight_toRightOf="@+id/character_chin_char"
+
+                    android:layout_marginTop="16dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    tools:text="TextTest"
+                    />
+
+                <TextView
+                    android:id="@+id/chin_tags"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="24sp"
+                    android:textAlignment="center"
+                    android:visibility="gone"
+                    android:textColor="?android:textColorSecondary"
+
+                    app:layout_constraintTop_toBottomOf="@+id/character_pinyin"
+                    app:layout_constraintLeft_toLeftOf="@+id/character_chin_char"
+                    app:layout_constraintRight_toRightOf="@+id/character_chin_char"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginHorizontal="16dp"
+
+                    tools:text="Tags"
+                    tools:visibility="visible"
+                    />
+
+                <com.google.android.material.button.MaterialButtonToggleGroup
+
+                    android:id="@+id/button_group"
+
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    app:singleSelection="true"
+                    app:selectionRequired="true"
+
+                    app:layout_constraintTop_toBottomOf="@id/chin_tags"
+
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+
+                    android:layout_marginEnd="16dp"
+                    android:layout_marginStart="16dp"
+                    android:layout_marginTop="12dp"
+
+
+                    android:visibility="gone"
+
+                    tools:visibility="visible"
+                    >
+
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Style.PocketChinese.ButtonToggleGroup.OutlinedButton.Primary"
+
+                        android:id="@+id/transition"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/transition"/>
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Style.PocketChinese.ButtonToggleGroup.OutlinedButton.Primary"
+
+                        android:id="@+id/characters"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/character"
+                        android:visibility="gone"
+
+                        tools:visibility="visible"
+                        />
+
+                    <com.google.android.material.button.MaterialButton
+                        style="@style/Style.PocketChinese.ButtonToggleGroup.OutlinedButton.Primary"
+
+                        android:id="@+id/example"
+                        android:layout_width="wrap_content"
+                        android:layout_height="40dp"
+                        android:text="@string/example"
+                        android:visibility="gone"
+
+                        tools:visibility="visible"
+                        />
+
+                </com.google.android.material.button.MaterialButtonToggleGroup>
+
+                <View
+                    android:id="@+id/separator"
+                    android:layout_width="match_parent"
+                    android:layout_height="14dp"
+                    android:alpha="0.2"
+                    android:background="?attr/colorOnSurface"
+
+                    android:layout_marginTop="8dp"
+
+                    app:layout_constraintTop_toBottomOf="@id/button_group"
+
+                    />
+                <TextView
+                    android:id="@+id/character_fragment_translate"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textAlignment="textStart"
+                    app:layout_constraintTop_toBottomOf="@+id/character_pinyin"
+                    android:layout_marginTop="20dp"
+                    app:layout_constraintLeft_toLeftOf="parent"
+                    android:layout_marginStart="16dp"
+
+                    tools:text="TextTest"
+                    />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/view_pager"
+
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+
+                android:layout_marginTop="8dp"
+                />
+        </LinearLayout>
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>
+
+

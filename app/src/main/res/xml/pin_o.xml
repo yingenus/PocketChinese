@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Keyboard
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:keyWidth="18.9%p"
+    app:horizontalGap="1%p"
+    app:verticalGap="0.6%p"
+    app:keyHeight="6%p">
+    <Row>
+        <Key app:codes="1001" app:keyLabel="ō" app:keyEdgeFlags="left"/>
+        <Key app:codes="1002" app:keyLabel="ó"/>
+        <Key app:codes="1003" app:keyLabel="ǒ"/>
+        <Key app:codes="1004" app:keyLabel="ò"/>
+        <Key app:codes="1000" app:keyLabel="o" app:keyEdgeFlags="right"/>
+    </Row>
+</Keyboard>

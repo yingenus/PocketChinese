@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.yingenus.pocketchinese.view.keyboard.KeyboardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingVertical="4dp"
+    android:background="@color/keyboard_background"
+    app:keyBackground="@drawable/key_background"
+    app:shadowColor="@color/text_color"
+    app:keyTextSize="20sp"
+    app:keyTextColor="@color/text_color"/>

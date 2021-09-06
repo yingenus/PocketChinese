@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/search"
+        android:icon="@drawable/ic_dictionary"
+        android:title="@string/menu_item_dictionary"
+        android:color="?attr/colorOnPrimary"
+        />
+
+    <item
+        android:id="@+id/study"
+        android:icon="@drawable/ic_learn"
+        android:title="@string/menu_item_learn_words"
+        android:color="?attr/colorOnPrimary"
+        />
+    <!--<item
+        android:id="@+id/grammar"
+        android:icon="@drawable/ic_grammar"
+        android:title="@string/menu_item_grammar"
+        android:color="?attr/colorOnPrimary"
+        />-->
+    <item
+        android:id="@+id/settings"
+        android:icon="@drawable/ic_settings"
+        android:title="@string/menu_item_settings"
+        android:color="?attr/colorOnPrimary"
+        />
+
+</menu>
