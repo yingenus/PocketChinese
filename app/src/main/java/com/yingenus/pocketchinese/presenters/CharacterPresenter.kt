@@ -1,10 +1,16 @@
 package com.yingenus.pocketchinese.presenters
 
 import android.content.Context
+import android.util.Log
 import com.yingenus.pocketchinese.controller.dialog.CharacterInterface
+import com.yingenus.pocketchinese.logErrorMes
 import com.yingenus.pocketchinese.model.database.DictionaryDBOpenManger
 import com.yingenus.pocketchinese.model.database.ExamplesDBOpenManger
 import com.yingenus.pocketchinese.model.database.dictionaryDB.*
+import com.yingenus.pocketchinese.model.pinplayer.PinPlayer
+import com.yingenus.pocketchinese.model.pinplayer.ToneSplitter
+import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
 
 class CharacterPresenter(val view : CharacterInterface, private val chinId : Int) {
 
@@ -21,6 +27,9 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
 
     private lateinit var redirectedChinChar: ChinChar
 
+    private lateinit var makeSoundClicked : PublishSubject<String>
+    private var pinPlayer : PinPlayer? = null
+
     fun onCreate(context: Context){
         val dictionaryConnection = DictionaryDBOpenManger.getHelper(context, DictionaryDBHelper::class.java).connectionSource
         val examplesConnection = ExamplesDBOpenManger.getHelper(context,ExamplesDBHelper::class.java).connectionSource
@@ -32,6 +41,8 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
 
         showChinChar = getShowedChar()
 
+        makeSoundClicked = PublishSubject.create()
+
         initViewHeader()
         initTranslations()
         initExamples()
@@ -41,6 +52,27 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
 
     fun addCardClicked(){
         view.startAddNewStudy(showChinChar)
+    }
+
+    fun makeSoundClicked(){
+        makeSoundClicked.onNext(showChinChar.pinyin)
+    }
+
+    fun onResume(context: Context){
+        pinPlayer = PinPlayer()
+        val observer = makeSoundClicked
+                .observeOn(Schedulers.computation())
+                .flatMap { ToneSplitter.rxSplitter(context,it) }
+        try {
+            pinPlayer!!.registerObserver(observer!!,context)
+        }catch (e : Exception){
+            Log.e("CharacterPresenter", e.logErrorMes())
+        }
+
+    }
+
+    fun onPause(){
+        pinPlayer?.release()
     }
 
     fun onDestroy(){

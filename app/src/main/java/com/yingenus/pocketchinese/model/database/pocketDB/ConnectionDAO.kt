@@ -24,7 +24,7 @@ class ConnectionDAO(db: SQLiteDatabase): PocketDAOs(db) {
         val cursor=queryConnectionTable(null,null)
         try {
             if (cursor.count==0)
-                return null
+                return Collections.emptyList()
             val list= mutableListOf<Connection>()
             cursor.moveToFirst()
             while (!cursor.isAfterLast){
@@ -59,7 +59,7 @@ class ConnectionDAO(db: SQLiteDatabase): PocketDAOs(db) {
 
         try {
             if (cursor.count==0)
-                return null
+                return Collections.emptyList()
 
             val connections= mutableListOf<Connection>()
 

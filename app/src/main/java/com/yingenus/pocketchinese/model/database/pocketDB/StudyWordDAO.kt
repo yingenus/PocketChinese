@@ -17,7 +17,7 @@ class StudyWordDAO(db: SQLiteDatabase): PocketDAOs(db) {
         val cursor=queryWordsTable(null,null)
         try {
             if (cursor.count==0)
-                return null
+                return Collections.emptyList()
             val list= mutableListOf<StudyWord>()
             cursor.moveToFirst()
             while (!cursor.isAfterLast){
@@ -49,7 +49,7 @@ class StudyWordDAO(db: SQLiteDatabase): PocketDAOs(db) {
         val cursor= WordCursorWrapper(database!!.rawQuery(query, arrayOf(studyListUUID.toString())))
         try {
             if (cursor.count==0)
-                return null
+                return Collections.emptyList()
 
             val words= mutableListOf<Pair<Int, StudyWord>>()
 

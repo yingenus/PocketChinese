@@ -39,6 +39,7 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
     private lateinit var viewPager: ViewPager2
     private lateinit var buttonGroup: MaterialButtonToggleGroup
     private lateinit var viewSepearator: View
+    private lateinit var soundButton: View
 
     private lateinit var mTranslations: List<String>
     private lateinit var mExamles: List<DbExample>
@@ -59,8 +60,10 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
         linksChars = view.findViewById(R.id.links_chin_char)
         charTags = view.findViewById(R.id.chin_tags)
         viewSepearator = view.findViewById(R.id.separator)
+        soundButton = view.findViewById(R.id.sound_button)
 
         addButton.setOnClickListener(this::onAddClicked)
+        soundButton.setOnClickListener(this::onSoundClicked)
         buttonGroup.check(R.id.transition)
         viewPager.isUserInputEnabled = false
 
@@ -78,6 +81,16 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
     override fun onDestroy() {
         super.onDestroy()
         presenter.onDestroy()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        presenter.onResume(context!!)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        presenter.onPause()
     }
 
     override fun setChin(text: String) {
@@ -120,6 +133,10 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
     override fun setCharacters(entrysChars: List<ChinChar>) {
         mCharacters = entrysChars
         reInitPages()
+    }
+
+    private fun onSoundClicked(v: View){
+        presenter.makeSoundClicked()
     }
 
     private fun onAddClicked(v: View){

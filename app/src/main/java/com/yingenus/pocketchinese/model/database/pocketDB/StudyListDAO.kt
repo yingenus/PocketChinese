@@ -10,11 +10,11 @@ class StudyListDAO(db: SQLiteDatabase): PocketDAOs(db) {
         database!!.insert(PocketDbSchema.StudyListTable.NAME,null,getContentValues(studyList))
     }
 
-    fun getAll():List<StudyList>?{
+    fun getAll():List<StudyList>{
         val cursor=queryStudyList(null,null)
         try {
             if (cursor.count==0)
-                return null
+                return Collections.emptyList()
             val list= mutableListOf<StudyList>()
             cursor.moveToFirst()
             while (!cursor.isAfterLast){

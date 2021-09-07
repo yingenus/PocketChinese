@@ -14,6 +14,7 @@ import com.yingenus.pocketchinese.model.words.statistic.RepeatHelper
 import com.yingenus.pocketchinese.model.words.statistic.StudyListAnalyzer
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyList
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyWord
+import com.yingenus.pocketchinese.model.imageDir
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
@@ -76,16 +77,24 @@ class UserListsPresenter(val view : UserListsInterface){
     }
 
     private fun updateLists(){
-        val observable = Observable.fromIterable( listDAO.getAll())
+        Observable.defer {
+                    val lists = listDAO.getAll()
+                    if (lists.isEmpty()) Observable.just(null)
+                    else Observable.fromIterable( lists)
+                }
                 .subscribeOn(Schedulers.io())
-                .map { studyList -> Pair(studyList,wordDAO.getAllIn(studyList.uuid)?.map { it.second }) }
-                .map { getStatistic(it.first,it.second) }
+                .map { studyList -> if (studyList == null) null else Pair(studyList,wordDAO.getAllIn(studyList.uuid)?.map { it.second }) }
+                .map { pair -> if (pair == null) null else getStatistic(pair.first,pair.second) }
                 .observeOn(AndroidSchedulers.mainThread())
-                .collect({ mutableListOf<UserListsInterface.StudyListInfo>()}, {acc, item -> acc.add(item)})
-                .subscribe({onNext -> view.setStudyLists(onNext)},
+                .collect({ mutableListOf<UserListsInterface.StudyListInfo>()}, {acc, item -> if (item != null) acc.add(item)})
+                .subscribe({onNext ->
+                        if (onNext.isEmpty()) view.showStartView()
+                        else view.setStudyLists(onNext)},
                         {onError ->
                             view.showStartView()
-                            Log.e("USPresenter",onError.logErrorMes())})
+                            Log.e("USPresenter",onError.logErrorMes())
+                        }
+                )
 
     }
 
