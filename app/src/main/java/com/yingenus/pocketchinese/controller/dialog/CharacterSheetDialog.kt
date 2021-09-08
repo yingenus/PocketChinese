@@ -36,6 +36,8 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
 
     private val presenter = CharacterPresenter(this,chinChar?.id?:1)
 
+    private val animationBid : MutableList<AnimationBillet> = mutableListOf()
+
     private lateinit var chiCharacters: TextView
     private lateinit var pinyin: TextView
     private lateinit var translation: TextView
@@ -172,8 +174,8 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
         }else
             throw RuntimeException(" no initialized holders in CharacterSheetDialog")
 
-        viewPager.setCurrentItem(position,true)
-
+        //viewPager.setCurrentItem(position,true)
+        switchToPage(position)
     }
 
     private fun reInitPages(){
@@ -196,50 +198,64 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
        viewPager.registerOnPageChangeCallback(object: ViewPager2.OnPageChangeCallback(){
            override fun onPageSelected(position: Int) {
 
-               if (isFirstCall){
-                   isFirstCall = false
-                   return
+               val billet = animationBid.findLast { it.toPosition == position }?:return
+               animationBid.remove(billet)
+               if (billet.animationForm != AnimationForm.NoForm){
+                   val form = billet.animationForm as AnimationForm.RealForm
+                   transferAnimator(viewPager, form.initHeight, form.finalHeight, form.endAnimationHeight)
                }
-
-               val view = (viewPager.adapter as PagerAdapter).recyclerView?.
-               layoutManager?.findViewByPosition(viewPager.currentItem)?: return
-
-
-
-               val measureSpeckW = View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
-               val measureSpeckH = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
-               view.measure(measureSpeckW, measureSpeckH)
-
-               val viewPagerMarginTop = viewPager.top
-               val displayHeight = getDisplayHeight(activity!!)
-               val statusBarHeight = getStatusBarHeight()
-               val absolutePosition = IntArray(2)
-               viewPager.getLocationOnScreen(absolutePosition)
-               val absoluteTop = absolutePosition[1]
-
-               val pagerVisibleHeight = displayHeight - absoluteTop + statusBarHeight
-
-               var pagerFinalVisibleHeight = 0
-
-               val minTop = Math.min(viewPagerMarginTop, absoluteTop)
-
-               if (minTop+view.measuredHeight < displayHeight){
-                   pagerFinalVisibleHeight = view.measuredHeight
-               }else {
-                   pagerFinalVisibleHeight = displayHeight - minTop
-               }
-
-               if (pagerVisibleHeight < pagerFinalVisibleHeight){
-                   transferAnimator(viewPager, pagerVisibleHeight, pagerFinalVisibleHeight ,  view.measuredHeight)
-               }
-               else if (pagerVisibleHeight > pagerFinalVisibleHeight){
-
-                   transferAnimator(viewPager, pagerVisibleHeight, pagerFinalVisibleHeight, view.measuredHeight)
-               }
-
            }
 
        })
+    }
+
+    private fun switchToPage(page : Int){
+        val view = (viewPager.adapter as PagerAdapter).recyclerView?.
+        layoutManager?.findViewByPosition(page)?: return
+
+        val measureSpeckW = View.MeasureSpec.makeMeasureSpec(view.width, View.MeasureSpec.EXACTLY)
+        val measureSpeckH = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+        view.measure(measureSpeckW, measureSpeckH)
+
+        val viewPagerMarginTop = viewPager.top
+        val displayHeight = getDisplayHeight(activity!!)
+        val statusBarHeight = getStatusBarHeight()
+        val absolutePosition = IntArray(2)
+        viewPager.getLocationOnScreen(absolutePosition)
+        val absoluteTop = absolutePosition[1]
+
+        val pagerVisibleHeight = displayHeight - absoluteTop + statusBarHeight
+
+        var pagerFinalVisibleHeight = 0
+
+        val minTop = Math.min(viewPagerMarginTop, absoluteTop)
+
+        if (minTop+view.measuredHeight < displayHeight){
+            pagerFinalVisibleHeight = view.measuredHeight
+        }else {
+            pagerFinalVisibleHeight = displayHeight - minTop
+        }
+
+        val animationForm = if (pagerVisibleHeight < pagerFinalVisibleHeight){
+            AnimationForm.RealForm(pagerVisibleHeight, pagerFinalVisibleHeight, view.measuredHeight)
+        }
+        else if (pagerVisibleHeight > pagerFinalVisibleHeight){
+            AnimationForm.RealForm(pagerVisibleHeight, pagerFinalVisibleHeight, view.measuredHeight)
+        }else{
+            AnimationForm.NoForm
+        }
+
+        val billet = AnimationBillet(viewPager.currentItem, page, animationForm)
+
+        animationBid.add(billet)
+        viewPager.setCurrentItem(page,true)
+    }
+
+    private class AnimationBillet(val fromPosition : Int, val toPosition: Int, val animationForm : AnimationForm)
+
+    private sealed  class AnimationForm{
+        class RealForm(val initHeight: Int, val finalHeight : Int, val endAnimationHeight : Int):  AnimationForm()
+        object NoForm:  AnimationForm()
     }
 
     fun transferAnimator(view: View, initHeight: Int, finalHeight : Int,endAnimationHeight : Int){
