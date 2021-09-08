@@ -3,6 +3,7 @@ package com.yingenus.pocketchinese.controller.fragment;
 import android.content.Context;
 import android.content.Intent;
 import android.content.res.Resources;
+import android.graphics.Color;
 import android.graphics.Rect;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -149,9 +150,17 @@ public class UserListsFragment extends Fragment implements UserListsInterface{
     }
 
     private void setListInfo(List<StudyListInfo> studyListInfos){
-        ((UserStudyWordsAdapter) recyclerView.getAdapter()).setStudyListInfos(studyListInfos);
+        if (recyclerView.getAdapter() instanceof UserStudyWordsAdapter){
+            ((UserStudyWordsAdapter) recyclerView.getAdapter()).setStudyListInfos(studyListInfos);
             recyclerView.getAdapter().notifyDataSetChanged();
-
+        }
+        else {
+            UserStudyWordsAdapter adapter = new UserStudyWordsAdapter();
+            adapter.setOnClickListener(this::onItemSelected);
+            adapter.setOnLongClickListener(this::onLongItemClick);
+            adapter.setStudyListInfos(studyListInfos);
+            recyclerView.setAdapter(adapter);
+        }
     }
 
     private void onItemSelected(StudyList list){
@@ -198,6 +207,8 @@ public class UserListsFragment extends Fragment implements UserListsInterface{
             }
             if (usStudyList.getExpered() != Expired.NON){
                 name.setTextColor(UtilsVariantParams.INSTANCE.getLstRepeatColor(resources,usStudyList.getExpered()));
+            }else {
+                name.setTextColor(Color.BLACK);
             }
 
             //backgroundView.setBackgroundColor(UtilsVariantParams.INSTANCE.getLstRepeatColor(resources,usStudyList.getExpered()));

@@ -28,7 +28,7 @@
 
         <item name="actionModeCloseDrawable">@drawable/ic_back</item>
 
-        <item name="alertDialogTheme">@style/Theme.PocketChinese.AlertDialog.Night</item>
+        <item name="alertDialogTheme">@style/Theme.PocketChinese.AlertDialog</item>
         <item name="actionModeStyle">@style/Style.PocketChinese.ActionMode</item>
         <item name="bottomSheetDialogTheme">@style/Style.PocketChinese.Rounded.SheetDialog.2</item>
 
@@ -39,7 +39,13 @@
         <item name="colorOnSecondary">@color/gray_light</item>
     </style>
 
-    <style name="Theme.PocketChinese.AlertDialog.Night" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
+    <style name="Theme.PocketChinese.TrainingCard" parent="Theme.PocketChinese">
+        <item name="colorSurface">@color/black_light_plus</item>
+        <item name="colorOnBackground">@color/black_light_plus</item>
+        <item name="colorOnSurface">@color/black</item>
+    </style>
+
+    <style name="Theme.PocketChinese.AlertDialog" parent="ThemeOverlay.MaterialComponents.Dialog.Alert">
         <item name="colorPrimary">@color/app_red</item>
         <item name="colorPrimaryVariant">@color/app_red_shaded</item>
         <item name="colorPrimaryDark">@color/app_red_shaded</item>

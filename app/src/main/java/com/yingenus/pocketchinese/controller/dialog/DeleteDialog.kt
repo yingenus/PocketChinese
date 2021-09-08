@@ -1,6 +1,6 @@
 package com.yingenus.pocketchinese.controller.dialog
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -26,7 +26,7 @@ class DeleteDialog :DialogFragment(){
     }
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        val dialog= AlertDialog.Builder(context)
+        val dialog= AlertDialog.Builder(context!!)
 
         mFullMes = getString(R.string.delete)
         mFullMes +=mMes

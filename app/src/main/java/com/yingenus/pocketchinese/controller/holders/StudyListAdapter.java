@@ -24,6 +24,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 public class StudyListAdapter extends RecyclerView.Adapter{
     private static final int VIEW_TYPE_BLOCK = 0;
@@ -40,12 +41,8 @@ public class StudyListAdapter extends RecyclerView.Adapter{
 
     public void setItems(Map<Integer,List<StudyWord>> map){
         this.map=map;
-        if (!(map == null || map.isEmpty())) {
-            blockPositions = getBlockPosition();
-        }
+        blockPositions = getBlockPosition();
     }
-
-
 
     @Override
     public int getItemViewType(int position) {
@@ -160,10 +157,14 @@ public class StudyListAdapter extends RecyclerView.Adapter{
     public StudyWord getItem(int position){
         for (int block = 1; block < blockPositions.length; block++){
             int blockPosition = blockPositions[block];
+            List<StudyWord> words = map.get(block);
+            if (words == null){
+                words = Collections.EMPTY_LIST;
+            }
             if (position == blockPosition)
                 return null;
-            else if( (position > blockPosition ) && ( position <= blockPosition+map.get(block).size())){
-                return map.get(block).get(position - blockPosition - 1);
+            else if( (position > blockPosition ) && ( position <= blockPosition+words.size())){
+                return words.get(position - blockPosition - 1);
             }
         }
         return null;
@@ -188,7 +189,10 @@ public class StudyListAdapter extends RecyclerView.Adapter{
         int count=0;
         for (int i = 1; i <= block; i++) {
             count += 1;
-            count += map.get(i).size();
+            List<StudyWord> words = map.get(i);
+            if (words != null){
+                count += words.size();
+            }
         }
         return count;
     }
@@ -209,16 +213,22 @@ public class StudyListAdapter extends RecyclerView.Adapter{
         return -1;
     }
     public int[] getBlockPosition() {
-        int[] blockPosition = new int[map.keySet().size() + 1];
+        int maxBlock = 0;
+        if (!map.isEmpty()){
+            maxBlock = Collections.max(map.keySet());
+        }
+        int[] blockPosition = new int[maxBlock + 1];
         int count = 0;
-        for (int block = 1; block<map.keySet().size() + 1; block++){
+        for (int block = 1; block <= maxBlock; block++){
             blockPosition[block] = count;
             count += 1;
-            count += map.get(block).size();
+            List<StudyWord> words = map.get(block);
+            if (words != null){
+                count += words.size();
+            }
         }
         return blockPosition;
     }
-
 
     private class SelectionObserver extends SelectionTracker.SelectionObserver<Long>{
         private boolean blockReaction = false;

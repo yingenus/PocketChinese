@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.controller.activity.CreateWordActivity
 import com.yingenus.pocketchinese.controller.dp2px
@@ -27,6 +28,11 @@ import java.lang.IllegalArgumentException
 import com.yingenus.pocketchinese.model.database.dictionaryDB.Example as DbExample
 
 class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), CharacterInterface {
+
+    private object Helper{
+        const val OccupiHeight = 0.9f
+    }
+
 
     private val presenter = CharacterPresenter(this,chinChar?.id?:1)
 
@@ -74,6 +80,10 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
         viewPager.adapter = PagerAdapter()
         viewPager.offscreenPageLimit = 2
         initPagerCallback()
+
+
+        val  behavior = (dialog as BottomSheetDialog).behavior
+        behavior.peekHeight = getPagerOccupiHeight(dp2px(0,inflater.context))
 
         return view
     }
@@ -281,6 +291,15 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
             result = resources.getDimensionPixelSize(resourceId)
         }
         return result
+    }
+
+    private fun getPagerOccupiHeight(marginTopPix : Int): Int{
+        val displayHeight = getDisplayHeight(context!!)
+        val statusBarHeight = getStatusBarHeight()
+        val availableSpace = displayHeight - statusBarHeight
+        val dialogHeight = (availableSpace*Helper.OccupiHeight).toInt()
+
+        return dialogHeight - marginTopPix
     }
 
     private fun enableExamples() =

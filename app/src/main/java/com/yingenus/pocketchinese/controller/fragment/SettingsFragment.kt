@@ -1,6 +1,7 @@
 package com.yingenus.pocketchinese.controller.fragment
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -12,7 +13,9 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.yingenus.pocketchinese.R
+import com.yingenus.pocketchinese.controller.PocketApplication
 import com.yingenus.pocketchinese.controller.Settings
+import com.yingenus.pocketchinese.controller.activity.AboutActivity
 import com.yingenus.pocketchinese.controller.activity.ActivateInputActivity
 import com.yingenus.pocketchinese.model.RepeatType
 import java.lang.IllegalArgumentException
@@ -29,6 +32,7 @@ class SettingsFragment: Fragment(){
     private lateinit var mIgnoreCHNSwitch: Switch
     private lateinit var mIgnorePINSwitch: Switch
     private lateinit var mIgnoreTRNSwitch: Switch
+    private lateinit var mShowNotifySwitch : Switch
     private lateinit var mSetDefaultKeyboardButton:Button
     private lateinit var toolbar: Toolbar
     private lateinit var mScrollView: ScrollView
@@ -76,6 +80,10 @@ class SettingsFragment: Fragment(){
         mIgnorePINSwitch=mScrollView.findViewById(R.id.switch_ignore_pin)
         mIgnoreTRNSwitch=mScrollView.findViewById(R.id.switch_ignore_trn)
         mSetDefaultKeyboardButton=mScrollView.findViewById(R.id.set_default_keyboard_button)
+        mShowNotifySwitch = mScrollView.findViewById(R.id.switch_notification)
+
+        val aboutView = mScrollView.findViewById<View>(R.id.about)
+        aboutView.setOnClickListener(this::onAboutClicked)
 
         mIgnoreCHNSwitch.setOnClickListener(this::onIgnoreSwitchClicked)
         mIgnorePINSwitch.setOnClickListener(this::onIgnoreSwitchClicked)
@@ -83,6 +91,7 @@ class SettingsFragment: Fragment(){
         mThemeSwitch.setOnClickListener(this::onDarkThemeSwitchClicked)
         mUseKeyboardSwitch.setOnClickListener(this::onUseAppKeyboardClicked)
         mSetDefaultKeyboardButton.setOnClickListener(this::onSetDefaultClicked)
+        mShowNotifySwitch.setOnClickListener(this::onShowNotifyClicked)
 
         initValues()
 
@@ -99,6 +108,8 @@ class SettingsFragment: Fragment(){
         mIgnoreCHNSwitch.isChecked=!repeatType.ignoreCHN
         mIgnorePINSwitch.isChecked=!repeatType.ignorePIN
         mIgnoreTRNSwitch.isChecked=!repeatType.ignoreTRN
+        // notify Switch
+        mShowNotifySwitch.isChecked = Settings.shouldShowNotifications(context!!)
     }
 
     private fun setupInputButton(){
@@ -174,5 +185,16 @@ class SettingsFragment: Fragment(){
         }else {
             mThemeSwitch.isChecked = false
         }
+    }
+
+    private fun onShowNotifyClicked(v : View){
+        val isChecked = (v as Switch).isChecked
+        Settings.showNotifications(isChecked,context!!)
+        PocketApplication.updateNotificationStatus()
+    }
+
+    private fun onAboutClicked( v : View){
+        val intent = Intent(context!!, AboutActivity::class.java)
+        startActivity(intent)
     }
 }

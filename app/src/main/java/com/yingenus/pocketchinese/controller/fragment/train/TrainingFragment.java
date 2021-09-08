@@ -9,10 +9,14 @@ import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.widget.Toolbar;
 import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
@@ -29,8 +33,10 @@ import com.yingenus.pocketchinese.model.database.pocketDB.StudyWord;
 import com.yingenus.pocketchinese.view.MultiColorProgressBar;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.function.ToDoubleBiFunction;
 
 public class TrainingFragment extends Fragment{
     private MultiColorProgressBar progressBar;
@@ -42,11 +48,16 @@ public class TrainingFragment extends Fragment{
     private UUID studyList;
     private int block;
 
+    private Button nextButton;
+    private Button skitButton;
+    private CheckBox visibilityBox;
+    private Toolbar toolbar;
+
     private MultiColorProgressBar.ProgressElement good;
     private MultiColorProgressBar.ProgressElement bed;
 
     private TrainingFragment(){
-        super(R.layout.training_fragment);
+        super(R.layout.train_layout);
     }
 
     public TrainingFragment(LanguageCase languageCase,UUID studyList,int block){
@@ -89,22 +100,26 @@ public class TrainingFragment extends Fragment{
         progressBar =view.findViewById(R.id.train_color_bar);
         viewPager =view.findViewById(R.id.train_view_pager);
 
+        nextButton = view.findViewById(R.id.next_button);
+        skitButton = view.findViewById(R.id.skip_button);
+        visibilityBox = view.findViewById(R.id.visibility_check_box);
+        toolbar = view.findViewById(R.id.toolbar);
+
+        nextButton.setOnClickListener(this::onNextClicked);
+        skitButton.setOnClickListener(this::onSkipClicked);
+        visibilityBox.setOnCheckedChangeListener(this::onCheckedChanged);
+
         good=new MultiColorProgressBar.ProgressElement();
         good.setProgressValue(0);
-        good.setProgressBackground(R.drawable.tests);
         good.setProgressColor(getResources().getColor(R.color.success_color_9));
         bed=new MultiColorProgressBar.ProgressElement();
         bed.setProgressValue(0);
-        bed.setProgressBackground(R.drawable.tests);
         bed.setProgressColor(getResources().getColor(R.color.success_color_4));
 
         progressBar.addProgressElement(good);
         progressBar.addProgressElement(bed);
 
         Adapter adapter =new Adapter(getBuilder());
-        adapter.setDisclosedClicked(this::onGiveUpClicked);
-        adapter.setOnNextClicked(this::onNextClicked);
-        adapter.setSkipClicked(this::onSkipClicked);
         adapter.setKeyboardCallback((KeyboardCallbackInterface) getActivity());
         viewPager.setAdapter(adapter);
         viewPager.setUserInputEnabled(false);
@@ -133,24 +148,44 @@ public class TrainingFragment extends Fragment{
     private void updateState(){
         List<StudyWord> words = repeatManager.getRepeatQueueSnapshot();
         if (!words.isEmpty()) {
-            ((Adapter)viewPager.getAdapter()).setStudyWords(words);
-            viewPager.getAdapter().notifyDataSetChanged();
+            Adapter adapter = ((Adapter)viewPager.getAdapter());
+            adapter.setStudyWords(words);
+            adapter.setShowedWord(Collections.EMPTY_LIST);
+            adapter.notifyDataSetChanged();
             viewPager.setCurrentItem(0);
         }else {
             itsWasLast();
         }
     }
 
+    private void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
+        if (isChecked){
+            if (viewPager.getAdapter() != null){
+                Adapter adapter = ((Adapter) viewPager.getAdapter());
+                StudyWord word= adapter.mWords.get(viewPager.getCurrentItem());
+                ArrayList<StudyWord> arrayList = new ArrayList<>();
+                arrayList.addAll(adapter.getShowedWord());
+                arrayList.add(word);
+                adapter.setShowedWord(arrayList);
+                adapter.notifyItemChanged(viewPager.getCurrentItem());
+            }
+            visibilityBox.setClickable(false);
+            onSeeClicked();
+        }
+    }
+
     public void onNextClicked(View view) {
-        if (repeatManager !=null){
-            StudyWord word= ((Adapter) viewPager.getAdapter()).mWords.get(viewPager.getCurrentItem());
+        if (repeatManager !=null && viewPager.getAdapter() != null){
+
+            Adapter adapter = ((Adapter) viewPager.getAdapter());
+            StudyWord word= adapter.mWords.get(viewPager.getCurrentItem());
 
             RecyclerView recyclerView=(RecyclerView) viewPager.getChildAt(0);
             RecyclerView.ViewHolder holder = recyclerView.findViewHolderForAdapterPosition(viewPager.getCurrentItem());
             if (holder instanceof TrainView){
                 TrainView trainView = (TrainView) holder;
-                String answer = (String) trainView.getAnswer();
-                Boolean isWasDisclosed = (Boolean) trainView.isDisclosed();
+                String answer = trainView.getAnswer();
+                Boolean isWasDisclosed = adapter.getShowedWord().contains(word);
 
                 if (answer == null && isWasDisclosed == null){
                     return;
@@ -185,7 +220,7 @@ public class TrainingFragment extends Fragment{
 
     }
 
-    public void onGiveUpClicked( View view) {
+    public void onSeeClicked() {
         StudyWord word= ((Adapter) viewPager.getAdapter()).mWords.get(viewPager.getCurrentItem());
         repeatManager.discloseWord(word);
         updatePresenter();
@@ -216,6 +251,12 @@ public class TrainingFragment extends Fragment{
         good.setProgressValue(repeatManager.getPassed());
         bed.setProgressValue(repeatManager.getFailed());
         progressBar.notifiProgressChanged();
+
+        String toolBarText = getString(R.string.count_words);
+        int wordsLeft = repeatManager.getTotal() - repeatManager.getPassed();
+        toolBarText += " "+wordsLeft;
+        toolbar.setTitle(toolBarText.toUpperCase());
+
     }
 
     private TrainViewBuilder getBuilder(){
@@ -232,13 +273,11 @@ public class TrainingFragment extends Fragment{
 
     private static class Adapter extends RecyclerView.Adapter<TrainView>{
 
-        private View.OnClickListener onNext;
-        private View.OnClickListener onSkip;
-        private View.OnClickListener onDisclosed;
         private KeyboardCallbackInterface keyboardCallback;
 
 
         private List<StudyWord> mWords= new ArrayList();
+        private List<StudyWord> mShowedWord = new ArrayList<>();
         private TrainViewBuilder viewBuilder;
 
         Adapter(TrainViewBuilder builder){
@@ -249,19 +288,26 @@ public class TrainingFragment extends Fragment{
             this.mWords=words;
         }
 
+        public List<StudyWord> getShowedWord() {
+            return mShowedWord;
+        }
+
+        public void setShowedWord(List<StudyWord> showedWord) {
+            this.mShowedWord = showedWord;
+        }
+
         @NonNull
         @Override
         public TrainView onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
             TrainView holder =  viewBuilder.build((LayoutInflater) parent.getContext()
                     .getSystemService(Context.LAYOUT_INFLATER_SERVICE),parent);
-            holder.setListeners(onNext,onSkip,onDisclosed);
             return holder;
         }
 
         @Override
         public void onBindViewHolder(@NonNull TrainView holder, int position) {
             StudyWord word=mWords.get(position);
-            holder.bind(word.getChinese(),word.getPinyin(),word.getTranslate());
+            holder.bind(word.getChinese(),word.getPinyin(),word.getTranslate(), mShowedWord.contains(word));
             if (Settings.INSTANCE.useAppKeyboard(holder.itemView.getContext()) && holder instanceof PinTrainView){
                 addKeyBoardObserver(holder);
             }
@@ -309,21 +355,9 @@ public class TrainingFragment extends Fragment{
         @Override
         public void onDetachedFromRecyclerView(@NonNull RecyclerView recyclerView) {
             super.onDetachedFromRecyclerView(recyclerView);
-            onNext = null;
-            onDisclosed = null;
-            onSkip = null;
             keyboardCallback = null;
         }
 
-        private void setOnNextClicked(View.OnClickListener listener){
-            onNext = listener;
-        }
-        private void setSkipClicked(View.OnClickListener listener){
-            onSkip = listener;
-        }
-        private void setDisclosedClicked(View.OnClickListener listener){
-            onDisclosed = listener;
-        }
         private void setKeyboardCallback(KeyboardCallbackInterface callback){
             keyboardCallback = callback;
         }

@@ -11,7 +11,7 @@ object DescriptorExtractor {
     @Throws(IllegalArgumentException::class)
     fun getSoundDescriptor( tone : String, context: Context): ToneSoundDescriptor{
 
-        val files = context.assets.list(assetDir+"/") ?:
+        val files = context.assets.list(assetDir) ?:
             throw IOException("cant find folder $assetDir")
 
 

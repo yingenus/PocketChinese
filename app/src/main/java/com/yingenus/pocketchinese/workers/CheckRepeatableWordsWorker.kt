@@ -54,8 +54,9 @@ class CheckRepeatableWordsWorker( context: Context, workerParameters: WorkerPara
         Log.d("CheckRepeatable","Worker start")
         try {
             val checker = RepeatableChecker(applicationContext, Settings.getRepeatType(applicationContext))
-
-            if (! checker.haveExpired()) return Result.success()
+            val expired = checker.haveExpired()
+            Log.d("CheckRepeatable","Have Expired: "+expired)
+            if (! expired) return Result.success()
 
             val repeatable = checker.repealable!!
 

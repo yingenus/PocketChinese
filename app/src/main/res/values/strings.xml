@@ -136,8 +136,8 @@
         <item>汉字 - pīnyīn</item>
         <item>汉字 - Русский</item>
     </string-array>
-    <string name="skip">Пропустить</string>
-    <string name="next">Дальше</string>
+    <string name="skip">Skip</string>
+    <string name="next">Next</string>
     <string name="give_up">Сдаться</string>
     <string name="system_key_bord">Системная</string>
     <string name="pocket_key_bord">Pocket</string>
@@ -156,8 +156,9 @@
     <string name="ignore_chn">Повторять иероглифы</string>
     <string name="ignore_pin">Повторять романизацию</string>
     <string name="ignore_trn">Повторять перевод</string>
+    <string name="about_app_u"><u>О программе</u></string>
     <string name="about_app">О программе</string>
-    <string name="about_app_text">PocketChinese- альфа верия словоря китайского языка и приложение для изучения китайских слов и грамматики</string>
+    <string name="about_app_text">\n \     PocketChinese- словорь китайского языка и приложение для изучения китайских слов и грамматики</string>
 
     <string name="lorem">
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -216,6 +217,8 @@
     <string name="repeatable_lists_title">Необходимо повторить</string>
     <string name="remind_notify_title">Можно повторить слова</string>
     <string name="remind_notify_text">Доуступно %1$s в %2$s</string>
+    <string name="other">Другое</string>
+    <string name="notification">Уведомления</string>
     <string name="activate_input_msg_1">
         Пожайлуста!
     </string>

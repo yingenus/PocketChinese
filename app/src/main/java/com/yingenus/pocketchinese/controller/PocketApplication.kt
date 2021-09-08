@@ -25,6 +25,10 @@ class PocketApplication: Application(), Configuration.Provider {
             pocketApplication?.postStartActivity(fromLaunch)
         }
 
+        fun updateNotificationStatus(){
+            pocketApplication?.initNotifications()
+        }
+
     }
 
     override fun getWorkManagerConfiguration(): Configuration {
@@ -50,6 +54,7 @@ class PocketApplication: Application(), Configuration.Provider {
         copyDBs()
         setupNotifyChannels()
         initWorks()
+        initNotifications()
     }
 
     private fun setupNotifyChannels(){
@@ -72,14 +77,28 @@ class PocketApplication: Application(), Configuration.Provider {
                 .setInitialDelay(3,TimeUnit.DAYS)
                 .setConstraints(cleanConstrains)
                 .build()
-
+        /*
         val checkWork = PeriodicWorkRequestBuilder<CheckRepeatableWordsWorker>(4,TimeUnit.HOURS)
                 .setInitialDelay(3,TimeUnit.HOURS)
                 .build()
 
-        wm.enqueueUniquePeriodicWork("clean_db",ExistingPeriodicWorkPolicy.KEEP,cleanWork)
         wm.enqueueUniquePeriodicWork("check_repeatable_words", ExistingPeriodicWorkPolicy.KEEP,checkWork)
+         */
+        wm.enqueueUniquePeriodicWork("clean_db",ExistingPeriodicWorkPolicy.KEEP,cleanWork)
+    }
 
+    private fun initNotifications(){
+        val shouldShow = Settings.shouldShowNotifications(applicationContext)
+
+        val wm = WorkManager.getInstance(applicationContext)
+        if (!shouldShow){
+            wm.cancelUniqueWork("check_repeatable_words")
+        }else{
+            val checkWork = PeriodicWorkRequestBuilder<CheckRepeatableWordsWorker>(4,TimeUnit.HOURS)
+                    .setInitialDelay(3,TimeUnit.HOURS)
+                    .build()
+            wm.enqueueUniquePeriodicWork("check_repeatable_words", ExistingPeriodicWorkPolicy.KEEP,checkWork)
+        }
     }
 
     private fun postStartActivity(fromLaunch : Boolean){
@@ -87,10 +106,12 @@ class PocketApplication: Application(), Configuration.Provider {
         else isApplicationStared = true
 
         if (fromLaunch) {
-            val wm = WorkManager.getInstance(applicationContext)
-            val checkWork = OneTimeWorkRequestBuilder<CheckRepeatableWordsWorker>()
-                    .setInitialDelay(0, TimeUnit.SECONDS).build()
-            wm.enqueueUniqueWork("check_repeatable_words_on_start", ExistingWorkPolicy.KEEP, checkWork)
+            if(Settings.shouldShowNotifications(applicationContext)) {
+                val wm = WorkManager.getInstance(applicationContext)
+                val checkWork = OneTimeWorkRequestBuilder<CheckRepeatableWordsWorker>()
+                        .setInitialDelay(0, TimeUnit.SECONDS).build()
+                wm.enqueueUniqueWork("check_repeatable_words_on_start", ExistingWorkPolicy.KEEP, checkWork)
+            }
         }
     }
 
@@ -110,6 +131,8 @@ class PocketApplication: Application(), Configuration.Provider {
             }catch (ioe : IOException){
                 Log.w("PocketApplication", "ioe wile copy $name")
             }
+        }else{
+            Log.i("PocketApplication","db: $name exist and last version")
         }
 
     }

@@ -1,7 +1,9 @@
 package com.yingenus.pocketchinese.model.pinplayer
 
 import android.content.Context
+import android.media.AudioAttributes
 import android.media.MediaPlayer
+import android.os.Build
 import android.util.Log
 import com.yingenus.pocketchinese.logErrorMes
 import io.reactivex.rxjava3.core.BackpressureStrategy
@@ -16,6 +18,7 @@ class PinPlayer {
         val mediaPlayer = MediaPlayer()
         mediaPlayer.setVolume(1f,1f)
         mediaPlayer.isLooping = false
+        mediaPlayer.setAudioAttributes(AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).build())
         subscriber = object : FlowSubscriber<ToneSoundDescriptor>() {
             override fun onComplete() {
 
@@ -23,11 +26,15 @@ class PinPlayer {
 
             override fun onNext(t: ToneSoundDescriptor?) {
                 Log.d("start play", t!!.tone)
-                val afd = t.assetFile
-                mediaPlayer.reset()
-                mediaPlayer.setDataSource(afd.fileDescriptor,afd.startOffset,afd.length)
-                mediaPlayer.prepare()
-                mediaPlayer.start()
+                try {
+                    val afd = t.assetFile
+                    mediaPlayer.setDataSource(afd.fileDescriptor, afd.startOffset, afd.length)
+                    mediaPlayer.prepare()
+                    mediaPlayer.start()
+                }catch (e : Exception){
+                    Log.i("pinplayer",e.logErrorMes())
+                    cancel()
+                }
             }
 
             override fun onError(t: Throwable?) {
@@ -40,15 +47,20 @@ class PinPlayer {
 
 
             override fun onStart() {
-                mediaPlayer.setOnCompletionListener { _ -> request(1) }
+                mediaPlayer.setOnCompletionListener { _ ->
+                    mediaPlayer.reset()
+                    request(1)
+                }
                 request(1)
             }
         }
         toneObserver
                 .map { tone -> DescriptorExtractor.getSoundDescriptor(tone.sound,context) }
                 .doFinally {
-                    if (mediaPlayer.isPlaying) mediaPlayer.stop()
-                    mediaPlayer.release()
+                    try {
+                        if (mediaPlayer.isPlaying) mediaPlayer.stop()
+                        mediaPlayer.release()
+                    }catch (e : IllegalStateException){}
                     if(subscriber != null) subscriber = null
                 }
                 .toFlowable(BackpressureStrategy.BUFFER)

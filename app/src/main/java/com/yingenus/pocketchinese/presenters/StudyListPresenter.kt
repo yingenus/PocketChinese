@@ -76,9 +76,48 @@ class StudyListPresenter(val view : StudyListInterface) {
     }
 
     fun moveWords(words : List<StudyWord>, newBlock : Int){
-        for( word in words){
-            connectionDAO.update(Connection(studyListUUID,word.uuid,newBlock))
+
+        val newList = mutableMapOf<Int,MutableList<StudyWord>>()
+
+        studyWords?.keys?.forEach { key: Int ->
+            val transferList = studyWords!![key]!!.toMutableList()
+            transferList.removeAll(words)
+            newList[key] = transferList
         }
+        if (!newList.containsKey(newBlock)){
+            newList[newBlock] = mutableListOf()
+        }
+        newList[newBlock]!!.addAll(words)
+
+        var block = 0
+
+        for (key in newList.keys.toList().sorted()){
+            val newBlock = block + 1
+            if (!newList[key].isNullOrEmpty()){
+                block = newBlock
+            }
+            if (key != newBlock){
+                newList[newBlock] = newList[key]!!
+                newList.remove(key)
+            }
+        }
+
+        newList.keys.forEach { key : Int ->
+            if (!studyWords!!.containsKey(key)){
+                newList[key]?.forEach{word ->
+                    connectionDAO.update(Connection(studyListUUID,word.uuid,key))
+                }
+            }else{
+                val oldList = studyWords!![key]!!
+
+                newList[key]?.forEach{word ->
+                    if (!oldList.contains(word))
+                        connectionDAO.update(Connection(studyListUUID,word.uuid,key))
+                }
+            }
+
+        }
+
         loadWords()
         updateWords()
     }

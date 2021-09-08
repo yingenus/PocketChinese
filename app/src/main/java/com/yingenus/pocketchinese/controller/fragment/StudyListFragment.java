@@ -6,6 +6,7 @@ import android.graphics.Rect;
 import android.graphics.drawable.StateListDrawable;
 import android.os.Bundle;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -345,7 +346,7 @@ public class StudyListFragment extends Fragment implements ActionMode.Callback, 
         }else if (!appBarLayout.isLiftOnScroll()){
             deployedAppBar();
         }
-        ((StudyListAdapter)recyclerView.getAdapter()).setItems((Map<Integer, List<StudyWord>>) stList);
+        ((StudyListAdapter) recyclerView.getAdapter()).setItems((Map<Integer, List<StudyWord>>) stList);
         recyclerView.getAdapter().notifyDataSetChanged();
     }
 

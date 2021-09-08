@@ -1,6 +1,6 @@
 package com.yingenus.pocketchinese.controller.dialog
 
-import android.app.AlertDialog
+import androidx.appcompat.app.AlertDialog
 import android.app.Dialog
 import android.content.DialogInterface
 import android.os.Bundle
@@ -55,7 +55,7 @@ class NumbPickerDialog : DialogFragment(){
 
         titel = getString(R.string.dialog_chose_block_mes)
 
-        val dialog= AlertDialog.Builder(context)
+        val dialog= AlertDialog.Builder(context!!)
 
         dialog.setView(frameLayout)
         dialog.setTitle(R.string.dialog_chose_block)

@@ -154,7 +154,9 @@ class RepeatManager(
         word.wasTryRepeat()
         repeatedWords.remove(word)
         repeatedWords.add(word)
-        filedWords.add(word)
+        if(!filedWords.contains(word)){
+            filedWords.add(word)
+        }
     }
 
     private fun wasChanged(word : StudyWord){

@@ -2,8 +2,10 @@ package com.yingenus.pocketchinese.model.database
 
 import android.content.Context
 import android.database.SQLException
+import android.database.sqlite.SQLiteDatabase
 import android.util.Log
 import com.yingenus.pocketchinese.model.database.dictionaryDB.DictionaryDBHelper
+import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
 
@@ -58,6 +60,16 @@ class CopierDBs(val dbName: String){
 
         try {
             val dbFile = context.getDatabasePath(dbName)!!
+
+            if (!dbFile.exists()){
+                val  path = dbFile.parentFile!!
+                if (!path.exists()){
+                    path.mkdirs()
+                }
+                dbFile.createNewFile()
+
+            }
+
             val dbAssets = context.assets.open(dbName)
             val dbOutPut = FileOutputStream(dbFile)
 

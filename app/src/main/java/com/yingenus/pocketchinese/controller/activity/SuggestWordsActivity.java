@@ -482,7 +482,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.Theme_PocketChinese_AlertDialog);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
             builder.setTitle(getString(R.string.success_insert_words));
 
@@ -494,7 +494,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
         @NonNull
         @Override
         public Dialog onCreateDialog(@Nullable Bundle savedInstanceState) {
-            AlertDialog.Builder builder = new AlertDialog.Builder(getContext(),R.style.Theme_PocketChinese_AlertDialog);
+            AlertDialog.Builder builder = new AlertDialog.Builder(getContext());
 
             builder.setTitle(getString(R.string.error_insert_words));
 

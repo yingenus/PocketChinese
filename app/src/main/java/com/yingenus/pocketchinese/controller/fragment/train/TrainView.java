@@ -28,9 +28,7 @@ public abstract class TrainView extends RecyclerView.ViewHolder implements TextW
 
     protected TextView mainText, secondText;
     protected FrameLayout frameLayout;
-    protected Button nextButton, skipButton;
     protected PinTextView pinView;
-    protected CheckBox showAnsBox;
 
     @Override
     public void beforeTextChanged(CharSequence s, int start, int count, int after) {
@@ -53,54 +51,31 @@ public abstract class TrainView extends RecyclerView.ViewHolder implements TextW
         mainText =super.itemView.findViewById(R.id.main_text);
         secondText =super.itemView.findViewById(R.id.second_text);
         frameLayout =super.itemView.findViewById(R.id.pin_text_view);
-        nextButton =super.itemView.findViewById(R.id.next_button);
-        skipButton =super.itemView.findViewById(R.id.skip_button);
-        showAnsBox =super.itemView.findViewById(R.id.visibility_check_box);
 
-        showAnsBox.setOnCheckedChangeListener(this::onCheckedChanged);
 
         super.itemView.addOnAttachStateChangeListener(this);
 
         pinView =loadTrain(inflater);
-
         pinView.addTextChangedListener(this);
         pinView.setFilters(new InputFilter[]{new SpaceFilter()});
         frameLayout.addView(pinView);
     }
 
-    public void bind(String chinText, String pinText, String trnText){
+    public void bind(String chinText, String pinText, String trnText, boolean shouldShowHidden){
         bindItem(chinText,pinText,trnText);
         pinView.getText().clear();
-        showAnsBox.setChecked(false);
-        showAnsBox.setClickable(true);
         showTestText(getHiddenWord());
-
+        if (shouldShowHidden){
+            pinView.setText(getHiddenWord());
+        }
     }
 
     public abstract void bindItem(String chinText,String pinText,String trnText);
     public abstract PinTextView loadTrain(LayoutInflater inflater);
     public abstract String getHiddenWord();
 
-    public void setListeners(View.OnClickListener onAnswerClicked, View.OnClickListener onSkipClicked, View.OnClickListener onGiveUpClicked){
-        nextButton.setOnClickListener(onAnswerClicked);
-        showAnsBox.setOnClickListener(onGiveUpClicked);
-        skipButton.setOnClickListener(onSkipClicked);
-    }
-
     public String getAnswer(){
         return pinView.getText().toString();
-    }
-
-    public boolean isDisclosed(){
-        return showAnsBox.isChecked();
-    }
-
-    private void onCheckedChanged(CompoundButton buttonView, boolean isChecked){
-        if (isChecked){
-            pinView.setText(getHiddenWord());
-            super.itemView.setTag(DISCLOSED_ID,true);
-            showAnsBox.setClickable(false);
-        }
     }
 
     protected void calcColumns(String text,int maxColumns){

@@ -12,6 +12,8 @@
     >
 
     <androidx.constraintlayout.widget.ConstraintLayout
+        android:theme="@style/Theme.PocketChinese.TrainingCard"
+
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 

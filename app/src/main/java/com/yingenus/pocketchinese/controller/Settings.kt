@@ -15,6 +15,7 @@ object Settings{
     private const val REPEAT_TYPE_TRN= "com.example.pocketchinese.repeatType.trn"
     private const val SEARCH_HISTORY="com.example.pocketchinese.searchHistory"
     private const val VIEWED_LISTS = "com.example.pocketchinese.viewedLists"
+    private const val SHOW_NOTIFICATION = "com.example.pocketchinese.showNotifications"
     private const val NIGHT_THEME = "com.example.pocketchinese.nightTheme"
 
 
@@ -93,13 +94,26 @@ object Settings{
 
     fun isNightModeOn(context : Context):Boolean{
         val preferences = context.getSharedPreferences(APP_PREFERENCE,0)
-        return preferences.getBoolean(NIGHT_THEME,false);
+        return preferences.getBoolean(NIGHT_THEME,false)
     }
+
     fun nightMode(on : Boolean,context : Context){
         context.getSharedPreferences(APP_PREFERENCE,0)
                 .edit()
                 .putBoolean(NIGHT_THEME,on)
                 .apply()
+    }
+
+    fun showNotifications(show : Boolean, context: Context){
+        context.getSharedPreferences(APP_PREFERENCE,0)
+                .edit()
+                .putBoolean(SHOW_NOTIFICATION,show)
+                .apply()
+    }
+
+    fun shouldShowNotifications(context: Context): Boolean{
+        val preferences = context.getSharedPreferences(APP_PREFERENCE,0)
+        return preferences.getBoolean(SHOW_NOTIFICATION,true)
     }
 
     private object Utils{

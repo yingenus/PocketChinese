@@ -64,8 +64,7 @@ class UserListsPresenter(val view : UserListsInterface){
     fun removeStudyList(item : StudyList){
         try {
             listDAO.remove(item)
-            showedStudyLists.remove(showedStudyLists.find{ it.studyList.uuid == item.uuid })
-            view.setStudyLists(showedStudyLists)
+            updateLists()
         } catch (e: Exception) {
             Log.e("Remove StudyList Error", e.message!!)
         }
