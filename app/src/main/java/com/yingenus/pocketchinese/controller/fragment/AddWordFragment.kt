@@ -19,6 +19,7 @@ import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
+import com.yingenus.pocketchinese.controller.hideKeyboard
 
 class AddWordFragment() : Fragment(R.layout.add_words_layout), AddWordInterface{
 
@@ -114,7 +115,9 @@ class AddWordFragment() : Fragment(R.layout.add_words_layout), AddWordInterface{
         initSelectionListener()
         initTextListener()
 
-        presenter!!.onCreate(context!!, getInsertedWords())
+        presenter!!.onCreate(requireContext(), getInsertedWords())
+
+        registerHideTouchListener(view)
 
         return view
     }
@@ -157,7 +160,7 @@ class AddWordFragment() : Fragment(R.layout.add_words_layout), AddWordInterface{
     }
 
     override fun setUserLists(names: List<String>) {
-        selectSpinner.setAdapter(ArrayAdapter(context!!,android.R.layout.simple_spinner_dropdown_item, names))
+        selectSpinner.setAdapter(ArrayAdapter(requireContext(),android.R.layout.simple_spinner_dropdown_item, names))
         selectSpinner.setSelection(0)
     }
 
@@ -305,11 +308,32 @@ class AddWordFragment() : Fragment(R.layout.add_words_layout), AddWordInterface{
     }
 
     private fun showDialog(){
-        MaterialAlertDialogBuilder(context!!)
+        MaterialAlertDialogBuilder(requireContext())
                 .setMessage(getString(R.string.error_insert_words))
-                .setPositiveButton(android.R.string.cancel) { _, _-> activity!!.finish()}
+                .setPositiveButton(android.R.string.cancel) { _, _-> requireActivity().finish()}
                 .show()
     }
+
+    private fun registerHideTouchListener(view : View){
+
+        if(view !is EditText){
+            view.setOnTouchListener { v, event ->
+                val focusView = requireActivity().currentFocus
+                if (focusView!= null){
+                    hideKeyboard(focusView)
+                }
+                false
+            }
+        }
+
+        if (view is ViewGroup){
+            for ( child in  0 until  view.childCount){
+                registerHideTouchListener(view.getChildAt(child))
+            }
+        }
+
+    }
+
 
     private fun getInsertedWords(): List<JSONObjects.Word>{
         if (::words.isInitialized){

@@ -25,7 +25,7 @@ public class PocketDBOpenManger {
         if (PocketDBOpenManger.helper == null){
             Log.i("pocketDb","open pocketDb");
             if (context!= null){
-                helper = new PocketBaseHelper(context);
+                helper = new PocketBaseHelper(context.getApplicationContext());
             }
             else {
                 throw new RuntimeException("Cant create new helper because context is null");

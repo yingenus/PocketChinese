@@ -110,7 +110,7 @@ class PocketApplication: Application(), Configuration.Provider {
                 val wm = WorkManager.getInstance(applicationContext)
                 val checkWork = OneTimeWorkRequestBuilder<CheckRepeatableWordsWorker>()
                         .setInitialDelay(0, TimeUnit.SECONDS).build()
-                wm.enqueueUniqueWork("check_repeatable_words_on_start", ExistingWorkPolicy.KEEP, checkWork)
+                wm.enqueueUniqueWork("check_repeatable_words_on_start", ExistingWorkPolicy.REPLACE, checkWork)
             }
         }
     }

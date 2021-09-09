@@ -8,15 +8,15 @@ object Settings{
     const val DEBUG: Boolean = true
 
     private const val SEPARATOR = "__,__"
-    private const val APP_PREFERENCE="com.example.pocketchinese.preference"
-    private const val USE_APP_KEYBOARD="com.example.pocketchinese.useAppKeyboard"
-    private const val REPEAT_TYPE_CHN= "com.example.pocketchinese.repeatType.chn"
-    private const val REPEAT_TYPE_PIN= "com.example.pocketchinese.repeatType.pin"
-    private const val REPEAT_TYPE_TRN= "com.example.pocketchinese.repeatType.trn"
-    private const val SEARCH_HISTORY="com.example.pocketchinese.searchHistory"
-    private const val VIEWED_LISTS = "com.example.pocketchinese.viewedLists"
-    private const val SHOW_NOTIFICATION = "com.example.pocketchinese.showNotifications"
-    private const val NIGHT_THEME = "com.example.pocketchinese.nightTheme"
+    private const val APP_PREFERENCE="com.yingenus.pocketchinese.preference"
+    private const val USE_APP_KEYBOARD="com.yingenus.pocketchinese.useAppKeyboard"
+    private const val REPEAT_TYPE_CHN= "com.yingenus.pocketchinese.repeatType.chn"
+    private const val REPEAT_TYPE_PIN= "com.yingenus.pocketchinese.repeatType.pin"
+    private const val REPEAT_TYPE_TRN= "com.yingenus.pocketchinese.repeatType.trn"
+    private const val SEARCH_HISTORY="com.yingenus.pocketchinese.searchHistory"
+    private const val VIEWED_LISTS = "com.yingenus.pocketchinese.viewedLists"
+    private const val SHOW_NOTIFICATION = "com.yingenus.pocketchinese.showNotifications"
+    private const val NIGHT_THEME = "com.yingenus.pocketchinese.nightTheme"
 
 
     fun useAppKeyboard(context: Context):Boolean{

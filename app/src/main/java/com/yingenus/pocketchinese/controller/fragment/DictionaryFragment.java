@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
@@ -22,6 +23,7 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yingenus.pocketchinese.R;
+import com.yingenus.pocketchinese.controller.InPutUtilsKt;
 import com.yingenus.pocketchinese.controller.Settings;
 import com.yingenus.pocketchinese.controller.dialog.CharacterSheetDialog;
 import com.yingenus.pocketchinese.controller.holders.ViewViewHolder;
@@ -135,6 +137,8 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface{
         unFilledAdapter.setHistory(presenter.getHistory(getContext()));
 
         presenter.onCreate(getContext());
+
+        registerHideTouchListener(view);
 
         return view;
     }
@@ -262,6 +266,26 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface{
 
     private void addToSetting( ChinChar chinChar){
         Settings.INSTANCE.addSearchItem(getContext(),chinChar.getId());
+    }
+
+    private void registerHideTouchListener(View view){
+        if (! (view instanceof EditText)){
+            view.setOnTouchListener((View v, MotionEvent event) ->{
+                View focusView = getActivity().getCurrentFocus();
+                if (focusView != null){
+                    InPutUtilsKt.hideKeyboard(focusView);
+                }
+                return false;
+            });
+        }
+
+        if (view instanceof ViewGroup){
+            ViewGroup group = (ViewGroup) view;
+            for(int child = 0; child < group.getChildCount(); child++){
+                registerHideTouchListener(group.getChildAt(child));
+            }
+        }
+
     }
 
     class HistoryInvisibleObserver extends RecyclerView.OnScrollListener{

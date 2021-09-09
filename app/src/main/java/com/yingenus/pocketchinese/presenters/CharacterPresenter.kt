@@ -62,6 +62,7 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
         pinPlayer = PinPlayer()
         val observer = makeSoundClicked
                 .observeOn(Schedulers.computation())
+                .filter { !pinPlayer!!.isPlaying() }
                 .flatMap { ToneSplitter.rxSplitter(context,it) }
         try {
             pinPlayer!!.registerObserver(observer!!,context)

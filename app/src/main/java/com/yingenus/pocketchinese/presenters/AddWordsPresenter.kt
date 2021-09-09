@@ -129,7 +129,7 @@ class AddWordsPresenter(val view : AddWordInterface) {
 
             var observable =
                     if (params.mixWords)
-                        Observable.fromIterable( getRandomize(insertedWords))
+                        Observable.defer { Observable.fromIterable( getRandomize(insertedWords)) }
                     else
                         Observable.fromIterable(insertedWords)
 

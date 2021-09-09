@@ -13,12 +13,24 @@ import io.reactivex.rxjava3.subscribers.DefaultSubscriber
 class PinPlayer {
 
     private var subscriber : FlowSubscriber<ToneSoundDescriptor>? = null
+    var mediaPlayer = MediaPlayer()
 
     fun registerObserver( toneObserver : Observable<Tone>, context: Context){
-        val mediaPlayer = MediaPlayer()
+
+        if (subscriber != null){
+            subscriber?.cancelSubscriber()
+            subscriber = null
+            mediaPlayer = MediaPlayer()
+
+        }
+
         mediaPlayer.setVolume(1f,1f)
         mediaPlayer.isLooping = false
-        mediaPlayer.setAudioAttributes(AudioAttributes.Builder().setContentType(AudioAttributes.CONTENT_TYPE_SPEECH).setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION).build())
+        mediaPlayer.setAudioAttributes(
+            AudioAttributes.Builder()
+                .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
+                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .build())
         subscriber = object : FlowSubscriber<ToneSoundDescriptor>() {
             override fun onComplete() {
 
@@ -60,11 +72,21 @@ class PinPlayer {
                     try {
                         if (mediaPlayer.isPlaying) mediaPlayer.stop()
                         mediaPlayer.release()
-                    }catch (e : IllegalStateException){}
+                    }catch (e : IllegalStateException){
+
+                    }
                     if(subscriber != null) subscriber = null
                 }
                 .toFlowable(BackpressureStrategy.BUFFER)
                 .subscribe(subscriber)
+    }
+
+    fun isPlaying(): Boolean{
+        return try {
+            mediaPlayer.isPlaying
+        }catch (e : IllegalStateException){
+            false
+        }
     }
 
     fun release(){

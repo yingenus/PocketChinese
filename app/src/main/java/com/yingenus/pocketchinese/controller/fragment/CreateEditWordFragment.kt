@@ -80,7 +80,7 @@ abstract class CreateEditWordFragment protected constructor() : Fragment(R.layou
     }
 
     override fun afterTextChanged(s: Editable?) {
-        when (activity!!.window.currentFocus) {
+        when (requireActivity().window.currentFocus) {
             editChn.editText -> presenter.afterTextChanged(CreateWordInterface.FIELD.CHN)
             editPin.editText -> presenter.afterTextChanged(CreateWordInterface.FIELD.PIN)
             editTrn.editText -> presenter.afterTextChanged(CreateWordInterface.FIELD.TRN)
@@ -129,16 +129,14 @@ abstract class CreateEditWordFragment protected constructor() : Fragment(R.layou
 
         createButton.setOnClickListener { createButtonClicked()}
 
-        presenter.onCreate(context!!)
+        presenter.onCreate(requireContext())
 
         (activity as AppCompatActivity).supportActionBar?.hide()
         activity?.setActionBar(view.findViewById(R.id.toolbar))
 
-        return view
-    }
+        registerHideTouchListener(view)
 
-    override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-        super.onActivityResult(requestCode, resultCode, data)
+        return view
     }
 
      override fun onDestroyView() {
@@ -148,7 +146,7 @@ abstract class CreateEditWordFragment protected constructor() : Fragment(R.layou
 
      @SuppressLint("ClickableViewAccessibility")
     private fun initConnectionWithAppKeyboard(){
-        if (activity is KeyboardCallbackInterface && Settings.useAppKeyboard(context!!)){
+        if (activity is KeyboardCallbackInterface && Settings.useAppKeyboard(requireContext())){
             val activity=activity as KeyboardCallbackInterface
             editPin.editText?.setOnClickListener { v: View ->  activity.showAppKeyboard(v)}
             editPin.editText?.setOnFocusChangeListener { v, hasFocus ->
@@ -184,7 +182,7 @@ abstract class CreateEditWordFragment protected constructor() : Fragment(R.layou
     override fun analogFounded(studyWord: StudyWord) {
         val dialog=HaveMatchDialog(studyWord)
         dialog.setTargetFragment(this,ANS.REQUEST_OK_CANSEL)
-        dialog.show(fragmentManager!!,"create")
+        dialog.show(childFragmentManager,"create")
     }
 
     override fun setSelectBlock(position: Int) {
@@ -265,7 +263,7 @@ abstract class CreateEditWordFragment protected constructor() : Fragment(R.layou
     }
 
     override fun setListOfStudyLists(list: List<String>) {
-        listSpinner.setAdapter(ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, list))
+        listSpinner.setAdapter(ArrayAdapter(requireContext(), android.R.layout.simple_spinner_dropdown_item, list))
     }
 
     override fun enableChoseStudyList(enable: Boolean) {
@@ -273,28 +271,28 @@ abstract class CreateEditWordFragment protected constructor() : Fragment(R.layou
     }
 
     open fun createButtonClicked(){
-         presenter.onCreateWordClicked()
-     }
+        presenter.onCreateWordClicked()
+    }
 
-     override fun showEmtFieldMes(field: CreateWordInterface.FIELD, show: Boolean) {
-         val inputLayout = getInputLayout(field)
-         if (show)
+    override fun showEmtFieldMes(field: CreateWordInterface.FIELD, show: Boolean) {
+        val inputLayout = getInputLayout(field)
+        if (show)
             showError(getString(ERRORS_MES.EMPTY_FIELDS),getInputLayout(field))
-         else if (inputLayout.error!= null && inputLayout.error!!.equals(getString(ERRORS_MES.EMPTY_FIELDS))){
-             inputLayout.error = null
-         }
-     }
+        else if (inputLayout.error!= null && inputLayout.error!!.equals(getString(ERRORS_MES.EMPTY_FIELDS))){
+            inputLayout.error = null
+        }
+    }
 
-     override fun showInvalCharsMes(field: CreateWordInterface.FIELD, show: Boolean) {
-         val inputLayout = getInputLayout(field)
-         if (show)
-             showError(getString(ERRORS_MES.INVALID_CHARS),getInputLayout(field))
-         else if (inputLayout.error!= null && inputLayout.error!!.equals(getString(ERRORS_MES.INVALID_CHARS))){
-             inputLayout.error = null
-         }
-     }
+    override fun showInvalCharsMes(field: CreateWordInterface.FIELD, show: Boolean) {
+        val inputLayout = getInputLayout(field)
+        if (show)
+            showError(getString(ERRORS_MES.INVALID_CHARS),getInputLayout(field))
+        else if (inputLayout.error!= null && inputLayout.error!!.equals(getString(ERRORS_MES.INVALID_CHARS))){
+            inputLayout.error = null
+        }
+    }
 
-     override fun showMaxCharsMes(field: CreateWordInterface.FIELD, show: Boolean) {
+    override fun showMaxCharsMes(field: CreateWordInterface.FIELD, show: Boolean) {
          val inputLayout = getInputLayout(field)
          if (show)
              showError(getString(ERRORS_MES.MORE_THEN_MAX_CHARS),getInputLayout(field))
@@ -302,17 +300,42 @@ abstract class CreateEditWordFragment protected constructor() : Fragment(R.layou
              inputLayout.error = null
          }
 
-     }
+    }
 
-     private fun getInputLayout(field: CreateWordInterface.FIELD): TextInputLayout = when(field){
+    private fun getInputLayout(field: CreateWordInterface.FIELD): TextInputLayout = when(field){
          CreateWordInterface.FIELD.TRN -> editTrn
          CreateWordInterface.FIELD.PIN -> editPin
          CreateWordInterface.FIELD.CHN -> editChn
-     }
+    }
 
-     private fun showError(mes: String, inputLayout: TextInputLayout){
+    private fun showError(mes: String, inputLayout: TextInputLayout){
         inputLayout.error=mes
-     }
+    }
+
+    private fun registerHideTouchListener(view : View){
+
+        if(view !is EditText){
+            view.setOnTouchListener { v, event ->
+                val focusView = requireActivity().currentFocus
+                if (focusView!= null){
+                    if (requireActivity() is KeyboardCallbackInterface){
+                        (requireActivity() as KeyboardCallbackInterface).hideKeyboard(focusView)
+                    }
+                    else {
+                        hideKeyboard(focusView)
+                    }
+                }
+                false
+            }
+        }
+
+        if (view is ViewGroup){
+            for ( child in  0 until  view.childCount){
+                registerHideTouchListener(view.getChildAt(child))
+            }
+        }
+
+    }
 
     private class HaveMatchDialog(val studyWord: StudyWord) : DialogFragment() {
 
@@ -322,13 +345,11 @@ abstract class CreateEditWordFragment protected constructor() : Fragment(R.layou
             builder.setNegativeButton(R.string.cancel) { dialogInterface: DialogInterface?, _: Int ->
                 val intent= Intent()
                 intent.putExtra(ANS.UUID,studyWord.uuid)
-                targetFragment?.onActivityResult(targetRequestCode, ANS.RESULT_CANCEL,intent)
                 dialogInterface?.cancel()
             }
             builder.setPositiveButton(R.string.Combine){ dialogInterface: DialogInterface?, _: Int ->
                 val intent= Intent()
                 intent.putExtra(ANS.UUID,studyWord.uuid)
-                targetFragment?.onActivityResult(targetRequestCode, ANS.RESULT_OK,intent)
                 dialogInterface?.cancel()
             }
             builder.setTitle(R.string.have_match)

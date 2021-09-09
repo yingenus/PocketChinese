@@ -15,6 +15,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 
 class DictionaryPresenter(val  view: DictionaryInterface ) {
 
@@ -69,6 +70,7 @@ class DictionaryPresenter(val  view: DictionaryInterface ) {
                 .filter { it.isNotEmpty() }
                 .filter { !(searcher.whichLanguage(it) == Language.RUSSIAN && it.length == 1) }
                 .observeOn(Schedulers.io())
+                .debounce(150, TimeUnit.MILLISECONDS)
                 .map { query ->
                     searcher.search(query)
                 }

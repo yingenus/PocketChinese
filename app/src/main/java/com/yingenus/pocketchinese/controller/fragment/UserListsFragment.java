@@ -61,7 +61,7 @@ public class UserListsFragment extends Fragment implements UserListsInterface{
         recyclerView.setAdapter(adapter);
         recyclerView.addItemDecoration(new BoundsDecorator());
 
-        presenter.onCreate(getContext());
+        presenter.onCreate(getActivity().getApplicationContext());
 
         return view;
     }

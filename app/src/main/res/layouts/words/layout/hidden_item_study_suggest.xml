@@ -110,7 +110,7 @@
             />
 
         <com.google.android.material.checkbox.MaterialCheckBox
-            style="@style/CheckBox.OnPrimary"
+            style="@style/Style.PocketChinese.CheckBox.OnPrimary"
 
             android:id="@+id/new_first_checkBox"
             android:layout_width="40dp"

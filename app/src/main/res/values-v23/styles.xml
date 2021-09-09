@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <style name="CheckBox.OnPrimary" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
+    <style name="Style.PocketChinese.CheckBox.OnPrimary" parent="Widget.MaterialComponents.CompoundButton.CheckBox">
         <item name="android:buttonTint">@color/check_box_on_primary</item>
     </style>
 </resources>
