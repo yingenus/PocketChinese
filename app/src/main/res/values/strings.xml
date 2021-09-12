@@ -4,9 +4,9 @@
     <string name="chinese">中文</string>>
     <string name="pinyin">Pīnyīn</string>
     <string name="my_language">Русский</string>
-    <string name="chinese_placeholder">Добавте слово</string>
-    <string name="pinyin_placeholder">Добавте романизацию</string>
-    <string name="my_language_placeholder">Добавте перевод</string>
+    <string name="chinese_placeholder">Добавьте слово</string>
+    <string name="pinyin_placeholder">Добавьте романизацию</string>
+    <string name="my_language_placeholder">Добавьте перевод</string>
     <string name="search_hidden_search_format">Поиск</string>
     <string name="search_hint">Русский, 汉语, Pīnyīn</string>
     <string name="search_hidden_search_format_defolt">Нечеткий</string>
@@ -21,7 +21,7 @@
     <string name="learn_words_my">Изучение</string>
     <string name="learn_words_sorting">Сортировка</string>
     <string name="delete">Удалить</string>
-    <string name="edit_name">Переиминовать</string>
+    <string name="edit_name">Переименовать</string>
     <string name="learn_words_sorting_az">А-Я</string>
     <string name="learn_words_sorting_za">Я-А</string>
     <string name="learn_words_new_first">Показать сначала новые</string>
@@ -118,19 +118,19 @@
     <string name="enter_name_placeholder">Придумайте имя</string>
     <string name="rename_placeholder">Введите новое имя</string>
     <string name="create">Создать</string>
-    <string name="rename">Переиминовать</string>
+    <string name="rename">Переименовать</string>
     <string name="cancel">Отмена</string>
     <string name="items">элементов</string>
     <string name="dialog_chose_block">Переместить</string>
     <string name="dialog_chose_block_mes">В какой блок ?</string>
     <string name="move">Переместить</string>
-    <string name="notifi_empty_list_name">У создаваемого списка дложнобыть имя !</string>
+    <string name="notifi_empty_list_name">У создаваемого списка должно быть имя !</string>
     <string name="notifi_busy_list_name">Такое имя уже занято :(</string>
     <string name="study_list">Список</string>
-    <string name="notifi_empty_field">Полье должно быть заполнено</string>
-    <string name="notifi_max_length">Привышена максимальная длинна</string>
-    <string name="Combine">ОбЪединить</string>
-    <string name="have_match">Найдено сопадение</string>
+    <string name="notifi_empty_field">Поле должно быть заполнено</string>
+    <string name="notifi_max_length">Превышена максимальная длинна</string>
+    <string name="Combine">Объединить</string>
+    <string name="have_match">Найдено совпадение</string>
     <string-array name="train_type">
         <item>Русский - 汉字</item>
         <item>汉字 - pīnyīn</item>
@@ -141,9 +141,9 @@
     <string name="give_up">Сдаться</string>
     <string name="system_key_bord">Системная</string>
     <string name="pocket_key_bord">Pocket</string>
-    <string name="nitify_invalid_chars">Поле содержит недопустимые симыолы: !#;:() итд.</string>
-    <string name="chose_type">Тип тренироки</string>
-    <string name="training">Тренирока</string>
+    <string name="nitify_invalid_chars">Поле содержит недопустимые символы: !#;:() итд.</string>
+    <string name="chose_type">Тип тренировки</string>
+    <string name="training">Тренировка</string>
     <string name="chose_block">блок</string>
     <string name="all">Все</string>
     <string name="style_and_theme">Стиль и Тема</string>
@@ -158,7 +158,16 @@
     <string name="ignore_trn">Повторять перевод</string>
     <string name="about_app_u"><u>О программе</u></string>
     <string name="about_app">О программе</string>
-    <string name="about_app_text">\n \     PocketChinese- словорь китайского языка и приложение для изучения китайских слов и грамматики</string>
+    <string name="about_app_text">\ PocketChinese - русско-китайский словарь с примерами, справочник грамматики и приложение для помощи в изучении слов. В базе данных приложения содержится 58 тысяч слов и словосочетаний и более 130 тысяч примеров (в целях оптимизации  некоторые могут быть доступны).\n
+        \n
+        В базы данных слов и примеров были включены данные с сайтов <a href="https://www.zhonga.ru/">zhonga.ru</a>  и <a href="https://bkrs.info/">bkrs.info</a>\n
+\n
+        В приложение использовались иконки с сайта <a href="https://icons8.com/">icons8.com</a>\n
+\n
+Посетите мой github <a href="https://github.com/yingenus/">github.com/yingenus</a> может быть там что-нибудь есть ;)\n
+        \n
+Для связи пишите на evgeniyaton@gmail.com
+</string>
 
     <string name="lorem">
 		Lorem ipsum dolor sit amet, consectetur adipiscing elit.
@@ -188,10 +197,10 @@
         Введите какой-нибудь \n
         запрос на \n
         русском, 汉语 или pīnyīn</string>
-    <string name="dictionary_no_history_msg">Тут будет отображаться истори поиска</string>
+    <string name="dictionary_no_history_msg">Тут будет отображаться история поиска</string>
     <string name="start_us_list_msg">Создайте свой список</string>
     <string name="start_us_list_msg_2">Нажмите: </string>
-    <string name="start_us_list_msg_2_next">в верху экрана </string>
+    <string name="start_us_list_msg_2_next">вверху экрана </string>
     <string name="transition">Перевод</string>
     <string name="example">Примеры</string>
     <string name="character">Иероглифы</string>
@@ -204,11 +213,11 @@
     <string name="correct_pinyin_type_1">pīnyīn</string>
     <string name="correct_pinyin_type_2">pinyin</string>
     <string name="add_words">Добавление слов</string>
-    <string name="add_words_insert_params">Пораметры вставки</string>
+    <string name="add_words_insert_params">Параметры вставки</string>
     <string name="add_words_div_to_blocks">Разделять по блокам</string>
     <string name="add_words_words_in_block">Слов в блоке</string>
     <string name="add_words_mix_words">Перемешать слова</string>
-    <string name="error_insert_words">Что-то пошо не так</string>
+    <string name="error_insert_words">Что-то пошло не так</string>
     <string name="success_insert_words">Слова успешно добавлены</string>
     <string name="error_list_not_selected">Выберете список</string>
     <string name="no_info">Нет данных</string>
@@ -216,11 +225,11 @@
     <string name="remind_channel_description">Напоминает о том, что нужно повторить слова</string>
     <string name="repeatable_lists_title">Необходимо повторить</string>
     <string name="remind_notify_title">Можно повторить слова</string>
-    <string name="remind_notify_text">Доуступно %1$s в %2$s</string>
+    <string name="remind_notify_text">Доступно %1$s в %2$s</string>
     <string name="other">Другое</string>
     <string name="notification">Уведомления</string>
     <string name="activate_input_msg_1">
-        Пожайлуста!
+        Пожалуйста!
     </string>
     <string name="activate_input_msg_2">
         активируйте клавиатуру

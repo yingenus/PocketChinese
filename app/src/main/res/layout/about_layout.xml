@@ -19,12 +19,14 @@
         />
 
     <TextView
+        android:id="@+id/about"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="8dp"
+        android:layout_marginHorizontal="16dp"
         android:layout_marginVertical="8dp"
-        android:textColor="?android:textColorPrimary"
+        android:textColor="?android:textColorSecondary"
         android:textSize="18sp"
+        android:autoLink="all"
         android:text="@string/about_app_text"
         />
 
