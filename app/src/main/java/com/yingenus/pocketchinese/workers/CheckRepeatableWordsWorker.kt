@@ -31,7 +31,7 @@ class CheckRepeatableWordsWorker( context: Context, workerParameters: WorkerPara
             else
                 NotificationCompat.Builder(context)
 
-            builder.setSmallIcon(R.mipmap.ic_launcher)
+            builder.setSmallIcon(R.drawable.ic_app_notify)
             builder.setContentTitle(context.getString(R.string.remind_notify_title))
 
             val words = context.resources.getQuantityString(R.plurals.words_dc,word,word)

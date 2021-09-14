@@ -22,19 +22,13 @@
     <color name="inactive_button_nav">@color/gray_light</color>
 
     <color name="blue">#0098DD</color>
-    <color name="inactiveButtonColor">#D2D2D2</color>
     <color name="text_color">#FF000000</color>
-    <color name="second_text_color">#5C5C5C</color>
-    <color name="text_color_white">#FFFCFC</color>
     <color name="appColor">#FFFF5454</color>
 
     <color name="white">#FFFFFFFF</color>
     <color name="appColorDark">#CC4343</color>
-    <color name="appColorDarkDark">#A53636</color>
     <color name="transparent">#00000000</color>
     <color name="red">#F10E00</color>
-
-    <color name="pin_background">#D8D8D8</color>
 
     <color name="keyboard_background">#D8D8D8</color>
     <color name="keyboard_key_background">#FAFAFA</color>
@@ -46,7 +40,6 @@
     <color name="keyboard_key_gray_pressed">#A1A1A1</color>
 
     <color name="fogging_color">#54676767</color>
-    <color name="fogging_color_light">#3B676767</color>
     <color name="attention_color">#E6A602</color>
     <color name="success_color_1">#F10E00</color>
     <color name="success_color_2">#F10E00</color>

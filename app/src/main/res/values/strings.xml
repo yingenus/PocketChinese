@@ -12,10 +12,8 @@
     <string name="search_hidden_search_format_defolt">Нечеткий</string>
     <string name="search_hidden_search_format_comple">Совпадение</string>
     <string name="empty_search_result">Нет результатов...</string>
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="menu_item_dictionary">Словарь</string>
     <string name="menu_item_learn_words">Обучение</string>
-    <string name="menu_item_grammar">Грамматика</string>
     <string name="menu_item_settings">Настройки</string>
     <string name="learn_words_available">Доступные</string>
     <string name="learn_words_my">Изучение</string>
@@ -26,10 +24,8 @@
     <string name="learn_words_sorting_za">Я-А</string>
     <string name="learn_words_new_first">Показать сначала новые</string>
     <string name="tags">Теги</string>
-    <string name="learn_words_add_new">Добавить новые</string>
     <string name="count_words">Слов: </string>
     <string name="success">Успешность: </string>
-    <string name="success_short">Усп: </string>
     <string name="last_repeat">Последнее повторение: </string>
     <string name="next_repeat">Следующие повторение: </string>
     <string name="count_words_right">Слов</string>
@@ -104,8 +100,6 @@
         <item quantity="other">%d месяцев</item>
     </plurals>
     <string name="more_then_year">больше года назад</string>
-    <string name="more_then">больше</string>
-    <string name="create_new_list">Создать новый список</string>
     <string name="statistics">Статистика</string>
     <string name="block">Блок %d</string>
     <string name="new_list">Новый список</string>
@@ -138,12 +132,8 @@
     </string-array>
     <string name="skip">Skip</string>
     <string name="next">Next</string>
-    <string name="give_up">Сдаться</string>
-    <string name="system_key_bord">Системная</string>
-    <string name="pocket_key_bord">Pocket</string>
     <string name="nitify_invalid_chars">Поле содержит недопустимые символы: !#;:() итд.</string>
     <string name="chose_type">Тип тренировки</string>
-    <string name="training">Тренировка</string>
     <string name="chose_block">блок</string>
     <string name="all">Все</string>
     <string name="style_and_theme">Стиль и Тема</string>
@@ -197,7 +187,6 @@
         Введите какой-нибудь \n
         запрос на \n
         русском, 汉语 или pīnyīn</string>
-    <string name="dictionary_no_history_msg">Тут будет отображаться история поиска</string>
     <string name="start_us_list_msg">Создайте свой список</string>
     <string name="start_us_list_msg_2">Нажмите: </string>
     <string name="start_us_list_msg_2_next">вверху экрана </string>
