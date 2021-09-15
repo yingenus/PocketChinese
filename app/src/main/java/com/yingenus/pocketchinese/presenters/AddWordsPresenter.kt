@@ -100,13 +100,10 @@ class AddWordsPresenter(val view : AddWordInterface) {
         val isEmp = text.isBlank() ||text.isEmpty()
         view.showNameError(AddWordInterface.CreateError.EMPTY_NAME, isEmp)
 
-        val isInv = !checkTrainStandards(text)
-        view.showNameError(AddWordInterface.CreateError.NOT_AVAIL_CHARS, isInv)
-
         val isExist = listsName.contains(text)
         view.showNameError(AddWordInterface.CreateError.NAME_BUSY, isExist)
 
-        return ( !isEmp )&&( !isInv )&&( !isExist )
+        return ( !isEmp )&&( !isExist )
     }
 
 
