@@ -55,7 +55,6 @@ android {
 
 dependencies {
 
-
     debugImplementation 'com.squareup.leakcanary:leakcanary-android:2.7'
 
     implementation "org.jetbrains.kotlin:kotlin-stdlib:$kotlin_version"
@@ -76,39 +75,21 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 
-
     //gson
     implementation 'com.google.code.gson:gson:2.8.7'
-
 
     //reactiveX
     implementation 'io.reactivex.rxjava3:rxandroid:3.0.0'
     implementation "io.reactivex.rxjava3:rxjava:3.0.9"
 
-
-    //tap layout chn
-    implementation 'com.flyco.tablayout:FlycoTabLayout_Lib:2.1.2@aar'
-
-    //have no idea
-    implementation 'net.cachapa.expandablelayout:expandablelayout:2.9.2'
-
-    //csv reader
-    implementation 'com.github.osiegmar:FastCSV:v1.0.2'
-
-    //bottom teb layout
+    //bottom tab layout
     implementation  'com.fxn769:bubbletabbar:1.0.6'
 
     //keyboard
     implementation 'com.hijamoya:keyboardview:0.0.3'
 
-    //edit text
-    implementation 'com.poovam:pin-edittext-field:1.2.3'
-
     //animations
     implementation 'com.daimajia.androidanimations:library:2.4@aar'
-
-    //recykle view
-    implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
 
     //ormlite
     implementation 'com.j256.ormlite:ormlite-core:5.3'
