@@ -104,6 +104,9 @@ dependencies {
     //edit text
     implementation 'com.poovam:pin-edittext-field:1.2.3'
 
+    //animations
+    implementation 'com.daimajia.androidanimations:library:2.4@aar'
+
     //recykle view
     implementation 'com.github.ksoichiro:android-observablescrollview:1.6.0'
 

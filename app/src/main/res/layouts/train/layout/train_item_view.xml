@@ -12,9 +12,11 @@
         android:textSize="36sp"
         android:textColor="?android:textColorSecondary"
         android:layout_marginTop="16dp"
-        android:layout_marginStart="16dp"
+        android:textAlignment="center"
+
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
 
         tools:text="TextTest"
         />
@@ -25,22 +27,37 @@
         android:layout_height="wrap_content"
         android:textSize="26sp"
         android:textColor="?android:textColorSecondary"
-        android:layout_marginStart="16dp"
-        app:layout_constraintStart_toStartOf="@id/main_text"
+        android:textAlignment="center"
+
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@id/main_text"
 
         tools:text="TextTest"/>
 
-    <FrameLayout
-        android:id="@+id/pin_text_view"
-        android:layout_width="0dp"
+    <com.google.android.material.textfield.TextInputLayout
+        style="@style/Style.PocketChinese.Rounded.Light.InputLayout.WhiteBack"
+
+        android:id="@+id/edit"
+        android:layout_width="280dp"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="4dp"
+        tools:hint="@string/chinese"
+        app:counterEnabled="true"
+        app:counterMaxLength="10"
+        app:errorEnabled="true"
+        app:helperTextEnabled="true"
+
+        android:layout_marginTop="30dp"
 
         app:layout_constraintTop_toBottomOf="@id/second_text"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-    />
+        app:layout_constraintEnd_toEndOf="parent">
+        <com.google.android.material.textfield.TextInputEditText
+            android:textSize="22sp"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+    </com.google.android.material.textfield.TextInputLayout>
 
     <TextView
         android:id="@+id/visible_testing_text"
@@ -50,7 +67,7 @@
         tools:visibility="visible"
         tools:text = "TextTest"
         android:textColor="?android:textColorSecondary"
-        app:layout_constraintTop_toBottomOf="@id/pin_text_view"
+        app:layout_constraintTop_toBottomOf="@id/edit"
         app:layout_constraintStart_toStartOf="parent"
 
         />

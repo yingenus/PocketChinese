@@ -1,5 +1,6 @@
 package com.yingenus.pocketchinese.controller.fragment.train
 
+import android.content.Context
 import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -10,12 +11,11 @@ interface TrainViewBuilder {
     fun build(inflater: LayoutInflater, parent: ViewGroup):TrainView
 }
 
-class TrnTrainView(inflater: LayoutInflater, parent: ViewGroup):TrainView(inflater,parent), TextWatcher {
+class TrnTrainView(inflater: LayoutInflater, parent: ViewGroup):TrainView(inflater,parent){
     class Builder : TrainViewBuilder {
         override fun build(inflater: LayoutInflater, parent: ViewGroup) =
                 TrnTrainView(inflater, parent)
     }
-    val MAX_COLUMS = 7
     private var mAnsLength=0
     private var mAnswer=""
 
@@ -23,8 +23,8 @@ class TrnTrainView(inflater: LayoutInflater, parent: ViewGroup):TrainView(inflat
         super.mainText.text = chinText?.capitalize()
         super.secondText.text = pinText
 
-        calcColumns(trnText!!,MAX_COLUMS)
-        mAnswer=trnText.filterNot { it==' ' }
+        inputLength(trnText!!)
+        mAnswer=trnText
         mAnsLength=mAnswer.length
     }
 
@@ -32,26 +32,23 @@ class TrnTrainView(inflater: LayoutInflater, parent: ViewGroup):TrainView(inflat
         return mAnswer
     }
 
-    override fun loadTrain(inflater: LayoutInflater?): PinTextView {
-        val view = inflater!!.inflate(R.layout.trn_pin_text_view, null) as PinTextView
-        return view
+    override fun getEditHint(context: Context?): String {
+        return context!!.getString(R.string.my_language)
     }
-
 }
 
-class PinTrainView(inflater: LayoutInflater, parent: ViewGroup):TrainView(inflater,parent),TextWatcher {
+class PinTrainView(inflater: LayoutInflater, parent: ViewGroup):TrainView(inflater,parent){
     class Builder:TrainViewBuilder{
         override fun build(inflater: LayoutInflater, parent: ViewGroup)=PinTrainView(inflater, parent)
     }
-    val MAX_COLUMS=7
     private var mAnsLength=0
     private var mAnswer=""
 
     override fun bindItem(chinText: String?, pinText: String?, trnText: String?) {
         super.mainText.text=chinText?.capitalize()
         super.secondText.text=trnText
-        calcColumns(pinText!!,MAX_COLUMS)
-        mAnswer=pinText.filterNot { it==' ' }
+        inputLength(pinText!!)
+        mAnswer=pinText
         mAnsLength=mAnswer.length
 
     }
@@ -60,26 +57,23 @@ class PinTrainView(inflater: LayoutInflater, parent: ViewGroup):TrainView(inflat
         return mAnswer
     }
 
-    override fun loadTrain(inflater: LayoutInflater?): PinTextView {
-        val view=inflater!!.inflate(R.layout.trn_pin_text_view,null) as PinTextView
-        return view
+    override fun getEditHint(context: Context?): String {
+        return context!!.getString(R.string.pinyin)
     }
-
 }
 
 class ChnTrainView(inflater: LayoutInflater, parent: ViewGroup):TrainView(inflater,parent){
     class Builder:TrainViewBuilder{
         override fun build(inflater: LayoutInflater, parent: ViewGroup)=ChnTrainView(inflater,parent)
     }
-    private val MAX_COLUMNS=5
     private var mAnsLength=0
     private var mAnswer=""
 
     override fun bindItem(chinText: String?, pinText: String?, trnText: String?) {
         super.mainText.text=trnText?.capitalize()
         super.secondText.text=pinText
-        super.calcColumns(chinText,MAX_COLUMNS)
-        mAnswer=chinText!!.filterNot { it==' ' }
+        super.inputLength(chinText!!)
+        mAnswer=chinText
         mAnsLength=mAnswer.length
 
     }
@@ -88,9 +82,7 @@ class ChnTrainView(inflater: LayoutInflater, parent: ViewGroup):TrainView(inflat
         return mAnswer
     }
 
-
-    override fun loadTrain(inflater: LayoutInflater?): PinTextView {
-        val view=inflater!!.inflate(R.layout.chn_pin_text_view,null,false)
-        return view as PinTextView
+    override fun getEditHint(context: Context?): String {
+        return context!!.getString(R.string.chinese)
     }
 }

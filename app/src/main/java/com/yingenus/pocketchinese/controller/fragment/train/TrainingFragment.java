@@ -6,7 +6,6 @@ import android.content.Context;
 import android.os.Bundle;
 import android.text.InputType;
 import android.view.LayoutInflater;
-import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
@@ -21,9 +20,13 @@ import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.viewpager2.widget.ViewPager2;
 
+import com.daimajia.androidanimations.library.Techniques;
+import com.daimajia.androidanimations.library.YoYo;
 import com.yingenus.pocketchinese.R;
+import com.yingenus.pocketchinese.controller.Durations;
 import com.yingenus.pocketchinese.controller.KeyboardCallbackInterface;
 import com.yingenus.pocketchinese.controller.Settings;
+import com.yingenus.pocketchinese.controller.VibrationUtilsKt;
 import com.yingenus.pocketchinese.model.LanguageCase;
 import com.yingenus.pocketchinese.model.database.pocketDB.PocketBaseHelper;
 import com.yingenus.pocketchinese.model.database.PocketDBOpenManger;
@@ -124,6 +127,7 @@ public class TrainingFragment extends Fragment{
         viewPager.setAdapter(adapter);
         viewPager.setUserInputEnabled(false);
         viewPager.setOffscreenPageLimit(1);
+        viewPager.registerOnPageChangeCallback(new PagerCallBack());
 
         initWords();
 
@@ -138,6 +142,24 @@ public class TrainingFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+    }
+
+    private class PagerCallBack extends ViewPager2.OnPageChangeCallback{
+        @Override
+        public void onPageSelected(int position) {
+            RecyclerView recyclerView = (RecyclerView) viewPager.getChildAt(0);
+            if (recyclerView != null){
+                TrainView holder = (TrainView) recyclerView.findViewHolderForAdapterPosition(position);
+                if (holder != null){
+                    holder.pinView.getEditText().requestFocus();
+                }
+            }
+
+            if (visibilityBox.isChecked()){
+                visibilityBox.setChecked(false);
+                visibilityBox.setClickable(true);
+            }
+        }
     }
 
     private  void initWords(){
@@ -201,6 +223,9 @@ public class TrainingFragment extends Fragment{
 
                     if (isCorrect){
                         switchToNextDelayed(500);
+                    }else {
+                        YoYo.with(Techniques.Shake).playOn(trainView.pinView);
+                        VibrationUtilsKt.vibrate(Durations.ERROR_DURATION, requireContext());
                     }
 
                 }else if(isWasDisclosed != null && isWasDisclosed){
@@ -317,7 +342,7 @@ public class TrainingFragment extends Fragment{
         private void addKeyBoardObserver(TrainView holder){
             if (keyboardCallback != null)
             {
-                EditText editText=holder.pinView;
+                EditText editText=holder.pinView.getEditText();
                 if (keyboardCallback != null){
                     editText.setOnClickListener(keyboardCallback::showAppKeyboard);
                 }

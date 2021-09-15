@@ -8,16 +8,16 @@ interface AnswerChecker {
 
 class ChnAnswerChecker:AnswerChecker{
     override fun check(item: StudyWord, value: String): Boolean {
-        return item.chinese.toLowerCase().filterNot{ it==' '}.contentEquals(value.toLowerCase())
+        return item.chinese.toLowerCase().filterNot{ it==' '}.contentEquals(value.filterNot{ it==' '}.toLowerCase())
     }
 }
 class PinAnswerChecker:AnswerChecker{
     override fun check(item: StudyWord, value: String): Boolean {
-        return item.pinyin.toLowerCase().filterNot{ it==' '}.contentEquals(value.toLowerCase())
+        return item.pinyin.toLowerCase().filterNot{ it==' '}.contentEquals(value.filterNot{ it==' '}.toLowerCase())
     }
 }
 class TrnAnswerChecker:AnswerChecker{
     override fun check(item: StudyWord, value: String): Boolean {
-        return item.translate.toLowerCase().filterNot{ it==' '}.contentEquals(value.toLowerCase())
+        return item.translate.toLowerCase().filterNot{ it==' '}.contentEquals(value.filterNot{ it==' '}.toLowerCase())
     }
 }

@@ -1,5 +1,6 @@
 package com.yingenus.pocketchinese.controller.fragment.train;
 
+import android.content.Context;
 import android.text.Editable;
 import android.text.InputFilter;
 import android.text.Spanned;
@@ -10,96 +11,55 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.material.textfield.TextInputLayout;
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.controller.Settings;
 import com.yingenus.pocketchinese.view.pintext.PinTextView;
 
 import java.util.Arrays;
 
-public abstract class TrainView extends RecyclerView.ViewHolder implements TextWatcher, View.OnAttachStateChangeListener {
-
-    public static final int ANSWER_ID = R.id.user_answer;
-    public static final int DISCLOSED_ID = R.id.user_answer;
+public abstract class TrainView extends RecyclerView.ViewHolder implements View.OnAttachStateChangeListener {
 
     protected TextView mainText, secondText;
-    protected FrameLayout frameLayout;
-    protected PinTextView pinView;
-
-    @Override
-    public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-
-    }
-
-    @Override
-    public void onTextChanged(CharSequence s, int start, int before, int count) {
-
-    }
-
-    @Override
-    public void afterTextChanged(Editable s) {
-        super.itemView.setTag(ANSWER_ID, s.toString());
-    }
+    protected TextInputLayout pinView;
 
     public TrainView(LayoutInflater inflater, ViewGroup parent) {
         super(inflater.inflate(R.layout.train_item_view,parent,false));
 
         mainText =super.itemView.findViewById(R.id.main_text);
         secondText =super.itemView.findViewById(R.id.second_text);
-        frameLayout =super.itemView.findViewById(R.id.pin_text_view);
-
 
         super.itemView.addOnAttachStateChangeListener(this);
 
-        pinView =loadTrain(inflater);
-        pinView.addTextChangedListener(this);
-        pinView.setFilters(new InputFilter[]{new SpaceFilter()});
-        frameLayout.addView(pinView);
+        pinView = super.itemView.findViewById(R.id.edit);
+        pinView.setHint(getEditHint(inflater.getContext()));
     }
 
     public void bind(String chinText, String pinText, String trnText, boolean shouldShowHidden){
         bindItem(chinText,pinText,trnText);
-        pinView.getText().clear();
+        pinView.getEditText().getText().clear();
         showTestText(getHiddenWord());
         if (shouldShowHidden){
-            pinView.setText(getHiddenWord());
+            pinView.getEditText().setText(getHiddenWord());
         }
     }
 
     public abstract void bindItem(String chinText,String pinText,String trnText);
-    public abstract PinTextView loadTrain(LayoutInflater inflater);
+    public abstract String getEditHint(Context context);
     public abstract String getHiddenWord();
 
     public String getAnswer(){
-        return pinView.getText().toString();
+        return pinView.getEditText().getText().toString();
     }
 
-    protected void calcColumns(String text,int maxColumns){
-        int row= (int) Math.ceil(((double)text.length()) /maxColumns);
-        int[] rows=new int[row];
-        int[] space=new int[text.length()];
-        int textLength=text.length();
-        for(int i=0; i<rows.length; i++){
-
-            if (textLength<=maxColumns){
-                rows[i]=textLength;
-            }else{
-                rows[i]=maxColumns;
-                textLength-=maxColumns;
-            }
-        }
-        int index=0;
-        for (int i=0;i<text.length();i++){
-            if (text.charAt(i)==' ') {
-                space[index++]=i;
-            }
-        }
-        pinView.setColumnsInRows(rows);
-        pinView.setSpaceOnIndexes(Arrays.copyOfRange(space,0,index));
+    protected void inputLength(String text){
+        pinView.setCounterMaxLength(text.length());
     }
 
     @Override
@@ -110,19 +70,6 @@ public abstract class TrainView extends RecyclerView.ViewHolder implements TextW
     @Override
     public void onViewDetachedFromWindow(View v) {
 
-    }
-
-    private static class SpaceFilter implements InputFilter{
-        @Override
-        public CharSequence filter(CharSequence source, int start, int end, Spanned dest, int dstart, int dend) {
-            StringBuilder sequence= new StringBuilder();
-
-            for (int i=start;i<end;i++){
-                if (Character.isWhitespace(source.charAt(i))) continue;
-                sequence.append(source.charAt(i));
-            }
-            return sequence.toString();
-        }
     }
 
     protected void showTestText(String text){

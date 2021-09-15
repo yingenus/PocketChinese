@@ -77,7 +77,7 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
 
         setOnButtonSelectListener()
 
-        presenter.onCreate(context!!)
+        presenter.onCreate(requireContext())
 
         viewPager.adapter = PagerAdapter()
         viewPager.offscreenPageLimit = 2
@@ -97,7 +97,7 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
 
     override fun onResume() {
         super.onResume()
-        presenter.onResume(context!!)
+        presenter.onResume(requireContext())
     }
 
     override fun onPause() {
@@ -128,8 +128,8 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
     }
 
     override fun startAddNewStudy(word: ChinChar) {
-        val intent= CreateWordActivity.getIntent(context!!,word)
-        context!!.startActivity(intent)
+        val intent= CreateWordActivity.getIntent(requireContext(),word)
+        requireContext().startActivity(intent)
     }
 
     override fun setTranslations(trns: List<String>) {
@@ -218,7 +218,7 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
         view.measure(measureSpeckW, measureSpeckH)
 
         val viewPagerMarginTop = viewPager.top
-        val displayHeight = getDisplayHeight(activity!!)
+        val displayHeight = getDisplayHeight(requireActivity())
         val statusBarHeight = getStatusBarHeight()
         val absolutePosition = IntArray(2)
         viewPager.getLocationOnScreen(absolutePosition)
@@ -310,7 +310,7 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
     }
 
     private fun getPagerOccupiHeight(marginTopPix : Int): Int{
-        val displayHeight = getDisplayHeight(context!!)
+        val displayHeight = getDisplayHeight(requireContext())
         val statusBarHeight = getStatusBarHeight()
         val availableSpace = displayHeight - statusBarHeight
         val dialogHeight = (availableSpace*Helper.OccupiHeight).toInt()

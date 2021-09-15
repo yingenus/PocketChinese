@@ -17,6 +17,12 @@
         <!-- <item name="boxBackgroundColor">@color/background_color</item> -->
     </style>
 
+    <style name="Style.PocketChinese.Rounded.Light.InputLayout.WhiteBack" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="shapeAppearanceOverlay">@style/Style.PocketChinese.Rounded.Light</item>
+        <item name="boxStrokeColor">@color/filled_stroke_color_secondary</item>
+        <!-- <item name="boxBackgroundColor">@color/background_color</item> -->
+    </style>
+
     <style name="Style.PocketChinese.Rounded.Button" parent="Widget.MaterialComponents.Button">
         <item name="shapeAppearanceOverlay">@style/Style.PocketChinese.Rounded</item>
     </style>
@@ -119,6 +125,7 @@
         <item name="cornerFamily">rounded</item>
         <item name="cornerSize">20dp</item>
     </style>
+
 
     <style name="Style.PocketChinese.Rounded.Light" parent="">
         <item name="cornerFamily">rounded</item>
