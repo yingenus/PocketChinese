@@ -12,6 +12,7 @@ import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.annotation.LayoutRes;
@@ -128,7 +129,8 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface{
         dictionaryRecycle.addItemDecoration(new BoundsDecorator());
         dictionaryRecycle.addOnScrollListener( new HistoryInvisibleObserver());
         //dictionaryRecycle.setAdapter(new UnFilledAdapter());
-        updateRecyclerView(null);
+
+        setResults(Results.NoQuery.INSTANCE);
 
         setSearchTypeChangedListener();
 
@@ -217,42 +219,6 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface{
         }
     }
 
-    private void updateRecyclerView(List<ChinChar> chinChars){
-        RecyclerView.Adapter adapter = dictionaryRecycle.getAdapter();
-
-        if(chinChars==null || chinChars.isEmpty()){
-            UnFilledAdapter unAdapter;
-
-            if (!(adapter instanceof UnFilledAdapter)){
-                unAdapter = new UnFilledAdapter();
-                unAdapter.setChinCharListener(this::onChnCharClicked);
-                dictionaryRecycle.setAdapter(unAdapter);
-            }else {
-                unAdapter = (UnFilledAdapter) adapter;
-            }
-            unAdapter.setHistory(history);
-            if (searchPanel.getText().length() == 0){
-                unAdapter.setMessageView(R.layout.dictionary_start_msg);
-                unAdapter.setHistory(presenter.getHistory(getContext()));
-            }else {
-                unAdapter.setMessageView(R.layout.holder_empty_dictionary_item);
-            }
-            unAdapter.notifyDataSetChanged();
-        }else {
-            DictionaryItemAdapter diAdapter;
-            if (!(adapter instanceof DictionaryItemAdapter)) {
-                diAdapter = new DictionaryItemAdapter();
-                diAdapter.setChinCharListener(this::onChnCharClicked);
-                dictionaryRecycle.setAdapter(diAdapter);
-            }else {
-                diAdapter = (DictionaryItemAdapter) adapter;
-            }
-            diAdapter.setChinCharacters(chinChars);
-            diAdapter.notifyDataSetChanged();
-            showDefaultHeader();
-        }
-    }
-
     private void onChnCharClicked(ChinChar chinChar){
         ((CharacterFragmentFactory)getChildFragmentManager().getFragmentFactory()).setShowedChinChar(chinChar);
         BottomSheetDialogFragment bottomSheetDialog=(BottomSheetDialogFragment)
@@ -328,18 +294,45 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface{
     }
 
     @Override
-    public void showEmpty() {
-        updateRecyclerView(null);
-    }
-
-    @Override
     public void setHistory(@NotNull List<? extends ChinChar> history) {
 
     }
 
     @Override
-    public void showItems(@NotNull List<? extends ChinChar> results) {
-        updateRecyclerView((List<ChinChar>)results);
+    public void setResults(@NotNull Results results) {
+        RecyclerView.Adapter adapter = dictionaryRecycle.getAdapter();
+
+
+        if (results instanceof Results.NoQuery || results instanceof  Results.NoMatches){
+            UnFilledAdapter unAdapter;
+
+            if (!(adapter instanceof UnFilledAdapter)){
+                unAdapter = new UnFilledAdapter();
+                unAdapter.setChinCharListener(this::onChnCharClicked);
+                dictionaryRecycle.setAdapter(unAdapter);
+                unAdapter.setHistory(history);
+            }else {
+                unAdapter = (UnFilledAdapter) adapter;
+            }
+            if ( results instanceof Results.NoQuery){
+                unAdapter.setMessageView(R.layout.dictionary_start_msg);
+            }else {
+                unAdapter.setMessageView(R.layout.holder_empty_dictionary_item);
+            }
+            unAdapter.notifyDataSetChanged();
+        }else if (results instanceof Results.Matches){
+            DictionaryItemAdapter diAdapter;
+            if (!(adapter instanceof DictionaryItemAdapter)) {
+                diAdapter = new DictionaryItemAdapter();
+                diAdapter.setChinCharListener(this::onChnCharClicked);
+                dictionaryRecycle.setAdapter(diAdapter);
+            }else {
+                diAdapter = (DictionaryItemAdapter) adapter;
+            }
+            diAdapter.setChinCharacters(((Results.Matches) results).getChars());
+            diAdapter.notifyDataSetChanged();
+            showDefaultHeader();
+        }
     }
 
     @NotNull
@@ -469,8 +462,10 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface{
         private static final int HISTORY = 2;
 
         private List<ChinChar> mHistory;
+        private int massageContainerId = View.NO_ID;
         private View mMassage;
         private int mViewRes = -1;
+        private boolean shouldUpdateMassage = true;
 
         @NonNull
         @Override
@@ -478,7 +473,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface{
             LayoutInflater inflater = (LayoutInflater) parent.getContext().getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 
             if (viewType == MESSAGE){
-                return getMesView(inflater);
+                return getMesViewHolder(inflater);
             }
             if (viewType == HISTORY_HEADER){
                 return new ViewViewHolder(R.layout.history_header,inflater);
@@ -503,7 +498,17 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface{
 
         @Override
         public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
-            if (holder.getClass() == DictionaryItemHolder.class){
+            if (holder instanceof ViewViewHolder && getItemViewType(position) == MESSAGE){
+                if (shouldUpdateMassage){
+                    shouldUpdateMassage = false;
+                    FrameLayout container = ((FrameLayout) holder.itemView.findViewById(massageContainerId));
+                    if (container != null){
+                        container.removeAllViews();
+                        container.addView(getMassageView(holder.itemView.getContext()));
+                    }
+                }
+            }
+            if (holder instanceof DictionaryItemHolder){
                 ((DictionaryItemHolder) holder).bind(mHistory.get(position - 2));
             }
         }
@@ -519,13 +524,16 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface{
 
         @Override
         public int getItemViewType(int position) {
+            if (position == 0){
+                return MESSAGE;
+            }
             if (position == 1){
                 return HISTORY_HEADER;
             }
             if (position > 1){
                 return HISTORY;
             }
-            return MESSAGE;
+            throw new RuntimeException("UnFilledAdapter no such type");
         }
 
         @Override
@@ -533,29 +541,42 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface{
             return position;
         }
 
-        private RecyclerView.ViewHolder getMesView(LayoutInflater inflater){
+        private RecyclerView.ViewHolder getMesViewHolder(LayoutInflater inflater){
+
+            FrameLayout container = new FrameLayout(inflater.getContext());
+            container.setLayoutParams(new
+                    FrameLayout.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT));
+            massageContainerId = View.generateViewId();
+            container.setId(massageContainerId);
+            return new ViewViewHolder(container);
+        }
+
+        private View getMassageView(Context context){
             if (mMassage != null){
-                return new ViewViewHolder(mMassage);
+                return mMassage;
             }
             else if (mViewRes != -1){
-                return new ViewViewHolder(mViewRes, inflater);
+                return ((LayoutInflater) context.getSystemService(Context.LAYOUT_INFLATER_SERVICE)).inflate(mViewRes,null);
             }
-            else return new ViewViewHolder(new View(inflater.getContext()));
+            else return new View(context);
         }
 
         public void setMessageView(View view){
-            mMassage = view;
-            notifyItemChanged(0);
+            if (mMassage != view){
+                shouldUpdateMassage = true;
+                mMassage = view;
+            }
         }
 
         public void setMessageView(@LayoutRes int res){
-            mViewRes= res;
-            notifyItemChanged(0);
+            if (mViewRes != res){
+                shouldUpdateMassage = true;
+                mViewRes= res;
+            }
         }
 
         public void setHistory( List<ChinChar> history){
             mHistory = history;
-            notifyItemRangeChanged(2, getItemCount() - 2);
         }
 
         public List<ChinChar> getHistory(){

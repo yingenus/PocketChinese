@@ -9,7 +9,7 @@ class SearchEngine(val queryHandler: Searcher, val sentenceExtractor: Extractor 
     private val maxLength = 100;
 
     fun startSearch(query: String): List<ChinChar>{
-        Log.i("SearchEngine", "search")
+        Log.i("SearchEngine", "search query: $query")
         val searcherResult = queryHandler.search(query)
         Log.i("SearchEngine", "search finish")
 

@@ -9,11 +9,16 @@ interface DictionaryInterface {
         SORT_FUZZY, SORT_MATCH
     }
 
+    sealed class Results{
+        object NoQuery : Results()
+        object NoMatches : Results()
+        class Matches(val chars : List<ChinChar>) : Results()
+    }
+
     fun getSearchQuery():String
     fun setSearchStates(state: States)
-    fun showEmpty()
     fun getSearchObserver() : Observable<String>
     fun setHistory(history : List<ChinChar>)
-    fun showItems(results: List<ChinChar>)
+    fun setResults(results: Results)
     fun showChinChar(chinChar: ChinChar)
 }

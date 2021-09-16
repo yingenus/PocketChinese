@@ -62,26 +62,29 @@ class DictionaryPresenter(val  view: DictionaryInterface ) {
 
     private fun registerSubscribers(){
         getSearchObserver()
-                .filter { it.isEmpty() }
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe({onNext -> view.showEmpty()},{onError -> })
-
-        getSearchObserver()
-                .filter { it.isNotEmpty() }
-                .filter { !(searcher.whichLanguage(it) == Language.RUSSIAN && it.length == 1) }
+                .filter { it.isEmpty()||(!(searcher.whichLanguage(it) == Language.RUSSIAN && it.length == 1)) }
                 .observeOn(Schedulers.io())
                 .debounce(150, TimeUnit.MILLISECONDS)
                 .map { query ->
-                    searcher.search(query)
+                   if(query.isEmpty()){
+                       DictionaryInterface.Results.NoQuery
+                   }else{
+                       val result = searcher.search(query)
+                       if(result.isEmpty()){
+                           DictionaryInterface.Results.NoMatches
+                       }else{
+                           DictionaryInterface.Results.Matches(result)
+                       }
+                   }
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError { msg ->
                     Log.i("Dictionary", "Cant compl Query = ${msg.logErrorMes()}")
-                    view.showEmpty()
+                    view.setResults(DictionaryInterface.Results.NoQuery)
                 }
                 .retry()
                 .subscribe {
-                    view.showItems(it)
+                    view.setResults(it)
                 }
 
     }
