@@ -29,7 +29,7 @@ class PinPlayer {
         mediaPlayer.setAudioAttributes(
             AudioAttributes.Builder()
                 .setContentType(AudioAttributes.CONTENT_TYPE_SPEECH)
-                .setUsage(AudioAttributes.USAGE_ASSISTANCE_SONIFICATION)
+                .setUsage(AudioAttributes.USAGE_MEDIA)
                 .build())
         subscriber = object : FlowSubscriber<ToneSoundDescriptor>() {
             override fun onComplete() {

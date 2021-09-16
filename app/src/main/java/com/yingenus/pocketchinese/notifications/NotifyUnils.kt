@@ -8,7 +8,7 @@ import androidx.annotation.RequiresApi
 import com.yingenus.pocketchinese.R
 
 object Channels{
-    const val REMIND_CHANNEL = "com.example.pocketchinese.notifychannel.remind"
+    const val REMIND_CHANNEL = "com.yingenus.pocketchinese.notifychannel.remind"
 }
 
 
