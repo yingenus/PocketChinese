@@ -23,6 +23,8 @@ class EditWordFragment(studyWordUUID: UUID, studyListUUID: UUID) : CreateEditWor
 
         title.setText(R.string.edit_word)
         createButton.setText(R.string.change)
+        blockTabLayout.visibility = View.INVISIBLE
+        blockTabLayout.isEnabled = false
     }
 
     override fun onFocusChange(v: View?, hasFocus: Boolean) {

@@ -127,7 +127,7 @@ public class StudyListFragment extends Fragment implements ActionMode.Callback, 
     @Override
     public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
         if (item.getItemId()==R.id.edit){
-            if (selectionTracker.getSelection().size()==1){
+            if (getSelectedWords().length==1){
                 onEditItemClicked();
                 return true;
             }
@@ -464,12 +464,13 @@ public class StudyListFragment extends Fragment implements ActionMode.Callback, 
 
             }
 
+            StudyWord[] selectedWords=getSelectedWords();
+
             MenuItem item = actionMode.getMenu().findItem(R.id.edit);
             if (item!=null) {
-                item.setVisible(selectionTracker.getSelection().size() == 1);
+                item.setVisible(selectedWords.length == 1);
             }
 
-            StudyWord[] selectedWords=getSelectedWords();
             actionMode.setTitle(String.valueOf(selectedWords.length));
 
         }else if(actionMode != null) {
