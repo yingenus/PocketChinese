@@ -1,11 +1,13 @@
 package com.yingenus.pocketchinese.controller
 
 import android.content.Context
+import android.os.Build
+import com.yingenus.pocketchinese.BuildConfig
 import com.yingenus.pocketchinese.model.RepeatType
 
 object Settings{
 
-    const val DEBUG: Boolean = true
+    val DEBUG: Boolean = BuildConfig.DEBUG
 
     private const val SEPARATOR = "__,__"
     private const val APP_PREFERENCE="com.yingenus.pocketchinese.preference"

@@ -73,7 +73,7 @@ public abstract class TrainView extends RecyclerView.ViewHolder implements View.
     }
 
     protected void showTestText(String text){
-        if (Settings.INSTANCE.DEBUG){
+        if (Settings.INSTANCE.getDEBUG()){
             TextView view = ((TextView)super.itemView.findViewById(R.id.visible_testing_text));
             view.setText(text);
             view.setVisibility(View.VISIBLE);

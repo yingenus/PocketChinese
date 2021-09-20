@@ -4,7 +4,6 @@
     xmlns:tools = "http://schemas.android.com/tools"
     package="com.yingenus.pocketchinese">
 
-    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
     <uses-permission android:name="android.permission.VIBRATE"/>
 
     <application
@@ -78,13 +77,6 @@
                 android:name="android.view.im"
                 android:resource="@xml/method"/>
         </service>
-        <receiver android:name="com.yingenus.pocketchinese.userrepeatnotify.DeviceRebootReceiver"
-            android:enabled="false">
-            <intent-filter>
-                <action android:name="android.intent.action.BOOT_COMPLETED"/>
-            </intent-filter>
-
-        </receiver>
         <provider
             android:name="androidx.work.impl.WorkManagerInitializer"
             android:authorities="${applicationId}.workmanager-init"
