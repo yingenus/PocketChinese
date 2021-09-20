@@ -1,15 +1,15 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <color name="app_red">#FFFF5454</color>
-    <color name="app_red_shaded">#CC4343</color>
-    <color name="app_red_dark">#A53636</color>
+    <color name="app_red">#F34242</color>
+    <color name="app_red_shaded">#C23535</color>
+    <color name="app_red_dark">#A52F2F</color>
 
 
 
-    <color name="dark_red">#802828</color>
-    <color name="dark_red_shaded">#732424</color>
-    <color name="dark_red_dark">#5A1C1C</color>
+    <color name="dark_red">#852626</color>
+    <color name="dark_red_shaded">#732121</color>
+    <color name="dark_red_dark">#5E1A1A</color>
 
     <color name="black">#FF000000</color>
     <color name="black_light">#1E1E1E</color>
@@ -23,10 +23,10 @@
 
     <color name="blue">#0098DD</color>
     <color name="text_color">#FF000000</color>
-    <color name="appColor">#FFFF5454</color>
+    <color name="appColor">#FFF34242</color>
 
     <color name="white">#FFFFFFFF</color>
-    <color name="appColorDark">#CC4343</color>
+    <color name="appColorDark">#C23535</color>
     <color name="transparent">#00000000</color>
     <color name="red">#F10E00</color>
 
