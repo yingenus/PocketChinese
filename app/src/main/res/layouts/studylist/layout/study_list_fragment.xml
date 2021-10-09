@@ -53,13 +53,11 @@
                         android:layout_marginTop="8dp"
                         android:rowCount="2">
 
-                        <com.yingenus.pocketchinese.multiplemine.MultipleLineProgressBar
+                        <com.yingenus.multipleprogressbar.MultipleProgressBar
                             android:id="@+id/progress_bar"
 
                             android:layout_width="210dp"
                             android:layout_height="200dp"
-
-
 
                             app:mpb_animate="false"
                             app:mpb_dividerSize="10dp"
@@ -68,48 +66,46 @@
                             android:layout_row="0"
                             android:layout_column="0"
                             >
-                            <com.yingenus.pocketchinese.multiplemine.ProgressItem
+                            <com.yingenus.multipleprogressbar.ProgressItem
                                 android:id="@+id/progress_chn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
 
                                 app:mpb_progressColor = "@color/indicator_1"
+                                app:mpb_progressTextColor = "@color/indicator_1"
                                 app:mpb_secondaryProgressColor = "@color/indicator1_back"
                                 app:mpb_min="0"
                                 app:mpb_max="100"
                                 tools:mpb_secondaryProgress = "100"
                                 tools:mpb_progress = "35"
-
-
                                 />
-                            <com.yingenus.pocketchinese.multiplemine.ProgressItem
+                            <com.yingenus.multipleprogressbar.ProgressItem
                                 android:id="@+id/progress_pin"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
 
                                 app:mpb_progressColor = "@color/indicator_2"
+                                app:mpb_progressTextColor = "@color/indicator_2"
                                 app:mpb_secondaryProgressColor = "@color/indicator2_back"
                                 app:mpb_min="0"
                                 app:mpb_max="100"
                                 tools:mpb_secondaryProgress = "100"
                                 tools:mpb_progress = "50"
-
-
                                 />
-                            <com.yingenus.pocketchinese.multiplemine.ProgressItem
+                            <com.yingenus.multipleprogressbar.ProgressItem
                                 android:id="@+id/progress_trn"
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
 
                                 app:mpb_progressColor = "@color/indicator_3"
+                                app:mpb_progressTextColor = "@color/indicator_3"
                                 app:mpb_secondaryProgressColor = "@color/indicator3_back"
                                 app:mpb_min="0"
                                 app:mpb_max="100"
                                 tools:mpb_secondaryProgress = "100"
                                 tools:mpb_progress = "40"
-
                                 />
-                        </com.yingenus.pocketchinese.multiplemine.MultipleLineProgressBar>
+                        </com.yingenus.multipleprogressbar.MultipleProgressBar>
 
                         <GridLayout
                             android:layout_width="wrap_content"

@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -42,7 +43,8 @@ import com.yingenus.pocketchinese.controller.holders.StudyListAdapter;
 import com.yingenus.pocketchinese.model.RepeatType;
 import com.yingenus.pocketchinese.model.UtilsVariantParams;
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyWord;
-import com.yingenus.pocketchinese.multiplemine.MultipleLineProgressBar;
+import com.yingenus.multipleprogressbar.MultipleProgressBar;
+
 import com.yingenus.pocketchinese.presenters.StudyListPresenter;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -69,7 +71,7 @@ public class StudyListFragment extends Fragment implements ActionMode.Callback, 
     private NestedScrollView header;
     private FloatingActionButton fabAdd;
     private FloatingActionButton fabStart;
-    private MultipleLineProgressBar progressBar;
+    private MultipleProgressBar progressBar;
     private AppBarLayout appBarLayout;
     private RecyclerView recyclerView;
     private Toolbar toolbar;
@@ -188,7 +190,6 @@ public class StudyListFragment extends Fragment implements ActionMode.Callback, 
         lastRepeat= view.findViewById(R.id.list_days);
         nextRepeat = view.findViewById(R.id.next_days);
         wordsCount= view.findViewById(R.id.word_count);
-        progressBar = view.findViewById(R.id.progress_bar);
         chnProgress= view.findViewById(R.id.chn_success);
         pinProgress= view.findViewById(R.id.pin_success);
         trnProgress = view.findViewById(R.id.trn_success);
@@ -205,6 +206,9 @@ public class StudyListFragment extends Fragment implements ActionMode.Callback, 
 
         toolbar.setNavigationOnClickListener(this::onNavigationClicked);
         toolbar.setOnMenuItemClickListener(this::onMenuItemClick);
+
+        progressBar = view.findViewById(R.id.progress_bar);
+        progressBar.setOnTouchListener(this::onProgressBarTouch);
 
         recyclerView.setAdapter(new StudyListAdapter());
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -259,6 +263,20 @@ public class StudyListFragment extends Fragment implements ActionMode.Callback, 
         presenter.onDestroy();
         selectionTracker.clearSelection();
         presenter = null;
+    }
+
+    private boolean onProgressBarTouch(View v, MotionEvent me){
+        int action = me.getAction();
+        if ( action == MotionEvent.ACTION_DOWN){
+            progressBar.getProgressItemById(R.id.progress_chn).setShowProgressText(true);
+            progressBar.getProgressItemById(R.id.progress_pin).setShowProgressText(true);
+            progressBar.getProgressItemById(R.id.progress_trn).setShowProgressText(true);
+        }else if (action == MotionEvent.ACTION_UP || action == MotionEvent.ACTION_CANCEL){
+            progressBar.getProgressItemById(R.id.progress_chn).setShowProgressText(false);
+            progressBar.getProgressItemById(R.id.progress_pin).setShowProgressText(false);
+            progressBar.getProgressItemById(R.id.progress_trn).setShowProgressText(false);
+        }
+        return true;
     }
 
     @Override
