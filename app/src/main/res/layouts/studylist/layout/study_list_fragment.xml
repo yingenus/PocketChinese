@@ -71,8 +71,10 @@
                                 android:layout_width="wrap_content"
                                 android:layout_height="wrap_content"
 
+                                app:mpb_showProgressText= "true"
                                 app:mpb_progressColor = "@color/indicator_1"
                                 app:mpb_progressTextColor = "@color/indicator_1"
+                                app:mpb_orientation="left"
                                 app:mpb_secondaryProgressColor = "@color/indicator1_back"
                                 app:mpb_min="0"
                                 app:mpb_max="100"

@@ -56,7 +56,7 @@ class EditWordActivity : SingleFragmentActivityWithKeyboard(){
             studyWord = intent.getStringExtra(INNER_EDIT_WORD_WORD_UUID)
         }
 
-        if (studyList == null || studyWord == null) throw RuntimeException("cant extract data")
+        if (studyList == null || studyWord == null) throw RuntimeException("cant extract com.yingenus.pocketchinese.data")
 
         return EditWordFragmentFactory(UUID.fromString(studyList), UUID.fromString(studyWord))
     }

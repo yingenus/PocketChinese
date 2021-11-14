@@ -12,9 +12,9 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.controller.PocketApplication;
-import com.yingenus.pocketchinese.controller.fragment.DictionaryFragment;
+import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryFragment;
 import com.yingenus.pocketchinese.controller.fragment.EmptyFragment;
-import com.yingenus.pocketchinese.controller.fragment.SettingsFragment;
+import com.yingenus.pocketchinese.presentation.views.settings.SettingsFragment;
 import com.yingenus.pocketchinese.controller.fragment.TrainListsFragment;
 import com.yingenus.pocketchinese.view.bubblecust.BubbleTabBarCust;
 

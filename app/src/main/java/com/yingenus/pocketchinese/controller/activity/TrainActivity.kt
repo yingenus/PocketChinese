@@ -92,7 +92,7 @@ class TrainActivity:SingleFragmentActivityWithKeyboard() {
             uuid = intent.getStringExtra(INNER_TRAIN_ACTIVITY_UUID)
         }
 
-        if (block == -1 || lang == -1 || uuid == null) throw RuntimeException("cant extract data")
+        if (block == -1 || lang == -1 || uuid == null) throw RuntimeException("cant extract com.yingenus.pocketchinese.data")
 
         return TrainActivityFragmentFactory(getLangFromInt(lang), UUID.fromString(uuid), block)
     }

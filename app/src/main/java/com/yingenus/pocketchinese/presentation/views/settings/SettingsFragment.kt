@@ -1,4 +1,4 @@
-package com.yingenus.pocketchinese.controller.fragment
+package com.yingenus.pocketchinese.presentation.views.settings
 
 import android.content.Context
 import android.content.Intent
@@ -15,7 +15,7 @@ import androidx.fragment.app.Fragment
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.controller.PocketApplication
 import com.yingenus.pocketchinese.controller.Settings
-import com.yingenus.pocketchinese.controller.activity.AboutActivity
+import com.yingenus.pocketchinese.presentation.views.about.AboutActivity
 import com.yingenus.pocketchinese.controller.activity.ActivateInputActivity
 import com.yingenus.pocketchinese.model.RepeatType
 import java.lang.IllegalArgumentException
@@ -41,11 +41,11 @@ class SettingsFragment: Fragment(){
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         val colorPrimary = TypedValue()
-        if(!context!!.theme.resolveAttribute(R.attr.colorPrimary,colorPrimary,true)){
+        if(!requireContext().theme.resolveAttribute(R.attr.colorPrimary,colorPrimary,true)){
             throw IllegalArgumentException("cant found attribute colorPrimary")
         }
         val colorOnPrimary = TypedValue()
-        if(!context!!.theme.resolveAttribute(R.attr.colorOnPrimary,colorOnPrimary,true)){
+        if(!requireContext().theme.resolveAttribute(R.attr.colorOnPrimary,colorOnPrimary,true)){
             throw IllegalArgumentException("cant found attribute colorOnPrimary")
         }
 
@@ -54,7 +54,7 @@ class SettingsFragment: Fragment(){
         layout.setBackgroundColor(colorPrimary.data)
 
 
-        toolbar = Toolbar(context!!)
+        toolbar = Toolbar(requireContext())
         toolbar.elevation = 0f
         toolbar.title = getString(R.string.menu_item_settings)
         toolbar.setBackgroundColor(colorPrimary.data)
@@ -100,22 +100,22 @@ class SettingsFragment: Fragment(){
 
     private fun initValues(){
         //Theme switch
-        mThemeSwitch.isChecked=Settings.isNightModeOn(context!!)
+        mThemeSwitch.isChecked=Settings.isNightModeOn(requireContext())
         //Use App Keyboard
-        mUseKeyboardSwitch.isChecked=Settings.useAppKeyboard(context!!)
+        mUseKeyboardSwitch.isChecked=Settings.useAppKeyboard(requireContext())
         // Ignore Switches
-        val repeatType=Settings.getRepeatType(context!!)
+        val repeatType=Settings.getRepeatType(requireContext())
         mIgnoreCHNSwitch.isChecked=!repeatType.ignoreCHN
         mIgnorePINSwitch.isChecked=!repeatType.ignorePIN
         mIgnoreTRNSwitch.isChecked=!repeatType.ignoreTRN
         // notify Switch
-        mShowNotifySwitch.isChecked = Settings.shouldShowNotifications(context!!)
+        mShowNotifySwitch.isChecked = Settings.shouldShowNotifications(requireContext())
     }
 
     private fun setupInputButton(){
-        val imm=context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm=requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val defaultInput = imm.enabledInputMethodList.find {
-            it.id == android.provider.Settings.Secure.getString(context!!.contentResolver,android.provider.Settings.Secure.DEFAULT_INPUT_METHOD) }
+            it.id == android.provider.Settings.Secure.getString(requireContext().contentResolver,android.provider.Settings.Secure.DEFAULT_INPUT_METHOD) }
         if (defaultInput != null && defaultInput.serviceName.contains("PinyinPocketInputMethodService", true)){
             mSetDefaultKeyboardButton.setText(R.string.off_app_keyboard_as_default)
         }
@@ -130,12 +130,12 @@ class SettingsFragment: Fragment(){
 
     //TODO: переделать
     private fun onSetDefaultClicked(v:View){
-        val imm=context!!.getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val imm=requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val enableList = imm.enabledInputMethodList
         if (enableList.any { it.serviceName.contains("PinyinPocketInputMethodService", true) }){
             imm.showInputMethodPicker()
         }else {
-            val intent = ActivateInputActivity.getIntent(context!!)
+            val intent = ActivateInputActivity.getIntent(requireContext())
             startActivity(intent)
         }
     }
@@ -164,12 +164,12 @@ class SettingsFragment: Fragment(){
                 ignoreTRN = !mIgnoreTRNSwitch.isChecked
         )
 
-        Settings.setRepeatType(activity!!,repeatType)
+        Settings.setRepeatType(requireActivity(),repeatType)
 
     }
 
     private fun onUseAppKeyboardClicked(v:View){
-        Settings.setUseAppKeyboard(activity!!,mUseKeyboardSwitch.isChecked)
+        Settings.setUseAppKeyboard(requireActivity(),mUseKeyboardSwitch.isChecked)
     }
 
     private fun onDarkThemeSwitchClicked(v:View){
@@ -177,10 +177,10 @@ class SettingsFragment: Fragment(){
             val isChecked = (v as Switch).isChecked
             if (isChecked){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                Settings.nightMode(true,context!!)
+                Settings.nightMode(true,requireContext())
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                Settings.nightMode(false,context!!)
+                Settings.nightMode(false,requireContext())
             }
         }else {
             mThemeSwitch.isChecked = false
@@ -189,12 +189,12 @@ class SettingsFragment: Fragment(){
 
     private fun onShowNotifyClicked(v : View){
         val isChecked = (v as Switch).isChecked
-        Settings.showNotifications(isChecked,context!!)
+        Settings.showNotifications(isChecked,requireContext())
         PocketApplication.updateNotificationStatus()
     }
 
     private fun onAboutClicked( v : View){
-        val intent = Intent(context!!, AboutActivity::class.java)
+        val intent = Intent(requireContext(), AboutActivity::class.java)
         startActivity(intent)
     }
 }

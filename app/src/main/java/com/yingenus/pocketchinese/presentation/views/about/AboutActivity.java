@@ -1,4 +1,4 @@
-package com.yingenus.pocketchinese.controller.activity;
+package com.yingenus.pocketchinese.presentation.views.about;
 
 import android.os.Bundle;
 import android.view.View;

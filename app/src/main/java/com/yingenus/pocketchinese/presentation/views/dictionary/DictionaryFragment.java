@@ -1,4 +1,4 @@
-package com.yingenus.pocketchinese.controller.fragment;
+package com.yingenus.pocketchinese.presentation.views.dictionary;
 
 
 import android.annotation.SuppressLint;
@@ -43,7 +43,7 @@ import java.util.List;
 import io.reactivex.rxjava3.core.Observable;
 
 
-public class DictionaryFragment extends Fragment implements DictionaryInterface{
+public class DictionaryFragment extends Fragment implements DictionaryInterface {
     private static final String CHIN_CHAR ="com.example.pocketchinese.dictionaryfragment.showedchin";
 
 

@@ -62,7 +62,7 @@
             android:theme="@style/Theme.PocketChinese.Default.NoActionBar.NoStatusBar"
             />
         <activity
-            android:name="com.yingenus.pocketchinese.controller.activity.AboutActivity"
+            android:name="com.yingenus.pocketchinese.presentation.views.about.AboutActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.PocketChinese.Default.NoActionBar"
             />

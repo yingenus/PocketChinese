@@ -3,7 +3,7 @@ package com.yingenus.pocketchinese.presenters
 import android.content.Context
 import android.util.Log
 import com.yingenus.pocketchinese.controller.Settings
-import com.yingenus.pocketchinese.controller.fragment.DictionaryInterface
+import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryInterface
 import com.yingenus.pocketchinese.controller.logErrorMes
 import com.yingenus.pocketchinese.model.database.DictionaryDBOpenManger
 import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
@@ -17,7 +17,7 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
-class DictionaryPresenter(val  view: DictionaryInterface ) {
+class DictionaryPresenter(val  view: DictionaryInterface) {
 
     private val searcher = DictionarySearch()
 
