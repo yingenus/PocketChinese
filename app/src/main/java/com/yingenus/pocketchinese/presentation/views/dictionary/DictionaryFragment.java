@@ -29,6 +29,7 @@ import com.yingenus.pocketchinese.controller.Settings;
 import com.yingenus.pocketchinese.controller.dialog.CharacterSheetDialog;
 import com.yingenus.pocketchinese.controller.holders.ViewViewHolder;
 import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar;
+import com.yingenus.pocketchinese.presentation.dialogs.radicalsearch.RadicalSearchDialog;
 import com.yingenus.pocketchinese.presenters.DictionaryPresenter;
 import com.yingenus.pocketchinese.presenters.UtilsKt;
 import com.google.android.material.appbar.AppBarLayout;
@@ -52,6 +53,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     private RecyclerView dictionaryRecycle;
     private TextView headerText;
     private MaterialButtonToggleGroup toggleGroup;
+    private View searchByRadical;
 
     private Observable<String> textInputObserver;
 
@@ -112,6 +114,9 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
 
         searchPanel = view.findViewById(R.id.top_bar_search_text);
         dictionaryRecycle = view.findViewById(R.id.expanded_recyclerview);
+
+        searchByRadical = view.findViewById(R.id.radical_layout);
+        searchByRadical.setOnClickListener(v -> showChooseCharacterDialog());
 
         toggleGroup = view.findViewById(R.id.button_group);
         toggleGroup.check(R.id.fuzzy);
@@ -203,7 +208,18 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         super.onStop();
     }
 
+    private void showChooseCharacterDialog(){
+        RadicalSearchDialog bottomSheetDialog = new RadicalSearchDialog();
+        bottomSheetDialog.setCallback(new RadicalSearchDialog.RadicalSearchCallback() {
+            @Override
+            public void onCharacterSelected(@NotNull String character) {
+                searchPanel.getText().append(character);
+                bottomSheetDialog.dismiss();
+            }
+        });
+        bottomSheetDialog.show(getChildFragmentManager(),"testtestestestes");
 
+    }
 
     private void tryUpdateHistory(){
         history = presenter.getHistory(getContext());

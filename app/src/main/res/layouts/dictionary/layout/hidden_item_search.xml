@@ -1,65 +1,126 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout
+<LinearLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="64dp"
     android:background="?attr/colorPrimary"
-    android:paddingStart="14dp"
+    android:layout_height="wrap_content"
     android:paddingTop="8dp"
-    android:paddingBottom="8dp">
+    android:paddingBottom="8dp"
+    android:orientation="vertical">
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
 
-    <!-- TODO: Update blank fragment layout -->
-    <TextView
-        android:id="@+id/search_text_view"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:fontFamily="sans-serif-medium"
-        android:gravity="center|start"
-        android:text="@string/search_hidden_search_format"
-        android:textStyle="italic"
-        android:textColor="?attr/colorOnPrimary"
-        android:textSize="18sp"
-
-        app:layout_constraintStart_toStartOf="parent"
-
-        app:layout_constraintTop_toTopOf="@id/button_group"
-        app:layout_constraintBottom_toBottomOf="@id/button_group"
-
-        />
-
-    <com.google.android.material.button.MaterialButtonToggleGroup
-        android:id="@+id/button_group"
-
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-
-        app:singleSelection="true"
-        app:selectionRequired="true"
-
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-
-        android:layout_marginEnd="16dp"
+        android:paddingStart="14dp"
         >
 
-        <com.google.android.material.button.MaterialButton
-            style="@style/Style.PocketChinese.ButtonToggleGroup.OutlinedButton"
 
-            android:id="@+id/fuzzy"
+        <TextView
+            android:id="@+id/search_text_view"
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="@string/search_hidden_search_format_defolt"/>
-        <com.google.android.material.button.MaterialButton
-            style="@style/Style.PocketChinese.ButtonToggleGroup.OutlinedButton"
+            android:layout_height="wrap_content"
+            android:fontFamily="sans-serif-medium"
+            android:gravity="center|start"
+            android:text="@string/search_hidden_search_format"
+            android:textStyle="italic"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="18sp"
 
-            android:id="@+id/match"
+            app:layout_constraintStart_toStartOf="parent"
+
+            app:layout_constraintTop_toTopOf="@id/button_group"
+            app:layout_constraintBottom_toBottomOf="@id/button_group"
+
+            />
+
+        <com.google.android.material.button.MaterialButtonToggleGroup
+            android:id="@+id/button_group"
+
             android:layout_width="wrap_content"
-            android:layout_height="40dp"
-            android:text="@string/search_hidden_search_format_comple"/>
+            android:layout_height="wrap_content"
 
-    </com.google.android.material.button.MaterialButtonToggleGroup>
+            app:singleSelection="true"
+            app:selectionRequired="true"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+
+            android:layout_marginEnd="16dp"
+            >
+
+            <com.google.android.material.button.MaterialButton
+                style="@style/Style.PocketChinese.ButtonToggleGroup.OutlinedButton"
+
+                android:id="@+id/fuzzy"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="@string/search_hidden_search_format_defolt"/>
+            <com.google.android.material.button.MaterialButton
+                style="@style/Style.PocketChinese.ButtonToggleGroup.OutlinedButton"
+
+                android:id="@+id/match"
+                android:layout_width="wrap_content"
+                android:layout_height="40dp"
+                android:text="@string/search_hidden_search_format_comple"/>
+
+        </com.google.android.material.button.MaterialButtonToggleGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/radical_layout"
+
+        android:layout_width="match_parent"
+        android:layout_height="40dp"
+
+        android:paddingStart="16dp"
+        android:paddingEnd="16dp"
+
+
+
+        android:background="?android:attr/selectableItemBackground">
+
+        <androidx.appcompat.widget.AppCompatImageView
+            android:id="@+id/icon"
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:alpha="1"
+            app:tint="?attr/colorOnPrimary"
+            android:src="@drawable/icons8_blockly_pink_96_white"
+
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintBottom_toBottomOf="parent"
+
+            />
+
+
+        <TextView
+            android:id="@+id/sort_text"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_toEndOf="@id/icon"
+            android:layout_gravity = "center_vertical"
+
+            android:layout_marginStart="16dp"
+
+            android:text="@string/by_key"
+            android:fontFamily="sans-serif-medium"
+            android:textStyle="italic"
+            android:textColor="?attr/colorOnPrimary"
+            android:textSize="18sp"
+
+            app:layout_constraintTop_toTopOf="@id/icon"
+            app:layout_constraintBottom_toBottomOf="@id/icon"
+            app:layout_constraintStart_toEndOf="@id/icon"
+
+            />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+
+</LinearLayout>

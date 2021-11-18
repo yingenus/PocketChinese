@@ -1,0 +1,61 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app='http://schemas.android.com/apk/res-auto'
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="56dp">
+
+    <Button
+        style="@style/Style.PocketChinese.Button.TextButton.OnSurface"
+
+        android:id="@+id/back_button"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+        android:visibility="gone"
+        tools:visibility="visible"
+
+        app:icon="@drawable/ic_chevrone_left_pr"
+        app:iconGravity="textEnd"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        />
+
+
+    <TextView
+        style="@style/Widget.AppCompat.TextView"
+        android:id="@+id/text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:textAppearance="@style/Style.PocketChinese.ActionMode.Title"
+
+        android:textColor="?android:textColorPrimary"
+
+        android:textSize="21sp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toEndOf="@id/back_button"
+        app:layout_constraintTop_toTopOf="parent"
+        tools:text="Ключевой знак" />
+
+    <Button
+        style="@style/Style.PocketChinese.Button.TextButton.Secondary"
+
+        android:id="@+id/help_button"
+        android:layout_width="40dp"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
+
+        app:icon="@drawable/ic_question"
+        app:iconGravity="textEnd"
+
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+
+        />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
