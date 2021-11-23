@@ -8,6 +8,11 @@
         <item name="shapeAppearanceOverlay">@style/Style.PocketChinese.Rounded.VeryLight</item>
     </style>
 
+    <style name="Style.PocketChinese.Toolbar.WithCloseButton" parent="Widget.AppCompat.Toolbar">
+        <item name="navigationContentDescription">Close</item>
+        <item name="navigationIcon">@drawable/ic_close</item>
+    </style>
+
     <style name="Style.PocketChinese.Rounded.ExposedDropdownMenu.WhiteBack" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
         <item name="shapeAppearanceOverlay">@style/Style.PocketChinese.Rounded</item>
         <!-- <item name="boxBackgroundColor">@color/background_color</item> -->

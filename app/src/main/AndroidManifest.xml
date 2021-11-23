@@ -66,6 +66,13 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.PocketChinese.Default.NoActionBar"
             />
+
+        <activity
+            android:name="com.yingenus.pocketchinese.presentation.views.grammar.GrammarCaseActivity"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.PocketChinese.PrimaryStatusBar.NoActionBar"
+            />
+
         <service
             android:name="com.yingenus.pocketchinese.view.keyboard.PinyinPocketInputMethodService"
             android:label="@string/app_name"

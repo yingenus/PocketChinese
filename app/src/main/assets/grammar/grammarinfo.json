@@ -1,0 +1,13 @@
+{
+  "cases": [
+    {
+      "name" : "howToRadicals",
+      "title" : "Поиск иероглифов в словаре",
+      "short" : "Умение находить иероглифы при помощи ключей будет полезно любому человеку, который хочет начать или уже изучает китайский язык.",
+      "tags" : ["советы"],
+      "version" : 1,
+      "image_link" : "radicals_header_image.png",
+      "html_link" : "howToRadicals.html"
+    }
+  ]
+}

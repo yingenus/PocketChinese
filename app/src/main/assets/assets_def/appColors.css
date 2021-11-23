@@ -1,0 +1,16 @@
+:root{
+	--color-primary : #F34242 ;
+ 	--color-primary-variant : #C23535 ;
+	--color-primary-dark : #A52F2F ;
+	--color-on-primary : #FFFFFF ;
+	--color-secondary : #C23535 ;
+	--color-secondary-variant : #A52F2F ;
+	--color-on-secondary : #FFFFFF ;
+	--color-surface : #FFFCFC ;
+	--color-on-background : #FFFFFF ;
+	--color-on-surface : #000000;
+	--color-on-surface-variant : #BCBCBC ;
+	--text-color-primary : #000000 ;
+	--text-color-secondary : #787878;
+	--text-color-note : #5C5C5C;
+}
