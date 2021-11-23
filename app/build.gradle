@@ -75,6 +75,12 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
 
+    //room
+    implementation "androidx.room:room-runtime:2.3.0"
+    annotationProcessor "androidx.room:room-compiler:2.3.0"
+    //roomRX
+    implementation "androidx.room:room-rxjava3:2.3.0"
+
     //gson
     implementation 'com.google.code.gson:gson:2.8.7'
 

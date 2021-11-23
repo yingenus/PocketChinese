@@ -21,6 +21,7 @@ class PocketApplication: Application(), Configuration.Provider {
 
         private var pocketApplication : PocketApplication? = null
 
+
         fun postStartActivity(fromLaunch : Boolean){
             pocketApplication?.postStartActivity(fromLaunch)
         }

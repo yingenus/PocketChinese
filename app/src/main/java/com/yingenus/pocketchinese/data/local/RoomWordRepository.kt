@@ -1,0 +1,43 @@
+package com.yingenus.pocketchinese.data.local
+
+import com.yingenus.pocketchinese.data.local.room.WordsDb
+import com.yingenus.pocketchinese.domain.dto.ChinChar
+import com.yingenus.pocketchinese.domain.dto.Tone
+import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+import com.yingenus.pocketchinese.domain.repository.RadicalsRepository
+import com.yingenus.pocketchinese.domain.repository.ToneRepository
+
+class RoomWordRepository(val wordsDb: WordsDb): ChinCharRepository, RadicalsRepository, ToneRepository {
+
+    override fun getAllChinChar(): List<ChinChar> {
+        return wordsDb.wordDao().getAll().map { it.toChinChar() }
+    }
+
+    override fun getAllTone(): List<Tone> {
+        return wordsDb.variantsDao().getAll().map { it.toTone() }
+    }
+
+    override fun findById(id: Int): ChinChar? {
+        return wordsDb.wordDao().loadById(id)?.toChinChar()
+    }
+
+    override fun findByChinese(chinese: String): List<ChinChar> {
+        return wordsDb.wordDao().loadByEntryChinese(chinese).map { it.toChinChar() }
+    }
+
+    override fun findByPinyin(pinyin: String): List<ChinChar> {
+        return wordsDb.wordDao().loadByEntryPinyin(pinyin).map { it.toChinChar() }
+    }
+
+    override fun findByTranslation(translation: String): List<ChinChar> {
+        return wordsDb.wordDao().loadByEntryTranslation(translation).map { it.toChinChar() }
+    }
+
+    override fun getRadicals(): List<Pair<Int, List<String>>> {
+        return wordsDb.radicalsDao().getAll().groupBy { it.stoke }.entries.map { Pair(it.key,it.value.map { it.radical }) }
+    }
+
+    override fun getCharacters(radical: String): List<Pair<Int, List<String>>> {
+        return wordsDb.keyDao().loadByRadical(radical).groupBy { it.stroke }.entries.map { Pair(it.key,it.value.map { it.character }) }
+    }
+}
