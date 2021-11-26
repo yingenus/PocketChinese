@@ -2,6 +2,7 @@ package com.yingenus.pocketchinese.model.dictionary
 
 import android.content.Context
 import android.content.res.AssetManager
+import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
 import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
 import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinCharDaoImpl
 import java.lang.RuntimeException
@@ -24,7 +25,8 @@ class DictionarySearch {
     }
 
 
-    private lateinit var chinDao : ChinCharDaoImpl
+    //private lateinit var chinDao : ChinCharDaoImpl
+    private var chinCharRepository : ChinCharRepository?= null
 
     private var resources : Context? = null
 
@@ -86,12 +88,13 @@ class DictionarySearch {
     var searchType : SearchFormat = SearchFormat.FUZZY
 
 
-    fun initDictionary(dbDaoImpl: ChinCharDaoImpl, resources: Context){
-        chinDao = dbDaoImpl
+    fun initDictionary(chinCharRepository: ChinCharRepository, resources: Context){
+        //chinDao = dbDaoImpl
+        this.chinCharRepository = chinCharRepository
         this.resources = resources
     }
 
-    fun search(query : String) : List<ChinChar>{
+    fun search(query : String) : List<com.yingenus.pocketchinese.domain.dto.ChinChar>{
         return when(language(query)){
             Language.RUSSIAN -> rusEngine.startSearch(query)
             Language.PINYIN -> pinEngine.startSearch(query)
@@ -113,11 +116,11 @@ class DictionarySearch {
         else -> Language.PINYIN
     }
 
-    private fun getSearchEngine(f : (ChinCharDaoImpl, AssetManager, List<String> ) -> SearchEngine, fileNames : List<String>) : SearchEngine{
+    private fun getSearchEngine(f : (ChinCharRepository, AssetManager, List<String> ) -> SearchEngine, fileNames : List<String>) : SearchEngine{
         resources ?: throw RuntimeException("no access to resources")
-        if (!::chinDao.isInitialized) throw RuntimeException("class should be initialized firstly ")
+        if (chinCharRepository == null) throw RuntimeException("class should be initialized firstly ")
 
-        return f(chinDao,resources!!.assets, fileNames.map { resDir+"/"+it })
+        return f(chinCharRepository!!,resources!!.assets, fileNames.map { resDir+"/"+it })
     }
 
 }

@@ -3,6 +3,7 @@ package com.yingenus.pocketchinese.presenters
 import android.content.Context
 import android.util.Log
 import com.yingenus.pocketchinese.controller.fragment.CreateWordInterface
+import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
 import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
 import com.yingenus.pocketchinese.model.database.pocketDB.Connection
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyList
@@ -12,16 +13,16 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.*
 
-open class CreateWordPresenter(view: CreateWordInterface): CreateEditWordPresenter(view) {
+open class CreateWordPresenter(view: CreateWordInterface, chinCharRepository: ChinCharRepository): CreateEditWordPresenter(view,chinCharRepository) {
 
     object Builder{
 
-        fun getPresenter(chinChar : ChinChar, view: CreateWordInterface): CreateWordPresenter{
-            return CreateWordChar(chinChar,view)
+        fun getPresenter(chinChar : com.yingenus.pocketchinese.domain.dto.ChinChar, view: CreateWordInterface, chinCharRepository: ChinCharRepository): CreateWordPresenter{
+            return CreateWordChar(chinChar,view,chinCharRepository)
         }
 
-        fun getPresenter(studyListUUID: UUID, view: CreateWordInterface): CreateWordPresenter{
-            return CreateWordStudyList(studyListUUID,view)
+        fun getPresenter(studyListUUID: UUID, view: CreateWordInterface, chinCharRepository: ChinCharRepository): CreateWordPresenter{
+            return CreateWordStudyList(studyListUUID,view,chinCharRepository)
         }
 
     }
@@ -40,7 +41,7 @@ open class CreateWordPresenter(view: CreateWordInterface): CreateEditWordPresent
         }
     }
 
-    class CreateWordChar(val chinChar: ChinChar,view: CreateWordInterface) : CreateWordPresenter(view) {
+    class CreateWordChar(val chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar,view: CreateWordInterface, chinCharRepository: ChinCharRepository) : CreateWordPresenter(view,chinCharRepository) {
 
         override fun onCreate(context: Context) {
             super.onCreate(context)
@@ -56,7 +57,7 @@ open class CreateWordPresenter(view: CreateWordInterface): CreateEditWordPresent
 
             view.setText(CreateWordInterface.FIELD.CHN, chinChar.chinese)
             view.setText(CreateWordInterface.FIELD.PIN,chinChar.pinyin)
-            view.setText(CreateWordInterface.FIELD.TRN,chinChar.translations.first())
+            view.setText(CreateWordInterface.FIELD.TRN,chinChar.translation.first())
         }
 
         private fun loadLists(){
@@ -97,7 +98,7 @@ open class CreateWordPresenter(view: CreateWordInterface): CreateEditWordPresent
 
     }
 
-    class CreateWordStudyList(val studyListUUID: UUID,view: CreateWordInterface): CreateWordPresenter(view){
+    class CreateWordStudyList(val studyListUUID: UUID,view: CreateWordInterface,chinCharRepository : ChinCharRepository): CreateWordPresenter(view,chinCharRepository){
         override fun onCreate(context: Context) {
             super.onCreate(context)
 

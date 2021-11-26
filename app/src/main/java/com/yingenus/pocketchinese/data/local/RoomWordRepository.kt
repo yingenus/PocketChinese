@@ -34,7 +34,7 @@ class RoomWordRepository(val wordsDb: WordsDb): ChinCharRepository, RadicalsRepo
     }
 
     override fun getRadicals(): List<Pair<Int, List<String>>> {
-        return wordsDb.radicalsDao().getAll().groupBy { it.stoke }.entries.map { Pair(it.key,it.value.map { it.radical }) }
+        return wordsDb.radicalsDao().getAll().groupBy { it.stoke }.entries.map { Pair(it.key.toInt(),it.value.map { it.radical }) }
     }
 
     override fun getCharacters(radical: String): List<Pair<Int, List<String>>> {

@@ -1,5 +1,6 @@
 package com.yingenus.pocketchinese.controller.fragment
 
+import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
 import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
 import com.yingenus.pocketchinese.presenters.CreateEditWordPresenter
 import com.yingenus.pocketchinese.presenters.CreateWordPresenter
@@ -13,12 +14,12 @@ class CreateNewWordFragment: CreateEditWordFragment,CreateWordInterface{
         return presenter
     }
 
-    constructor(studyListUUID: UUID): super(){
-        presenter = CreateWordPresenter.Builder.getPresenter(studyListUUID,this)
+    constructor(studyListUUID: UUID, chinCharRepository: ChinCharRepository): super(){
+        presenter = CreateWordPresenter.Builder.getPresenter(studyListUUID,this,chinCharRepository)
     }
 
-    constructor(chinChar: ChinChar):super(){
-        presenter = CreateWordPresenter.Builder.getPresenter(chinChar,this)
+    constructor(chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar,chinCharRepository: ChinCharRepository):super(){
+        presenter = CreateWordPresenter.Builder.getPresenter(chinChar,this,chinCharRepository)
     }
 
 }

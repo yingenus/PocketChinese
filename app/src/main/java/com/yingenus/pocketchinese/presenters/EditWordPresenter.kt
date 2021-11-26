@@ -2,6 +2,7 @@ package com.yingenus.pocketchinese.presenters
 
 import android.content.Context
 import com.yingenus.pocketchinese.controller.fragment.CreateWordInterface
+import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
 import com.yingenus.pocketchinese.model.database.pocketDB.Connection
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyList
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyWord
@@ -11,8 +12,8 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 import java.util.*
 
-class EditWordPresenter(private val studyWordUUID: UUID, private val studyListUUID: UUID, view: CreateWordInterface)
-    : CreateEditWordPresenter(view) {
+class EditWordPresenter(private val studyWordUUID: UUID, private val studyListUUID: UUID, view: CreateWordInterface, chinCharRepository: ChinCharRepository)
+    : CreateEditWordPresenter(view,chinCharRepository) {
 
     private var block:Int=0
     private lateinit var editableWord: StudyWord

@@ -10,9 +10,9 @@ interface WordDao {
     fun getAll(): List<Word>
     @Query("SELECT * FROM words WHERE ID = :id")
     fun loadById( id : Int): Word?
-    @Query("SELECT * FROM words WHERE chinese_word = '%' || :entry || '%'")
+    @Query("SELECT * FROM words WHERE chinese_word LIKE '%' || :entry || '%'")
     fun loadByEntryChinese( entry : String): List<Word>
-    @Query("SELECT * FROM words WHERE pinyin = '%' || :entry || '%'")
+    @Query("SELECT * FROM words WHERE pinyin LIKE '%' || :entry || '%'")
     fun loadByEntryPinyin( entry : String): List<Word>
     @Query("SELECT * FROM words WHERE translation LIKE '%' || :entry || '%'")
     fun loadByEntryTranslation( entry : String): List<Word>

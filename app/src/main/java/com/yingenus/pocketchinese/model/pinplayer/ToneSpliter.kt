@@ -1,6 +1,7 @@
 package com.yingenus.pocketchinese.model.pinplayer
 
 import android.content.Context
+import com.yingenus.pocketchinese.domain.repository.ToneRepository
 import com.yingenus.pocketchinese.model.database.DictionaryDBOpenManger
 import com.yingenus.pocketchinese.model.database.PocketDBOpenManger
 import com.yingenus.pocketchinese.model.database.dictionaryDB.DictionaryDBHelper
@@ -17,23 +18,23 @@ class ToneSplitter constructor(tones : List<Tone>) {
     companion object{
         @Volatile private var splitterRef : SoftReference<ToneSplitter?> = SoftReference(null)
 
-        fun splitter(context: Context, sent : String): List<Tone>{
+        fun splitter(sent : String, toneRepository: ToneRepository): List<Tone>{
             var splitter = splitterRef.get()
             if (splitter == null){
-                splitter = buildSplitter(context)
+                splitter = buildSplitter(toneRepository)
                 splitterRef = SoftReference(splitter)
             }
             return splitter.split(sent)
         }
 
-        fun rxSplitter(context : Context, sent : String): Observable<Tone>{
-            return Observable.defer { Observable.fromIterable(splitter(context,sent)) }.subscribeOn(Schedulers.io())
+        fun rxSplitter(sent : String, toneRepository: ToneRepository): Observable<Tone>{
+            return Observable.defer { Observable.fromIterable(splitter(sent,toneRepository)) }.subscribeOn(Schedulers.io())
         }
 
-        private fun buildSplitter(context: Context): ToneSplitter{
-            val helper = DictionaryDBOpenManger.getHelper(context,DictionaryDBHelper::class.java)
-            val toneDb = ToneDaoImpl(helper.connectionSource)
-            return ToneSplitter(toneDb.all.map { Tone.fromPinTone(it) })
+        private fun buildSplitter(toneRepository: ToneRepository): ToneSplitter{
+            //val helper = DictionaryDBOpenManger.getHelper(context,DictionaryDBHelper::class.java)
+           // val toneDb = ToneDaoImpl(helper.connectionSource)
+            return ToneSplitter(toneRepository.getAllTone().map { Tone.fromTone(it) })
         }
 
 

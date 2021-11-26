@@ -11,11 +11,11 @@ class Example(
         @ColumnInfo(name = "chinese_word") val chinese : String,
         @ColumnInfo(name = "pinyin") val pinyin : String,
         @ColumnInfo(name = "translation") val translation : String,
-        @ColumnInfo(name = "entry_words") val entry : String
+        @ColumnInfo(name = "entry_words") val entry : String?
 ) {
 
         fun toExample() = Example(
-                id = id,
+                id = id.toInt(),
                 chinese = chinese,
                 pinyin = pinyin,
                 translation = translation

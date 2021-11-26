@@ -2,6 +2,7 @@ package com.yingenus.pocketchinese.presenters
 
 import android.content.Context
 import com.yingenus.pocketchinese.controller.fragment.CreateWordInterface
+import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
 import com.yingenus.pocketchinese.model.database.DictionaryDBOpenManger
 import com.yingenus.pocketchinese.model.database.PocketDBOpenManger
 import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
@@ -17,9 +18,9 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-open class CreateEditWordPresenter(val view: CreateWordInterface) {
+open class CreateEditWordPresenter(val view: CreateWordInterface, val chinCharRepository: ChinCharRepository) {
 
-    private lateinit var chinDao: ChinCharDaoImpl
+    //private lateinit var chinDao: ChinCharDaoImpl
 
     protected lateinit var wordDAO: StudyWordDAO
     protected lateinit var listDAO: StudyListDAO
@@ -39,10 +40,10 @@ open class CreateEditWordPresenter(val view: CreateWordInterface) {
 
     open fun onCreate(context: Context){
         val sqlDb = PocketDBOpenManger.getHelper(context).writableDatabase
-        val connection =
-                DictionaryDBOpenManger.getHelper(context,DictionaryDBHelper::class.java).connectionSource
+        //val connection =
+        //        DictionaryDBOpenManger.getHelper(context,DictionaryDBHelper::class.java).connectionSource
 
-        chinDao = ChinCharDaoImpl(connection)
+        //chinDao = ChinCharDaoImpl(connection)
 
         wordDAO = StudyWordDAO(sqlDb)
         listDAO = StudyListDAO(sqlDb)
@@ -66,7 +67,7 @@ open class CreateEditWordPresenter(val view: CreateWordInterface) {
         connectionDAO.finish()
 
         PocketDBOpenManger.releaseHelper()
-        DictionaryDBOpenManger.releaseHelper()
+        //DictionaryDBOpenManger.releaseHelper()
     }
 
     open fun initChnInputObserver(){
@@ -74,7 +75,11 @@ open class CreateEditWordPresenter(val view: CreateWordInterface) {
 
         observable
                 .observeOn(Schedulers.io())
-                .map { text ->  chinDao.findChinCharInColumn(text, ChinChar.WORD_FIELD_NAME).first { it.chinese.equals(text) } }
+                .map { text ->
+                    val result= chinCharRepository.findByChinese(text)
+                    result.first{ it.chinese == text }
+                    //chinDao.findChinCharInColumn(text, ChinChar.WORD_FIELD_NAME).first { it.chinese.equals(text) }
+                    }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError { onError -> toDefaultHint() }
                 .retry()
@@ -91,9 +96,9 @@ open class CreateEditWordPresenter(val view: CreateWordInterface) {
         checkStandards()
     }
 
-    protected fun chinCharFounded(chinChar: ChinChar){
+    protected fun chinCharFounded(chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar){
         view.setText(CreateWordInterface.FIELD.PIN, chinChar.pinyin)
-        view.setText(CreateWordInterface.FIELD.TRN,chinChar.translations.first())
+        view.setText(CreateWordInterface.FIELD.TRN,chinChar.translation.first())
         checkStandards()
     }
 

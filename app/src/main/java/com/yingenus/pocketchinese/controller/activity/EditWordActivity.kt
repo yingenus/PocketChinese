@@ -6,16 +6,18 @@ import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.yingenus.pocketchinese.controller.fragment.EditWordFragment
+import com.yingenus.pocketchinese.di.ServiceLocator
+import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyWord
 import java.lang.RuntimeException
 import java.util.*
 
 class EditWordActivity : SingleFragmentActivityWithKeyboard(){
 
-    class EditWordFragmentFactory(val studyListUUID: UUID, val studyWordUUID: UUID): FragmentFactory(){
+    class EditWordFragmentFactory(val studyListUUID: UUID, val studyWordUUID: UUID, val chinCharRepository: ChinCharRepository): FragmentFactory(){
         override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
             if(className == EditWordFragment::class.java.name)
-                return EditWordFragment(studyWordUUID,studyListUUID)
+                return EditWordFragment(studyWordUUID,studyListUUID,chinCharRepository)
             return super.instantiate(classLoader, className)
         }
     }
@@ -41,7 +43,7 @@ class EditWordActivity : SingleFragmentActivityWithKeyboard(){
         val studyList = UUID.fromString(intent.getStringExtra(INNER_EDIT_WORD_LIST_UUID))
         val studyWord = UUID.fromString(intent.getStringExtra(INNER_EDIT_WORD_WORD_UUID))
 
-        return EditWordFragment(studyWord,studyList)
+        return EditWordFragment(studyWord,studyList,ServiceLocator.get(baseContext,ChinCharRepository::class.java.name))
     }
 
     private fun createFragmentFactory(savedInstanceState: Bundle?): FragmentFactory{
@@ -58,6 +60,6 @@ class EditWordActivity : SingleFragmentActivityWithKeyboard(){
 
         if (studyList == null || studyWord == null) throw RuntimeException("cant extract com.yingenus.pocketchinese.data")
 
-        return EditWordFragmentFactory(UUID.fromString(studyList), UUID.fromString(studyWord))
+        return EditWordFragmentFactory(UUID.fromString(studyList), UUID.fromString(studyWord), ServiceLocator.get(baseContext,ChinCharRepository::class.java.name))
     }
 }

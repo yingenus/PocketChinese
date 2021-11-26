@@ -24,17 +24,21 @@ import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
 import com.yingenus.pocketchinese.presenters.CharacterPresenter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButtonToggleGroup
+import com.yingenus.pocketchinese.domain.dto.Example
+import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+import com.yingenus.pocketchinese.domain.repository.ExampleRepository
+import com.yingenus.pocketchinese.domain.repository.ToneRepository
 import java.lang.IllegalArgumentException
 import com.yingenus.pocketchinese.model.database.dictionaryDB.Example as DbExample
 
-class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), CharacterInterface {
+class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar?, val chinCharRepository: ChinCharRepository, val exampleRepository: ExampleRepository,val toneRepository: ToneRepository) :BottomSheetDialogFragment(), CharacterInterface {
 
     private object Helper{
         const val OccupiHeight = 0.9f
     }
 
 
-    private val presenter = CharacterPresenter(this,chinChar?.id?:1)
+    private val presenter = CharacterPresenter(this,chinChar?.id?:1,chinCharRepository, exampleRepository,toneRepository)
 
     private val animationBid : MutableList<AnimationBillet> = mutableListOf()
 
@@ -50,8 +54,8 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
     private lateinit var soundButton: View
 
     private lateinit var mTranslations: List<String>
-    private lateinit var mExamles: List<DbExample>
-    private lateinit var mCharacters: List<ChinChar>
+    private lateinit var mExamles: List<Example>
+    private lateinit var mCharacters: List<com.yingenus.pocketchinese.domain.dto.ChinChar>
 
     private var isFirstCall = true
 
@@ -127,7 +131,7 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
         charTags.visibility = View.VISIBLE
     }
 
-    override fun startAddNewStudy(word: ChinChar) {
+    override fun startAddNewStudy(word: com.yingenus.pocketchinese.domain.dto.ChinChar) {
         val intent= CreateWordActivity.getIntent(requireContext(),word)
         requireContext().startActivity(intent)
     }
@@ -137,12 +141,12 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
         reInitPages()
     }
 
-    override fun setExamples(exampls: List<DbExample>) {
+    override fun setExamples(exampls: List<Example>) {
         mExamles = exampls
         reInitPages()
     }
 
-    override fun setCharacters(entrysChars: List<ChinChar>) {
+    override fun setCharacters(entrysChars: List<com.yingenus.pocketchinese.domain.dto.ChinChar>) {
         mCharacters = entrysChars
         reInitPages()
     }
@@ -460,7 +464,7 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
     }
 
     private class CharactersHolder: ViewViewHolder{
-        constructor( parent: ViewGroup, chars : List<ChinChar>):
+        constructor( parent: ViewGroup, chars : List<com.yingenus.pocketchinese.domain.dto.ChinChar>):
                 super(LinearLayout(parent.context).apply {
                     orientation = LinearLayout.VERTICAL
                     layoutParams = ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT)
@@ -482,7 +486,7 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
 
         }
         @SuppressLint("ResourceAsColor")
-        private fun createItemView(inflater: LayoutInflater, char : ChinChar): View{
+        private fun createItemView(inflater: LayoutInflater, char : com.yingenus.pocketchinese.domain.dto.ChinChar): View{
             val view = inflater.inflate(R.layout.inner_char_item, null)
 
             val chn = view.findViewById<TextView>(R.id.character)
@@ -500,7 +504,7 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
             val translationLayoutParam = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
 
             var counter = 1
-            for (translation in char.translations){
+            for (translation in char.translation){
                 if (translation.contains("\$link"))
                     continue
 
@@ -529,7 +533,7 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
     }
 
     private class ExamplesHolder: ViewViewHolder{
-        constructor( parent: ViewGroup, examples: List<DbExample>):
+        constructor( parent: ViewGroup, examples: List<Example>):
                 super(LinearLayout(parent.context).apply {
                     orientation = LinearLayout.VERTICAL
                     layoutParams = ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT)
@@ -569,7 +573,7 @@ class CharacterSheetDialog(chinChar: ChinChar?) :BottomSheetDialogFragment(), Ch
         }
 
         @SuppressLint("ResourceAsColor")
-        private fun createItemView(inflater: LayoutInflater, examp : DbExample, isLast : Boolean): View{
+        private fun createItemView(inflater: LayoutInflater, examp : Example, isLast : Boolean): View{
 
             val view = inflater.inflate(R.layout.example_holder_dictionary,null)
 

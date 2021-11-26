@@ -117,8 +117,8 @@ class PocketApplication: Application(), Configuration.Provider {
     }
 
     private fun copyDBs(){
-        copyDB(2, "examplesDB.db")
-        copyDB(2, "dictionaryDB.db")
+        //copyDB(2, "examplesDB.db")
+        //copyDB(2, "dictionaryDB.db")
     }
 
     private fun copyDB(version : Int, name : String){

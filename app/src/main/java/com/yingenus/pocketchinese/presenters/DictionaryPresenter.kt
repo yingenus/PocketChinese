@@ -5,6 +5,7 @@ import android.util.Log
 import com.yingenus.pocketchinese.controller.Settings
 import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryInterface
 import com.yingenus.pocketchinese.controller.logErrorMes
+import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
 import com.yingenus.pocketchinese.model.database.DictionaryDBOpenManger
 import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
 import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinCharDaoImpl
@@ -17,11 +18,11 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.concurrent.TimeUnit
 
-class DictionaryPresenter(val  view: DictionaryInterface) {
+class DictionaryPresenter(val  view: DictionaryInterface,private  val chinCharRepository: ChinCharRepository) {
 
     private val searcher = DictionarySearch()
 
-    private lateinit var charDaoImpl: ChinCharDaoImpl
+    //private lateinit var charDaoImpl: ChinCharDaoImpl
 
     private lateinit var typeChangedPublisher : PublishSubject<DictionaryInterface.States>
     private lateinit var searchObservable: Observable<String>
@@ -30,11 +31,11 @@ class DictionaryPresenter(val  view: DictionaryInterface) {
         //DictionaryDBOpenManger.setOpenHelperClass(DictionaryDBHelper::class.java)
 
 
-        val helper = DictionaryDBOpenManger.getHelper(context,DictionaryDBHelper::class.java)
+        //val helper = DictionaryDBOpenManger.getHelper(context,DictionaryDBHelper::class.java)
 
-        charDaoImpl = ChinCharDaoImpl(helper.connectionSource)
+        //charDaoImpl = ChinCharDaoImpl(helper.connectionSource)
 
-        searcher.initDictionary(charDaoImpl, context)
+        searcher.initDictionary(chinCharRepository, context)
 
         typeChangedPublisher = PublishSubject.create<DictionaryInterface.States>()
 
@@ -65,6 +66,7 @@ class DictionaryPresenter(val  view: DictionaryInterface) {
                 .filter { it.isEmpty()||(!(searcher.whichLanguage(it) == Language.RUSSIAN && it.length == 1)) }
                 .observeOn(Schedulers.io())
                 .debounce(150, TimeUnit.MILLISECONDS)
+                .observeOn(Schedulers.single())
                 .map { query ->
                    if(query.isEmpty()){
                        DictionaryInterface.Results.NoQuery
@@ -89,24 +91,25 @@ class DictionaryPresenter(val  view: DictionaryInterface) {
 
     }
 
-    fun chinCharClicked(chinChar: ChinChar){
+    fun chinCharClicked(chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar){
         view.showChinChar(chinChar)
     }
 
     fun onDestroy(){
         searcher.close()
-        DictionaryDBOpenManger.releaseHelper()
+        //DictionaryDBOpenManger.releaseHelper()
     }
 
 
-    fun getHistory(context: Context): List<ChinChar>{
-        val history = mutableListOf<ChinChar>()
+    fun getHistory(context: Context): List<com.yingenus.pocketchinese.domain.dto.ChinChar>{
+        val history = mutableListOf<com.yingenus.pocketchinese.domain.dto.ChinChar>()
 
-        if (context != null && ::charDaoImpl.isInitialized){
+        if (context != null){
             val ids = Settings.getSearchHistory(context!!)
 
             for (id in ids){
-                history.add(charDaoImpl.queryForId(id.toString()))
+                val chinChar = chinCharRepository.findById(id)
+                if (chinChar != null )history.add(chinChar)
             }
             return history
         }

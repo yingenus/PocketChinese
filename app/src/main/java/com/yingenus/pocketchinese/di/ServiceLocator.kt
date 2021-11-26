@@ -24,39 +24,45 @@ object ServiceLocator {
     private var roomWordRepository : RoomWordRepository? = null
 
 
-    fun <T> get( context : Context, clazz: Class<T>): T{
-        return when(clazz){
-            ExamplesDb::class ->{
+    fun <T> get( context : Context, className : String): T{
+        return when(className){
+            ExamplesDb::class.java.name ->{
                 if (examplesDb == null){
-                    val db = Room.databaseBuilder(context,ExamplesDb::class.java,"examplesDB.db")
-                            .createFromAsset("/").allowMainThreadQueries().build()
+                    val db = Room.databaseBuilder(context,ExamplesDb::class.java,"exampleDB.db")
+                            .createFromAsset("exampleDB.db")
+                            .fallbackToDestructiveMigration()
+                            .enableMultiInstanceInvalidation()
+                            .allowMainThreadQueries().build()
                     examplesDb = db
                 }
                 examplesDb!! as T
             }
-            WordsDb::class ->{
-                if (examplesDb == null){
-                    val db = Room.databaseBuilder(context,WordsDb::class.java,"examplesDB.db")
-                            .createFromAsset("/").allowMainThreadQueries().build()
+            WordsDb::class.java.name ->{
+                if (wordsDb == null){
+                    val db = Room.databaseBuilder(context,WordsDb::class.java,"dictionaryDB.db")
+                            .createFromAsset("dictionaryDB.db")
+                            .fallbackToDestructiveMigration()
+                            .enableMultiInstanceInvalidation()
+                            .allowMainThreadQueries().build()
                     wordsDb = db
                 }
                 wordsDb!! as T
             }
-            RoomExampleRepository::class ->{
+            RoomExampleRepository::class.java.name ->{
                 if (roomExampleRepository == null)
-                    roomExampleRepository = RoomExampleRepository(get(context,ExamplesDb::class.java))
+                    roomExampleRepository = RoomExampleRepository(get(context,ExamplesDb::class.java.name))
                 roomExampleRepository as T
             }
-            RoomWordRepository::class ->{
+            RoomWordRepository::class.java.name ->{
                 if (roomWordRepository == null)
-                    roomWordRepository = RoomWordRepository(get(context,WordsDb::class.java))
+                    roomWordRepository = RoomWordRepository(get(context,WordsDb::class.java.name))
                 roomWordRepository as T
             }
-            ChinCharRepository::class -> get(context,RoomWordRepository::class.java) as T
-            RadicalsRepository::class -> get(context,RoomWordRepository::class.java) as T
-            ToneRepository::class -> get(context,RoomWordRepository::class.java) as T
-            ExampleRepository::class -> get(context,RoomExampleRepository::class.java) as T
-            else -> throw IllegalArgumentException("cant provide class :${clazz.name}")
+            ChinCharRepository::class.java.name -> get(context,RoomWordRepository::class.java.name) as T
+            RadicalsRepository::class.java.name -> get(context,RoomWordRepository::class.java.name) as T
+            ToneRepository::class.java.name -> get(context,RoomWordRepository::class.java.name) as T
+            ExampleRepository::class.java.name -> get(context,RoomExampleRepository::class.java.name) as T
+            else -> throw IllegalArgumentException("cant provide class :${className}")
         }
     }
 }

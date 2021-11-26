@@ -6,12 +6,17 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.solver.state.ConstraintReference;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.controller.PocketApplication;
+import com.yingenus.pocketchinese.di.ServiceLocator;
+import com.yingenus.pocketchinese.domain.repository.ChinCharRepository;
+import com.yingenus.pocketchinese.domain.repository.ExampleRepository;
+import com.yingenus.pocketchinese.domain.repository.ToneRepository;
 import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryFragment;
 import com.yingenus.pocketchinese.controller.fragment.EmptyFragment;
 import com.yingenus.pocketchinese.presentation.views.settings.SettingsFragment;
@@ -21,12 +26,24 @@ import com.yingenus.pocketchinese.view.bubblecust.BubbleTabBarCust;
 public class MainActivity  extends AppCompatActivity {
 
     static class MainFragmentFactory  extends FragmentFactory{
+
+        ChinCharRepository chinCharRepository;
+        ExampleRepository exampleRepository;
+        ToneRepository toneRepository;
+
+        public MainFragmentFactory(ChinCharRepository chinCharRepository, ExampleRepository exampleRepository, ToneRepository toneRepository){
+            super();
+            this.chinCharRepository = chinCharRepository;
+            this.exampleRepository = exampleRepository;
+            this.toneRepository = toneRepository;
+        }
+
         @NonNull
         @Override
         public Fragment instantiate(@NonNull ClassLoader classLoader, @NonNull String className) {
             if (className.equals(DictionaryFragment.class.getName())) {
                 Log.d("MainFragmentFactory","create Fragment: DictionaryFragment");
-                return new DictionaryFragment();
+                return new DictionaryFragment(chinCharRepository,exampleRepository,toneRepository);
             }
             if (className.equals(TrainListsFragment.class.getName())) {
                 Log.d("MainFragmentFactory","create Fragment: TrainListsFragment");
@@ -57,7 +74,12 @@ public class MainActivity  extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
-        getSupportFragmentManager().setFragmentFactory(new MainFragmentFactory());
+        getSupportFragmentManager().setFragmentFactory(
+                new MainFragmentFactory(
+                        ServiceLocator.INSTANCE.get(getApplicationContext(),ChinCharRepository.class.getName()),
+                        ServiceLocator.INSTANCE.get(getApplicationContext(),ExampleRepository.class.getName()),
+                        ServiceLocator.INSTANCE.get(getApplicationContext(),ToneRepository.class.getName())
+                ));
         super.onCreate(savedInstanceState);
         PocketApplication.Companion.postStartActivity(true);
         setContentView(R.layout.main_activity);

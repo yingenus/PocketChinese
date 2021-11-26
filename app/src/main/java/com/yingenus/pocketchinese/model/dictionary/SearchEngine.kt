@@ -8,7 +8,7 @@ class SearchEngine(val queryHandler: Searcher, val sentenceExtractor: Extractor 
 
     private val maxLength = 100;
 
-    fun startSearch(query: String): List<ChinChar>{
+    fun startSearch(query: String): List<com.yingenus.pocketchinese.domain.dto.ChinChar>{
         Log.i("SearchEngine", "search query: $query")
         val searcherResult = queryHandler.search(query)
         Log.i("SearchEngine", "search finish")
@@ -16,9 +16,9 @@ class SearchEngine(val queryHandler: Searcher, val sentenceExtractor: Extractor 
         return extractChins(searcherResult)
     }
 
-    private fun extractChins(reqList: List<String>): List<ChinChar>{
+    private fun extractChins(reqList: List<String>): List<com.yingenus.pocketchinese.domain.dto.ChinChar>{
         Log.i("SearchEngine", "extract")
-        val extracted = mutableMapOf<Int, ChinChar>()
+        val extracted = mutableMapOf<Int, com.yingenus.pocketchinese.domain.dto.ChinChar>()
 
         val cutedList = if (reqList.size > maxLength)
             reqList.subList(0, maxLength)

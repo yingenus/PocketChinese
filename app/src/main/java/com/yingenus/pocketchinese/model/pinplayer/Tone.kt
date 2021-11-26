@@ -17,5 +17,18 @@ data class Tone(val pinyin: String,val requiredPostfix: String, val sound:  Stri
                 return Tone(tone.pinyin,"",tone.tone)
             }
         }
+
+        fun fromTone(tone : com.yingenus.pocketchinese.domain.dto.Tone): Tone{
+            if (tone.pinyin.trim().contains(" ")){
+                val split = tone.pinyin.trim().split(" ")
+                if (split.size >= 2){
+                    return Tone(split[0],split[1],tone.numericalTone)
+                }else{
+                    return Tone(tone.pinyin,"",tone.numericalTone)
+                }
+            }else{
+                return Tone(tone.pinyin,"",tone.numericalTone)
+            }
+        }
     }
 }
