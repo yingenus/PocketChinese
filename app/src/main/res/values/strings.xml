@@ -223,4 +223,7 @@
     <string name="activate_input_msg_2">
         активируйте клавиатуру
     </string>
+    <string name="by_key">Поиск по ключам</string>
+    <string name="radical">Ключивые знаки</string>
+    <string name="characters">Иерогифы</string>
 </resources>
