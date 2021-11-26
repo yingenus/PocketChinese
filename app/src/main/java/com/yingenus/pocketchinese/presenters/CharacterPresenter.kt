@@ -23,29 +23,16 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
         val maxExampsLength = 20
     }
 
-    //private lateinit var chiDaoImpl: ChinCharDaoImpl
-    //private lateinit var exampleDaoImpl: ExampleDaoImpl
-    //private lateinit var linksDaoImpl: LinksDaoImpl
+    private lateinit var showChinChar: ChinChar
 
-    private lateinit var showChinChar: com.yingenus.pocketchinese.domain.dto.ChinChar
-
-    private lateinit var redirectedChinChar: com.yingenus.pocketchinese.domain.dto.ChinChar
+    private lateinit var redirectedChinChar: ChinChar
 
     private lateinit var makeSoundClicked : PublishSubject<String>
     private var pinPlayer : PinPlayer? = null
 
-    fun onCreate(context: Context){
-        //val dictionaryConnection = DictionaryDBOpenManger.getHelper(context, DictionaryDBHelper::class.java).connectionSource
-        //val examplesConnection = ExamplesDBOpenManger.getHelper(context,ExamplesDBHelper::class.java).connectionSource
+    fun onCreate(){
 
-
-        //chiDaoImpl = ChinCharDaoImpl(dictionaryConnection)
-        //exampleDaoImpl = ExampleDaoImpl(examplesConnection)
-        //linksDaoImpl = LinksDaoImpl(examplesConnection)
-
-        //val showed =
-
-        showChinChar = getShowedChar()?: com.yingenus.pocketchinese.domain.dto.ChinChar(Int.MAX_VALUE, "-","-", emptyArray(),"-", emptyArray())
+        showChinChar = getShowedChar()?: ChinChar(Int.MAX_VALUE, "-","-", emptyArray(),"-", emptyArray())
 
         makeSoundClicked = PublishSubject.create()
 
@@ -83,12 +70,10 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
     }
 
     fun onDestroy(){
-        //DictionaryDBOpenManger.releaseHelper()
-        //ExamplesDBOpenManger.releaseHelper()
+
     }
 
-    private fun getShowedChar(): com.yingenus.pocketchinese.domain.dto.ChinChar?{
-        //var provided = chiDaoImpl.queryForId(chinId.toString())
+    private fun getShowedChar(): ChinChar?{
         var provided = chinCharRepository.findById(chinId)
 
         val translations = provided!!.translation
@@ -101,9 +86,6 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
             ) {
                 redirectedChinChar = provided
                 provided = chinCharRepository.findByChinese(linked.substring(linked.indexOf("{") + 1, linked.indexOf("}"))).firstOrNull()
-                //provided = chiDaoImpl.findChinCharInColumn(
-                //        linked.substring(linked.indexOf("{") + 1, linked.indexOf("}")), ChinChar.WORD_FIELD_NAME)
-                //        .firstOrNull() ?: provided
             }
         }
         return  provided
@@ -137,7 +119,7 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
             if (translations[i].contains("\$link") || !translations[i].contains(Regex("""[А-Яа-я]""")))
                 continue
 
-            val line = (tags[i]?:"".toUpperCase())+" "+translations[i].capitalize()
+            val line = (tags[i].toUpperCase())+" "+translations[i].capitalize()
             result.add(line)
         }
 
@@ -146,20 +128,6 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
 
     private fun initExamples(){
         if (isExamplesEnabled){
-            //val links = linksDaoImpl.findChinCharInColumn(showChinChar.id.toString(),Links.WORD_ID_FIELD_NAME).toList()
-            //
-            //val examples = mutableListOf<Example>()
-            //
-            //var count = 1
-            //loop@ for (link in links){
-            //    for (id in link.examplIds){
-            //        val example = exampleDaoImpl.queryForId(id.toString())
-            //        examples.add(example)
-            //       if (count> maxExampsLength)
-            //            break@loop
-            //        count++
-            //    }
-            //}
             val matchExamples = exampleRepository.fundByChinCharId(chinId)
             val examples = matchExamples.subList(0,if (matchExamples.size > maxExampsLength) maxExampsLength else matchExamples.lastIndex + 1)
 
@@ -172,11 +140,9 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
 
     private fun initEntryChins(){
         if (showChinChar.chinese.length > 1){
-            val entries = mutableListOf<com.yingenus.pocketchinese.domain.dto.ChinChar>()
+            val entries = mutableListOf<ChinChar>()
 
             for (char in showChinChar.chinese.toList().map { it.toString() }){
-                //val chins =
-                //        chiDaoImpl.findChinCharInColumn(char,ChinChar.WORD_FIELD_NAME)
                 val chins = chinCharRepository.findByChinese(char)
 
                 for (chin in chins) {
@@ -198,14 +164,13 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
     private fun findLinked(): List<ChinChar>{
         val links = showChinChar.translation.filterIndexed { _, s -> s.contains("\$link")  }
 
-        val result = mutableMapOf<Int,com.yingenus.pocketchinese.domain.dto.ChinChar>()
+        val result = mutableMapOf<Int,ChinChar>()
 
         if (links.isNotEmpty()){
             for (link in links){
                 val char = link.substring(link.indexOf("{")+1, link.indexOf("}"))
 
                 val chins = chinCharRepository.findByChinese(char)
-                //findChinCharInColumn(char, ChinChar.WORD_FIELD_NAME)
 
                 chins.forEach { result[it.id] = it }
             }

@@ -81,7 +81,7 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
 
         setOnButtonSelectListener()
 
-        presenter.onCreate(requireContext())
+        presenter.onCreate()
 
         viewPager.adapter = PagerAdapter()
         viewPager.offscreenPageLimit = 2

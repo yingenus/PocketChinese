@@ -5,11 +5,8 @@ import android.util.Log
 import com.yingenus.pocketchinese.controller.Settings
 import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryInterface
 import com.yingenus.pocketchinese.controller.logErrorMes
+import com.yingenus.pocketchinese.domain.dto.ChinChar
 import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
-import com.yingenus.pocketchinese.model.database.DictionaryDBOpenManger
-import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
-import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinCharDaoImpl
-import com.yingenus.pocketchinese.model.database.dictionaryDB.DictionaryDBHelper
 import com.yingenus.pocketchinese.model.dictionary.DictionarySearch
 import com.yingenus.pocketchinese.model.dictionary.Language
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
@@ -22,18 +19,11 @@ class DictionaryPresenter(val  view: DictionaryInterface,private  val chinCharRe
 
     private val searcher = DictionarySearch()
 
-    //private lateinit var charDaoImpl: ChinCharDaoImpl
 
     private lateinit var typeChangedPublisher : PublishSubject<DictionaryInterface.States>
     private lateinit var searchObservable: Observable<String>
 
     fun onCreate( context: Context){
-        //DictionaryDBOpenManger.setOpenHelperClass(DictionaryDBHelper::class.java)
-
-
-        //val helper = DictionaryDBOpenManger.getHelper(context,DictionaryDBHelper::class.java)
-
-        //charDaoImpl = ChinCharDaoImpl(helper.connectionSource)
 
         searcher.initDictionary(chinCharRepository, context)
 
@@ -91,18 +81,18 @@ class DictionaryPresenter(val  view: DictionaryInterface,private  val chinCharRe
 
     }
 
-    fun chinCharClicked(chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar){
+    fun chinCharClicked(chinChar: ChinChar){
         view.showChinChar(chinChar)
     }
 
     fun onDestroy(){
         searcher.close()
-        //DictionaryDBOpenManger.releaseHelper()
+
     }
 
 
-    fun getHistory(context: Context): List<com.yingenus.pocketchinese.domain.dto.ChinChar>{
-        val history = mutableListOf<com.yingenus.pocketchinese.domain.dto.ChinChar>()
+    fun getHistory(context: Context): List<ChinChar>{
+        val history = mutableListOf<ChinChar>()
 
         if (context != null){
             val ids = Settings.getSearchHistory(context!!)

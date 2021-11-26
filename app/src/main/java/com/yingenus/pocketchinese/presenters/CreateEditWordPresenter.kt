@@ -20,8 +20,6 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 
 open class CreateEditWordPresenter(val view: CreateWordInterface, val chinCharRepository: ChinCharRepository) {
 
-    //private lateinit var chinDao: ChinCharDaoImpl
-
     protected lateinit var wordDAO: StudyWordDAO
     protected lateinit var listDAO: StudyListDAO
     protected lateinit var connectionDAO: ConnectionDAO
@@ -40,10 +38,6 @@ open class CreateEditWordPresenter(val view: CreateWordInterface, val chinCharRe
 
     open fun onCreate(context: Context){
         val sqlDb = PocketDBOpenManger.getHelper(context).writableDatabase
-        //val connection =
-        //        DictionaryDBOpenManger.getHelper(context,DictionaryDBHelper::class.java).connectionSource
-
-        //chinDao = ChinCharDaoImpl(connection)
 
         wordDAO = StudyWordDAO(sqlDb)
         listDAO = StudyListDAO(sqlDb)
@@ -67,7 +61,6 @@ open class CreateEditWordPresenter(val view: CreateWordInterface, val chinCharRe
         connectionDAO.finish()
 
         PocketDBOpenManger.releaseHelper()
-        //DictionaryDBOpenManger.releaseHelper()
     }
 
     open fun initChnInputObserver(){
@@ -78,7 +71,6 @@ open class CreateEditWordPresenter(val view: CreateWordInterface, val chinCharRe
                 .map { text ->
                     val result= chinCharRepository.findByChinese(text)
                     result.first{ it.chinese == text }
-                    //chinDao.findChinCharInColumn(text, ChinChar.WORD_FIELD_NAME).first { it.chinese.equals(text) }
                     }
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError { onError -> toDefaultHint() }
