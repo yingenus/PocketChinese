@@ -207,6 +207,7 @@
     <string name="add_words_words_in_block">Слов в блоке</string>
     <string name="add_words_mix_words">Перемешать слова</string>
     <string name="error_insert_words">Что-то пошло не так</string>
+    <string name="error_msg_def">Что-то пошло не так</string>
     <string name="success_insert_words">Слова успешно добавлены</string>
     <string name="error_list_not_selected">Выберете список</string>
     <string name="no_info">Нет данных</string>

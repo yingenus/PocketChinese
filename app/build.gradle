@@ -29,6 +29,7 @@ android {
         main{
 
             res.srcDirs=[
+                    '/src/main/res/layouts/grammar',
                     '/src/main/res/layouts/suggestwords',
                 '/src/main/res/layouts/dictionary',
                 '/src/main/res/layouts/settings',
@@ -39,7 +40,7 @@ android {
                 '/src/main/res/layouts/character',
                 '/src/main/res/layouts/dialogs',
                 '/src/main/res/layouts/givenwords',
-                '/src/main/res'
+                '/src/main/res',
             ]
 
         }
@@ -75,6 +76,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
+    implementation 'androidx.webkit:webkit:1.4.0'
 
     //room
     implementation "androidx.room:room-runtime:2.3.0"
