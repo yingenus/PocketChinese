@@ -33,11 +33,11 @@ class RoomWordRepository(val wordsDb: WordsDb): ChinCharRepository, RadicalsRepo
         return wordsDb.wordDao().loadByEntryTranslation(translation).map { it.toChinChar() }
     }
 
-    override fun getRadicals(): List<Pair<Int, List<String>>> {
-        return wordsDb.radicalsDao().getAll().groupBy { it.stoke }.entries.map { Pair(it.key.toInt(),it.value.map { it.radical }) }
+    override fun getRadicals(): Map<Int, List<String>> {
+        return wordsDb.radicalsDao().getAll().groupBy { it.stoke }.mapValues { it.value.map { it.radical } }.mapKeys { it.key.toIntOrNull()?:1 }
     }
 
-    override fun getCharacters(radical: String): List<Pair<Int, List<String>>> {
-        return wordsDb.keyDao().loadByRadical(radical).groupBy { it.stroke }.entries.map { Pair(it.key,it.value.map { it.character }) }
+    override fun getCharacters(radical: String): Map<Int, List<String>> {
+        return wordsDb.keyDao().loadByRadical(radical).groupBy { it.stroke }.mapValues { it.value.map { it.character } }
     }
 }

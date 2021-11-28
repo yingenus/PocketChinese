@@ -29,10 +29,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.controller.holders.ViewViewHolder
+import com.yingenus.pocketchinese.di.ServiceLocator
+import com.yingenus.pocketchinese.domain.repository.RadicalsRepository
 import com.yingenus.pocketchinese.domain.repositorys.FakeRadicalRepository
 import com.yingenus.pocketchinese.model.imageDir
 import com.yingenus.pocketchinese.presentation.views.findViewByClass
 import com.yingenus.pocketchinese.presentation.views.findViewsByClass
+import com.yingenus.pocketchinese.presentation.views.grammar.GrammarCaseActivity
 import kotlin.math.max
 import kotlin.math.min
 
@@ -62,7 +65,7 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        presenter = RadicalSearchPresenter(this, FakeRadicalRepository())
+        presenter = RadicalSearchPresenter(this, ServiceLocator.get(context,RadicalsRepository::class.java.name))
 
     }
 
@@ -131,7 +134,8 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
             presenter.onBackPressed()
         }
         if (v!!.id == R.id.help_button){
-            //
+            val intent = GrammarCaseActivity.getIntent(requireContext(),"howToRadicals")
+            startActivity(intent)
         }
     }
 

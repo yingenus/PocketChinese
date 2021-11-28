@@ -1,8 +1,9 @@
 package com.yingenus.pocketchinese.presentation.dialogs.radicalsearch
 
+import com.yingenus.pocketchinese.domain.repository.RadicalsRepository
 import com.yingenus.pocketchinese.domain.repositorys.CharactersRadicalRepository
 
-class RadicalSearchPresenter(private var view: RadicalSearchInterface?, private val radicalRepository: CharactersRadicalRepository) {
+class RadicalSearchPresenter(private var view: RadicalSearchInterface?, private val radicalRepository: RadicalsRepository) {
 
     init {
         view?.setRadicals(radicalRepository.getRadicals())

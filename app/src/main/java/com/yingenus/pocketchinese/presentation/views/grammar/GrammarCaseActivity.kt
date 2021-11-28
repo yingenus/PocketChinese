@@ -29,6 +29,12 @@ class GrammarCaseActivity() : AppCompatActivity(), GrammarCaseInterface {
             intent.putExtra(GRAMMAR_CASE_NAME, grammarCase.name)
             return intent
         }
+
+        fun getIntent(context : Context, grammarCaseName: String): Intent{
+            val intent = Intent(context, GrammarCaseActivity::class.java)
+            intent.putExtra(GRAMMAR_CASE_NAME, grammarCaseName)
+            return intent
+        }
     }
 
     private var toolbar : Toolbar? = null
@@ -134,7 +140,7 @@ class GrammarCaseActivity() : AppCompatActivity(), GrammarCaseInterface {
                 error: WebResourceError?
             ) {
                 super.onReceivedError(view, request, error)
-                declareError("web error")
+                //declareError("web error")
             }
         }
     }

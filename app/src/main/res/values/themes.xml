@@ -37,8 +37,8 @@
 
     </style>
 
-    <style name="Theme.PocketChinese.PrimaryStatusBar" parent="Theme.PocketChinese.Default">
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimary</item>
+    <style name="Theme.PocketChinese.PrimaryStatusBar" parent="Theme.PocketChinese">
+        <item name="android:statusBarColor">?attr/colorPrimary</item>
     </style>
 
     <style name="Theme.PocketChinese.Default.NoActionBar" parent="Theme.PocketChinese.Default">

@@ -28,9 +28,7 @@ import com.yingenus.pocketchinese.controller.InPutUtilsKt;
 import com.yingenus.pocketchinese.controller.Settings;
 import com.yingenus.pocketchinese.controller.dialog.CharacterSheetDialog;
 import com.yingenus.pocketchinese.controller.holders.ViewViewHolder;
-import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar;
 import com.yingenus.pocketchinese.presentation.dialogs.radicalsearch.RadicalSearchDialog;
-import com.yingenus.pocketchinese.di.ServiceLocator;
 import com.yingenus.pocketchinese.domain.dto.ChinChar;
 import com.yingenus.pocketchinese.domain.repository.ChinCharRepository;
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository;
@@ -82,7 +80,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         private ExampleRepository exampleRepository;
         private ToneRepository toneRepository;
 
-        public void setShowedChinChar(com.yingenus.pocketchinese.domain.dto.ChinChar showedChinChar, ChinCharRepository charRepository, ExampleRepository exampleRepository, ToneRepository toneRepository) {
+        public void setShowedChinChar(ChinChar showedChinChar, ChinCharRepository charRepository, ExampleRepository exampleRepository, ToneRepository toneRepository) {
             this.showedChinChar = showedChinChar;
             this.chinCharRepository = charRepository;
             this.exampleRepository = exampleRepository;
@@ -108,7 +106,6 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         CharacterFragmentFactory factory = new CharacterFragmentFactory();
         if (savedInstanceState != null){
             int id = savedInstanceState.getInt(CHIN_CHAR);
-            //factory.setShowedChinChar((com.yingenus.pocketchinese.domain.dto.ChinChar) savedInstanceState.getSerializable(CHIN_CHAR));
             com.yingenus.pocketchinese.domain.dto.ChinChar chinChar = chinCharRepository.findById(id);
             factory.setShowedChinChar(chinChar, chinCharRepository, exampleRepository,toneRepository);
         }
