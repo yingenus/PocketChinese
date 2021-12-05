@@ -5,6 +5,7 @@ import android.app.Activity
 import android.content.Context
 import android.content.res.ColorStateList
 import android.graphics.Canvas
+import android.graphics.Color
 import android.graphics.Paint
 import android.graphics.Rect
 import android.os.Build
@@ -18,6 +19,7 @@ import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
 import android.widget.Toolbar
+import androidx.annotation.AnyRes
 import androidx.annotation.ColorInt
 import androidx.annotation.ColorRes
 import androidx.annotation.RequiresApi
@@ -58,7 +60,7 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
 
     private var recyclerView : RecyclerView? = null
 
-    private var showedRadicals :  Map<Int, List<String>>? = null
+    private var showedRadicals :  Map<Int, List<RadicalSearchInterface.Character>>? = null
     private var title = ""
     private var showBack = false
 
@@ -106,26 +108,32 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
         radicalSearchCallback = null
     }
 
-    override fun setRadicals(radicals: Map<Int, List<String>>) {
+    override fun setRadicals(radicals: Map<Int, List<RadicalSearchInterface.Character>>) {
         showedRadicals = radicals
         title = requireContext().resources.getString(R.string.radical)
         showBack = false
         updateRadicals()
     }
 
-    override fun setCharacters(characters: Map<Int, List<String>>) {
+    override fun setCharacters(characters: Map<Int, List<RadicalSearchInterface.Character>>) {
         showedRadicals = characters
         title = requireContext().resources.getString(R.string.characters)
         showBack = true
         updateRadicals()
     }
 
-    override fun publishCharacter(character: String) {
-        radicalSearchCallback?.onCharacterSelected(character)
+    override fun publishCharacter(character: RadicalSearchInterface.Character) {
+        radicalSearchCallback?.onCharacterSelected(character.zi)
     }
 
     private fun onRadicalClicked(v : View?){
-        presenter.radicalSelected(v!!.findViewByClass(TextView::class.java)!!.text.toString())
+        val viewholder = recyclerView?.findContainingViewHolder(v!!)
+        if (viewholder is RadicalViewHolder){
+            if (viewholder.character != null && viewholder.character!!.isEnabled)
+                presenter.radicalSelected(viewholder.character!!)
+
+        }
+        //presenter.radicalSelected(RadicalSearchInterface.Character(v!!.findViewByClass(TextView::class.java)!!.text.toString(),true))
     }
 
 
@@ -230,7 +238,10 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
                                 View.GONE
                 }
                 is TitleViewHolder -> holder.bindTitle((itemList[position] as AdapterItems.Title).title)
-                is RadicalViewHolder -> holder.bindRadical((itemList[position] as AdapterItems.Radical).content)
+                is RadicalViewHolder ->{
+                    val radical = (itemList[position] as AdapterItems.Radical)
+                    holder.bindRadical(radical.content)
+                }
             }
         }
 
@@ -256,7 +267,7 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
 
         class Title(val title: String) : AdapterItems()
 
-        class Radical(val content: String) : AdapterItems()
+        class Radical(val content: RadicalSearchInterface.Character) : AdapterItems()
 
     }
 
@@ -312,6 +323,19 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
     class RadicalViewHolder(parent: ViewGroup) : RecyclerView.ViewHolder(inflateRadicalView(parent)) {
 
         val textView : TextView = super.itemView.findViewByClass(TextView::class.java)!!
+        @ColorInt val tintColor : Int
+        @AnyRes val clikedBackground : Int
+        var character : RadicalSearchInterface.Character?= null
+
+        init {
+            val typedValue = TypedValue()
+            parent.context.theme.resolveAttribute(R.attr.colorOnSurface,typedValue,true)
+            @ColorInt val onSurface = typedValue.data
+            tintColor = Color.argb((0.1*255).toInt(), Color.red(onSurface), Color.green(onSurface), Color.blue(onSurface))
+            val typedValue2 = TypedValue()
+            parent.context.theme.resolveAttribute(android.R.attr.selectableItemBackground,typedValue,true)
+            clikedBackground = typedValue2.resourceId
+        }
 
         companion object{
             fun inflateRadicalView(parent : ViewGroup): View{
@@ -322,9 +346,9 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
                         .apply {
                             layoutParams = rootParams
 
-                            val typedValue = TypedValue()
-                            context.theme.resolveAttribute(android.R.attr.selectableItemBackground,typedValue,true)
-                            this.setBackgroundResource(typedValue.resourceId)
+                            //val typedValue = TypedValue()
+                            //context.theme.resolveAttribute(android.R.attr.selectableItemBackground,typedValue,true)
+                            //this.setBackgroundResource(typedValue.resourceId)
                         }
 
                 val textViewParams = FrameLayout.LayoutParams(ViewGroup.LayoutParams.WRAP_CONTENT,ViewGroup.LayoutParams.WRAP_CONTENT, Gravity.CENTER)
@@ -340,9 +364,14 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
             }
         }
 
-        fun bindRadical(radical : String){
-            textView.text = radical
-
+        fun bindRadical( character: RadicalSearchInterface.Character){
+            this.character = character
+            textView.text = character.zi
+            if (character.isEnabled){
+                itemView.setBackgroundResource(clikedBackground)
+            }else{
+                itemView.setBackgroundColor(tintColor)
+            }
         }
 
     }
@@ -436,10 +465,10 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
                 outRect.set(margin, margin, margin, margin)
 
                 val left =
-                if (spanIndex == 0)
+                if (spanIndex == 0 && beforeEndRadicals > 1 )
                     true
                 else
-                    spanIndex < columns -1 && beforeEndRadicals != 0
+                    spanIndex < columns -1 && beforeEndRadicals > 1
 
                 val beforeEndRow = columns - spanIndex
                 val nextLine = beforeEndRadicals - beforeEndRow
