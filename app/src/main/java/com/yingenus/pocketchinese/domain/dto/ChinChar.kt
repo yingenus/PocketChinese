@@ -6,6 +6,7 @@ class ChinChar(
     val pinyin : String,
     val translation : Array<String>,
     val generalTag : String,
-    val specialTag : Array<String>
+    val specialTag : Array<String>,
+    val chineseOld : String? = null
 ) {
 }

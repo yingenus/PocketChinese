@@ -20,6 +20,7 @@
             app:menu="@menu/grammar_case_menu"
             app:navigationIcon="@drawable/ic_close_on_primary"
             app:titleTextColor="?attr/colorOnPrimary"
+            android:background="?attr/colorPrimary"
             tools:title = "Test"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -29,11 +30,13 @@
     <androidx.core.widget.NestedScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/colorSurface"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior">
         <WebView
             android:id="@+id/web_view"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/colorSurface"
             />
     </androidx.core.widget.NestedScrollView>
 

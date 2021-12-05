@@ -72,6 +72,10 @@ class GrammarCaseActivity() : AppCompatActivity(), GrammarCaseInterface {
         toolbar = findViewById(R.id.toolbar)
         webView = findViewById(R.id.web_view)
 
+        toolbar!!.setNavigationOnClickListener { v ->
+            finish()
+        }
+
         configureWebView()
 
         presenter = GrammarPresenter(this, caseName!!, GrammarAssetsRepository(baseContext), ImageAssetsRepository(baseContext))

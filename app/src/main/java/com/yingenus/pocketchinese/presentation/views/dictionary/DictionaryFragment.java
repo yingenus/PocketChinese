@@ -429,7 +429,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
             int counter = 1;
             for (String trn : trns) {
 
-                if (trn.contains("link") || !UtilsKt.isRussian(trn)) {
+                if (trn.contains("link") /*|| !UtilsKt.isRussian(trn)*/) {
                     continue;
                 }
                 if (trns.length == 1)

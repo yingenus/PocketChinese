@@ -94,7 +94,10 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
     private fun initViewHeader(){
         val links = findLinked()
 
-        if (links.isNotEmpty()){
+        if (showChinChar.chineseOld != null){
+            view.setLinked(listOf(showChinChar.chineseOld!!))
+        }
+        else if (links.isNotEmpty()){
             view.setLinked(links.map { it.chinese })
         }
 
@@ -116,7 +119,7 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
 
         for (i in translations.indices){
 
-            if (translations[i].contains("\$link") || !translations[i].contains(Regex("""[А-Яа-я]""")))
+            if (translations[i].contains("\$link") /*|| !translations[i].contains(Regex("""[А-Яа-я]"""))*/)
                 continue
 
             val line = (tags[i].toUpperCase())+" "+translations[i].capitalize()

@@ -3,6 +3,7 @@ package com.yingenus.pocketchinese.data.local
 import com.yingenus.pocketchinese.data.local.room.WordsDb
 import com.yingenus.pocketchinese.domain.dto.ChinChar
 import com.yingenus.pocketchinese.domain.dto.Tone
+import com.yingenus.pocketchinese.domain.dto.ZiChar
 import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
 import com.yingenus.pocketchinese.domain.repository.RadicalsRepository
 import com.yingenus.pocketchinese.domain.repository.ToneRepository
@@ -37,7 +38,7 @@ class RoomWordRepository(val wordsDb: WordsDb): ChinCharRepository, RadicalsRepo
         return wordsDb.radicalsDao().getAll().groupBy { it.stoke }.mapValues { it.value.map { it.radical } }.mapKeys { it.key.toIntOrNull()?:1 }
     }
 
-    override fun getCharacters(radical: String): Map<Int, List<String>> {
-        return wordsDb.keyDao().loadByRadical(radical).groupBy { it.stroke }.mapValues { it.value.map { it.character } }
+    override fun getCharacters(radical: String): Map<Int, List<ZiChar>> {
+        return wordsDb.keyDao().loadByRadical(radical).groupBy { it.stroke }.mapValues { it.value.map { it.toZiChar() } }
     }
 }
