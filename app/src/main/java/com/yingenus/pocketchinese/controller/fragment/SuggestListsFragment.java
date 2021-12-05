@@ -52,7 +52,7 @@ public class SuggestListsFragment extends Fragment implements SuggestListsInterf
     private View downIndicator;
 
     private Map<String, Boolean> tagsState;
-    private boolean isTagsShowed = true;
+    private boolean isTagsShowed = false;
 
 
     SuggestListsFragment(){
@@ -74,6 +74,11 @@ public class SuggestListsFragment extends Fragment implements SuggestListsInterf
         downIndicator = view.findViewById(R.id.dropdown_icon);
 
         tagsGroup = view.findViewById(R.id.tags_group);
+
+        if(!isTagsShowed){
+            ViewGroup.LayoutParams params = tagsGroup.getLayoutParams();
+            params.height = 0;
+        }
 
         sortLayout.setOnClickListener(this);
         newFirstLayout.setOnClickListener(this);
