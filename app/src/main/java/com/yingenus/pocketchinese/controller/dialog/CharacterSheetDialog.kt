@@ -456,6 +456,7 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
 
             val textView = TextView(context)
             textView.text = text
+            textView.setTextIsSelectable(true)
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
             textView.setTextColor(textColor.data)
 

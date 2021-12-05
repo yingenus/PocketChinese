@@ -17,3 +17,4 @@
 local.properties
 /app/src/main/assets/pinsound/*
 /app/src/androidTest/assets/pinsound/*
+/app/src/main/assets/www/*

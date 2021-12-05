@@ -21,6 +21,7 @@
         android:textColor="?android:textColorPrimary"
         android:textSize="24sp"
 
+        android:textIsSelectable="true"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -37,6 +38,8 @@
         android:textSize="18sp"
         android:textColor="?android:textColorSecondary"
 
+        android:textIsSelectable="true"
+
         app:layout_constraintTop_toBottomOf="@id/chin"
         app:layout_constraintStart_toStartOf="@id/chin"
 
@@ -52,6 +55,8 @@
         android:textColor="?android:textColorSecondary"
         android:layout_marginTop="5dp"
         tools:text="TextTest"
+
+        android:textIsSelectable="true"
 
         app:layout_constraintTop_toBottomOf="@id/pinyin"
         app:layout_constraintStart_toStartOf="@id/pinyin"
