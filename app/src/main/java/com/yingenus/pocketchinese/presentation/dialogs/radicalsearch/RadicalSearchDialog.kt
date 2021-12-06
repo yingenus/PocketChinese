@@ -27,9 +27,12 @@ import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.daimajia.androidanimations.library.fading_exits.FadeOutRightAnimator
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.yingenus.pocketchinese.R
+import com.yingenus.pocketchinese.controller.dialog.StartTrainingSheetDialog
 import com.yingenus.pocketchinese.controller.dp2px
+import com.yingenus.pocketchinese.controller.getDisplayHeight
 import com.yingenus.pocketchinese.controller.holders.ViewViewHolder
 import com.yingenus.pocketchinese.di.ServiceLocator
 import com.yingenus.pocketchinese.domain.repository.RadicalsRepository
@@ -48,6 +51,10 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
         const val radicalBoxSize = 68
         val boxSizePx: (Context) -> Int = {c -> dp2px(radicalBoxSize,c)}
 
+    }
+
+    private object Helper{
+        const val OccupiHeight = 0.7f
     }
 
     interface RadicalSearchCallback{
@@ -84,6 +91,12 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
 
         recyclerView!!.addItemDecoration(Decorator(dp2px(1,requireContext()),requireContext().resources.getColor(R.color.gray_light),65, viewWight,displayWight))
 
+        val displayHeight = getDisplayHeight(requireContext())
+        val statusBarHeight = getStatusBarHeight()
+        val availableSpace = displayHeight - statusBarHeight
+
+        recyclerView!!.minimumHeight = availableSpace
+
         recyclerView!!.setBackgroundResource(R.drawable.sheet_dialog_shape)
         recyclerView!!.adapter = RadicalsAdapter()
                 .also {
@@ -99,6 +112,10 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
                 }
 
         updateRadicals()
+
+        val  behavior = (dialog as BottomSheetDialog).behavior
+        behavior.peekHeight = getPagerOccupiHeight(dp2px(0,inflater.context))
+        behavior.isDraggable = true
 
         return recyclerView
     }
@@ -124,6 +141,24 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
 
     override fun publishCharacter(character: RadicalSearchInterface.Character) {
         radicalSearchCallback?.onCharacterSelected(character.zi)
+    }
+
+    private fun getPagerOccupiHeight(marginTopPix : Int): Int{
+        val displayHeight = getDisplayHeight(requireContext())
+        val statusBarHeight = getStatusBarHeight()
+        val availableSpace = displayHeight - statusBarHeight
+        val dialogHeight = (availableSpace* Helper.OccupiHeight).toInt()
+
+        return dialogHeight - marginTopPix
+    }
+
+    private fun getStatusBarHeight(): Int{
+        var result = 0
+        val resourceId = resources.getIdentifier("status_bar_height", "dimen", "android")
+        if (resourceId > 0) {
+            result = resources.getDimensionPixelSize(resourceId)
+        }
+        return result
     }
 
     private fun onRadicalClicked(v : View?){

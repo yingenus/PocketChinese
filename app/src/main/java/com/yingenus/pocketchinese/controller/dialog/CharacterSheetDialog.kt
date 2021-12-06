@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.controller.activity.CreateWordActivity
@@ -34,7 +35,8 @@ import com.yingenus.pocketchinese.model.database.dictionaryDB.Example as DbExamp
 class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar?, val chinCharRepository: ChinCharRepository, val exampleRepository: ExampleRepository,val toneRepository: ToneRepository) :BottomSheetDialogFragment(), CharacterInterface {
 
     private object Helper{
-        const val OccupiHeight = 0.9f
+        const val occupiHeight = 0.7f
+        const val peekHeight = 0.9f
     }
 
 
@@ -87,9 +89,11 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
         viewPager.offscreenPageLimit = 2
         initPagerCallback()
 
-
         val  behavior = (dialog as BottomSheetDialog).behavior
-        behavior.peekHeight = getPagerOccupiHeight(dp2px(0,inflater.context))
+        behavior.peekHeight = getPagerOccupiHeight(dp2px(0,inflater.context), Helper.peekHeight)
+
+        view.findViewById<View>(R.id.container)
+                .minimumHeight = getPagerOccupiHeight(dp2px(0,inflater.context), Helper.occupiHeight)
 
         return view
     }
@@ -313,11 +317,11 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
         return result
     }
 
-    private fun getPagerOccupiHeight(marginTopPix : Int): Int{
+    private fun getPagerOccupiHeight(marginTopPix : Int, ofScreen : Float): Int{
         val displayHeight = getDisplayHeight(requireContext())
         val statusBarHeight = getStatusBarHeight()
         val availableSpace = displayHeight - statusBarHeight
-        val dialogHeight = (availableSpace*Helper.OccupiHeight).toInt()
+        val dialogHeight = (availableSpace*ofScreen).toInt()
 
         return dialogHeight - marginTopPix
     }
