@@ -12,4 +12,8 @@ class RoomExampleRepository( val examplesDb: ExamplesDb) : ExampleRepository {
     override fun fundByChinCharId(id: Int): List<Example> {
         return examplesDb.exampleDao().loadByWordId(id).map { it.toExample() }
     }
+
+    override fun fundByChinCharId(id: Int, maxSize: Int): List<Example> {
+        return examplesDb.exampleDao().loadByWordIdLimited(id,maxSize).map { it.toExample() }
+    }
 }

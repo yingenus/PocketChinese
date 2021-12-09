@@ -4,17 +4,18 @@ import android.content.Context
 import android.util.Log
 import com.yingenus.pocketchinese.controller.dialog.CharacterInterface
 import com.yingenus.pocketchinese.domain.dto.ChinChar
+import com.yingenus.pocketchinese.domain.dto.Example
 import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository
 import com.yingenus.pocketchinese.domain.repository.ToneRepository
 import com.yingenus.pocketchinese.logErrorMes
-import com.yingenus.pocketchinese.model.database.DictionaryDBOpenManger
-import com.yingenus.pocketchinese.model.database.ExamplesDBOpenManger
-import com.yingenus.pocketchinese.model.database.dictionaryDB.*
 import com.yingenus.pocketchinese.model.pinplayer.PinPlayer
 import com.yingenus.pocketchinese.model.pinplayer.ToneSplitter
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
+import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
+import java.util.*
 
 class CharacterPresenter(val view : CharacterInterface, private val chinId : Int, private val chinCharRepository: ChinCharRepository, val exampleRepository: ExampleRepository, val toneRepository: ToneRepository) {
 
@@ -130,8 +131,26 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
     }
 
     private fun initExamples(){
+        Single.defer { Single.just {
+            val matchExamples = exampleRepository.fundByChinCharId(chinId, maxExampsLength)
+            return@just matchExamples.subList(
+                0,
+                if (matchExamples.size > maxExampsLength) maxExampsLength else matchExamples.lastIndex + 1
+            )
+        }.subscribeOn(Schedulers.io())
+        }.subscribeOn(Schedulers.io())
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({onSuccess ->
+                if (onSuccess.invoke().isNotEmpty() && isExamplesEnabled){
+                    view.setExamples(onSuccess.invoke())
+                }
+            },{ onError ->
+
+            })
+
+
         if (isExamplesEnabled){
-            val matchExamples = exampleRepository.fundByChinCharId(chinId)
+            val matchExamples = exampleRepository.fundByChinCharId(chinId, maxExampsLength)
             val examples = matchExamples.subList(0,if (matchExamples.size > maxExampsLength) maxExampsLength else matchExamples.lastIndex + 1)
 
             if (examples.isNotEmpty()){

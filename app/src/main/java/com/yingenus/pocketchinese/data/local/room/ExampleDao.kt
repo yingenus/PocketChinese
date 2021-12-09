@@ -14,4 +14,9 @@ interface ExampleDao {
     @Query(
         "SELECT examples.id, examples.chinese_word, examples.pinyin,examples.translation, examples.entry_words  FROM examples, links WHERE links.word_id = :id  AND ( links.exmpl_ids = examples.id OR links.exmpl_ids GLOB '*[^0-9]' || examples.id || '[^0-9]*' OR links.exmpl_ids GLOB examples.id || '[^0-9]*' OR links.exmpl_ids GLOB '*[^0-9]' || examples.id) LIMIT 50")
     fun loadByWordId( id : Int): List<Example>
+    @Query(
+        "SELECT examples.id, examples.chinese_word, examples.pinyin,examples.translation, examples.entry_words  FROM examples, links WHERE links.word_id = :id  AND ( links.exmpl_ids = examples.id OR links.exmpl_ids GLOB '*[^0-9]' || examples.id || '[^0-9]*' OR links.exmpl_ids GLOB examples.id || '[^0-9]*' OR links.exmpl_ids GLOB '*[^0-9]' || examples.id) LIMIT :limit")
+    fun loadByWordIdLimited( id : Int, limit : Int): List<Example>
+
+
 }
