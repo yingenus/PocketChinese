@@ -147,17 +147,6 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
             },{ onError ->
 
             })
-
-
-        if (isExamplesEnabled){
-            val matchExamples = exampleRepository.fundByChinCharId(chinId, maxExampsLength)
-            val examples = matchExamples.subList(0,if (matchExamples.size > maxExampsLength) maxExampsLength else matchExamples.lastIndex + 1)
-
-            if (examples.isNotEmpty()){
-                view.setExamples(examples)
-            }
-
-        }
     }
 
     private fun initEntryChins(){
