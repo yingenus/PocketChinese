@@ -199,6 +199,23 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
                 viewSepearator.visibility = View.GONE
             }
             viewPager.adapter?.notifyDataSetChanged()
+
+            if(viewPager.adapter is PagerAdapter){
+                val view = (viewPager.adapter as PagerAdapter).recyclerView?.
+                layoutManager?.findViewByPosition(viewPager.currentItem)?: return
+
+                val measureSpeckW = View.MeasureSpec.makeMeasureSpec(viewPager.width, View.MeasureSpec.EXACTLY)
+                val measureSpeckH = View.MeasureSpec.makeMeasureSpec(0, View.MeasureSpec.UNSPECIFIED)
+                view.measure(measureSpeckW, measureSpeckH)
+
+                val measureHeight = view.measuredHeight
+                if (measureHeight != 0)
+                {
+                    viewPager.layoutParams.height = measureHeight
+                    viewPager.requestLayout()
+                }
+            }
+
         }
     }
 
