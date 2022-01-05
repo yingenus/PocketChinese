@@ -74,10 +74,11 @@ class DictionaryPresenter(val  view: DictionaryInterface,private  val chinCharRe
                     Log.i("Dictionary", "Cant compl Query = ${msg.logErrorMes()}")
                     view.setResults(DictionaryInterface.Results.NoQuery)
                 }
-                .retry()
-                .subscribe {
-                    view.setResults(it)
+                .doOnNext { next ->
+                    view.setResults(next)
                 }
+                .retry()
+                .subscribe()
 
     }
 

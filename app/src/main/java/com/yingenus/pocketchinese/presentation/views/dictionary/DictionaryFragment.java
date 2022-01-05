@@ -141,7 +141,9 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         toggleGroup.check(R.id.fuzzy);
 
         headerText = view.findViewById(R.id.header_text);
-        showDefaultHeader();
+        headerText.setText(inflater.getContext()
+                .getResources()
+                .getText(R.string.dictionary_history_header));
 
         AppBarLayout appBar = view.findViewById(R.id.app_bar);
         appBar.setStatusBarForegroundColor(getResources().getColor(R.color.appColor));
@@ -322,10 +324,29 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     }
 
     private void showHistoryHeader(){
-        headerText.setText( getText(R.string.dictionary_history_header));
+        String text;
+        try {
+            text = getText(R.string.dictionary_history_header).toString();
+        }catch (IllegalStateException exception){
+            text = null;
+        }
+
+        if (text != null && headerText != null){
+            headerText.setText(text);
+        }
+
     }
     private void showDefaultHeader(){
-        headerText.setText( getText(R.string.dictionary_header));
+        String text;
+        try {
+            text = getText(R.string.dictionary_header).toString();
+        }catch (IllegalStateException exception){
+            text = null;
+        }
+
+        if (text != null && headerText != null){
+            headerText.setText(text);
+        }
     }
 
     @Override
@@ -335,8 +356,10 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
 
     @Override
     public void setResults(@NotNull Results results) {
-        RecyclerView.Adapter adapter = dictionaryRecycle.getAdapter();
 
+        if (dictionaryRecycle == null) return;
+
+        RecyclerView.Adapter adapter = dictionaryRecycle.getAdapter();
 
         if (results instanceof Results.NoQuery || results instanceof  Results.NoMatches){
             UnFilledAdapter unAdapter;
