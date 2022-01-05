@@ -143,7 +143,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         headerText = view.findViewById(R.id.header_text);
         headerText.setText(inflater.getContext()
                 .getResources()
-                .getText(R.string.dictionary_history_header));
+                .getText(R.string.dictionary_header));
 
         AppBarLayout appBar = view.findViewById(R.id.app_bar);
         appBar.setStatusBarForegroundColor(getResources().getColor(R.color.appColor));
