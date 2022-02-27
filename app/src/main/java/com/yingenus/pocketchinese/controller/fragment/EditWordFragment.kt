@@ -3,14 +3,14 @@ package com.yingenus.pocketchinese.controller.fragment
 import android.os.Bundle
 import android.view.View
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.presenters.CreateEditWordPresenter
 import com.yingenus.pocketchinese.presenters.EditWordPresenter
 import java.util.*
 
-class EditWordFragment(studyWordUUID: UUID, studyListUUID: UUID, chinCharRepository: ChinCharRepository) : CreateEditWordFragment() {
+class EditWordFragment(studyWordUUID: UUID, studyListUUID: UUID, dictionaryItemRepository: DictionaryItemRepository) : CreateEditWordFragment() {
 
-    private val presenter : EditWordPresenter = EditWordPresenter(studyWordUUID,studyListUUID,this,chinCharRepository)
+    private val presenter : EditWordPresenter = EditWordPresenter(studyWordUUID,studyListUUID,this,dictionaryItemRepository)
 
     private var isUpdateEnable = false
 

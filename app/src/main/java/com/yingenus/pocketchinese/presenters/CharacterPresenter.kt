@@ -3,9 +3,8 @@ package com.yingenus.pocketchinese.presenters
 import android.content.Context
 import android.util.Log
 import com.yingenus.pocketchinese.controller.dialog.CharacterInterface
-import com.yingenus.pocketchinese.domain.dto.ChinChar
-import com.yingenus.pocketchinese.domain.dto.Example
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+import com.yingenus.pocketchinese.domain.dto.DictionaryItem
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository
 import com.yingenus.pocketchinese.domain.repository.ToneRepository
 import com.yingenus.pocketchinese.logErrorMes
@@ -17,23 +16,23 @@ import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
 import java.util.*
 
-class CharacterPresenter(val view : CharacterInterface, private val chinId : Int, private val chinCharRepository: ChinCharRepository, val exampleRepository: ExampleRepository, val toneRepository: ToneRepository) {
+class CharacterPresenter(val view : CharacterInterface, private val chinId : Int, private val dictionaryItemRepository: DictionaryItemRepository, val exampleRepository: ExampleRepository, val toneRepository: ToneRepository) {
 
     private companion object{
         val isExamplesEnabled = true
         val maxExampsLength = 20
     }
 
-    private lateinit var showChinChar: ChinChar
+    private lateinit var showDictionaryItem: DictionaryItem
 
-    private lateinit var redirectedChinChar: ChinChar
+    private lateinit var redirectedDictionaryItem: DictionaryItem
 
     private lateinit var makeSoundClicked : PublishSubject<String>
     private var pinPlayer : PinPlayer? = null
 
     fun onCreate(){
 
-        showChinChar = getShowedChar()?: ChinChar(Int.MAX_VALUE, "-","-", emptyArray(),"-", emptyArray())
+        showDictionaryItem = getShowedChar()?: DictionaryItem(Int.MAX_VALUE, "-","-", emptyArray(),"-", emptyArray())
 
         makeSoundClicked = PublishSubject.create()
 
@@ -45,11 +44,11 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
     }
 
     fun addCardClicked(){
-        view.startAddNewStudy(showChinChar)
+        view.startAddNewStudy(showDictionaryItem)
     }
 
     fun makeSoundClicked(){
-        makeSoundClicked.onNext(showChinChar.pinyin)
+        makeSoundClicked.onNext(showDictionaryItem.pinyin)
     }
 
     fun onResume(context: Context){
@@ -74,8 +73,8 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
 
     }
 
-    private fun getShowedChar(): ChinChar?{
-        var provided = chinCharRepository.findById(chinId)
+    private fun getShowedChar(): DictionaryItem?{
+        var provided = dictionaryItemRepository.findById(chinId)
 
         val translations = provided!!.translation
 
@@ -85,8 +84,8 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
             if (!translations.filterNot { it.contains("\$link") }.any {
                         it.contains(Regex("""[А-яа-я]""")) }
             ) {
-                redirectedChinChar = provided
-                provided = chinCharRepository.findByChinese(linked.substring(linked.indexOf("{") + 1, linked.indexOf("}"))).firstOrNull()
+                redirectedDictionaryItem = provided
+                provided = dictionaryItemRepository.findByChinese(linked.substring(linked.indexOf("{") + 1, linked.indexOf("}"))).firstOrNull()
             }
         }
         return  provided
@@ -95,28 +94,28 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
     private fun initViewHeader(){
         val links = findLinked()
 
-        if (showChinChar.chineseOld != null){
-            view.setLinked(listOf(showChinChar.chineseOld!!))
+        if (showDictionaryItem.chineseOld != null){
+            view.setLinked(listOf(showDictionaryItem.chineseOld!!))
         }
         else if (links.isNotEmpty()){
             view.setLinked(links.map { it.chinese })
         }
 
-        val tag = showChinChar.generalTag
+        val tag = showDictionaryItem.generalTag
         if (tag.isNotEmpty()){
             view.setTags(listOf(tag))
         }
 
-        view.setChin( showChinChar.chinese )
-        view.setPinyin( showChinChar.pinyin )
+        view.setChin( showDictionaryItem.chinese )
+        view.setPinyin( showDictionaryItem.pinyin )
     }
 
     private fun initTranslations(){
 
         val result = mutableListOf<String>()
 
-        val tags = showChinChar.specialTag
-        val translations = showChinChar.translation
+        val tags = showDictionaryItem.specialTag
+        val translations = showDictionaryItem.translation
 
         for (i in translations.indices){
 
@@ -150,15 +149,15 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
     }
 
     private fun initEntryChins(){
-        if (showChinChar.chinese.length > 1){
-            val entries = mutableListOf<ChinChar>()
+        if (showDictionaryItem.chinese.length > 1){
+            val entries = mutableListOf<DictionaryItem>()
 
-            for (char in showChinChar.chinese.toList().map { it.toString() }){
-                val chins = chinCharRepository.findByChinese(char)
+            for (char in showDictionaryItem.chinese.toList().map { it.toString() }){
+                val chins = dictionaryItemRepository.findByChinese(char)
 
                 for (chin in chins) {
                     if (chin.chinese.trim() == char
-                            && showChinChar.pinyin.contains(chin.pinyin)){
+                            && showDictionaryItem.pinyin.contains(chin.pinyin)){
                         entries.add(chin)
                         break
                     }
@@ -172,23 +171,23 @@ class CharacterPresenter(val view : CharacterInterface, private val chinId : Int
         }
     }
 
-    private fun findLinked(): List<ChinChar>{
-        val links = showChinChar.translation.filterIndexed { _, s -> s.contains("\$link")  }
+    private fun findLinked(): List<DictionaryItem>{
+        val links = showDictionaryItem.translation.filterIndexed { _, s -> s.contains("\$link")  }
 
-        val result = mutableMapOf<Int,ChinChar>()
+        val result = mutableMapOf<Int,DictionaryItem>()
 
         if (links.isNotEmpty()){
             for (link in links){
                 val char = link.substring(link.indexOf("{")+1, link.indexOf("}"))
 
-                val chins = chinCharRepository.findByChinese(char)
+                val chins = dictionaryItemRepository.findByChinese(char)
 
                 chins.forEach { result[it.id] = it }
             }
         }
 
-        if (::redirectedChinChar.isInitialized)
-            result[redirectedChinChar.id] = redirectedChinChar
+        if (::redirectedDictionaryItem.isInitialized)
+            result[redirectedDictionaryItem.id] = redirectedDictionaryItem
 
         return result.values.toList()
     }

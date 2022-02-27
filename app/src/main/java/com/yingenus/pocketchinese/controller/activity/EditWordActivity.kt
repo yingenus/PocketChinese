@@ -7,17 +7,17 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.yingenus.pocketchinese.controller.fragment.EditWordFragment
 import com.yingenus.pocketchinese.di.ServiceLocator
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyWord
 import java.lang.RuntimeException
 import java.util.*
 
 class EditWordActivity : SingleFragmentActivityWithKeyboard(){
 
-    class EditWordFragmentFactory(val studyListUUID: UUID, val studyWordUUID: UUID, val chinCharRepository: ChinCharRepository): FragmentFactory(){
+    class EditWordFragmentFactory(val studyListUUID: UUID, val studyWordUUID: UUID, val dictionaryItemRepository: DictionaryItemRepository): FragmentFactory(){
         override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
             if(className == EditWordFragment::class.java.name)
-                return EditWordFragment(studyWordUUID,studyListUUID,chinCharRepository)
+                return EditWordFragment(studyWordUUID,studyListUUID,dictionaryItemRepository)
             return super.instantiate(classLoader, className)
         }
     }
@@ -43,7 +43,7 @@ class EditWordActivity : SingleFragmentActivityWithKeyboard(){
         val studyList = UUID.fromString(intent.getStringExtra(INNER_EDIT_WORD_LIST_UUID))
         val studyWord = UUID.fromString(intent.getStringExtra(INNER_EDIT_WORD_WORD_UUID))
 
-        return EditWordFragment(studyWord,studyList,ServiceLocator.get(baseContext,ChinCharRepository::class.java.name))
+        return EditWordFragment(studyWord,studyList,ServiceLocator.get(baseContext,DictionaryItemRepository::class.java.name))
     }
 
     private fun createFragmentFactory(savedInstanceState: Bundle?): FragmentFactory{
@@ -60,6 +60,6 @@ class EditWordActivity : SingleFragmentActivityWithKeyboard(){
 
         if (studyList == null || studyWord == null) throw RuntimeException("cant extract com.yingenus.pocketchinese.data")
 
-        return EditWordFragmentFactory(UUID.fromString(studyList), UUID.fromString(studyWord), ServiceLocator.get(baseContext,ChinCharRepository::class.java.name))
+        return EditWordFragmentFactory(UUID.fromString(studyList), UUID.fromString(studyWord), ServiceLocator.get(baseContext,DictionaryItemRepository::class.java.name))
     }
 }

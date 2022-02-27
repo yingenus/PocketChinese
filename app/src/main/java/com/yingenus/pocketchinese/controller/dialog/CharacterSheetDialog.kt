@@ -14,25 +14,22 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.controller.activity.CreateWordActivity
 import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.controller.getDisplayHeight
 import com.yingenus.pocketchinese.controller.holders.ViewViewHolder
-import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
 import com.yingenus.pocketchinese.presenters.CharacterPresenter
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.yingenus.pocketchinese.domain.dto.Example
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository
 import com.yingenus.pocketchinese.domain.repository.ToneRepository
 import java.lang.IllegalArgumentException
-import com.yingenus.pocketchinese.model.database.dictionaryDB.Example as DbExample
 
-class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar?, val chinCharRepository: ChinCharRepository, val exampleRepository: ExampleRepository,val toneRepository: ToneRepository) :BottomSheetDialogFragment(), CharacterInterface {
+class CharacterSheetDialog(dictionaryItem: com.yingenus.pocketchinese.domain.dto.DictionaryItem?, val dictionaryItemRepository: DictionaryItemRepository, val exampleRepository: ExampleRepository, val toneRepository: ToneRepository) :BottomSheetDialogFragment(), CharacterInterface {
 
     private object Helper{
         const val occupiHeight = 0.7f
@@ -40,7 +37,7 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
     }
 
 
-    private val presenter = CharacterPresenter(this,chinChar?.id?:1,chinCharRepository, exampleRepository,toneRepository)
+    private val presenter = CharacterPresenter(this,dictionaryItem?.id?:1,dictionaryItemRepository, exampleRepository,toneRepository)
 
     private val animationBid : MutableList<AnimationBillet> = mutableListOf()
 
@@ -57,7 +54,7 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
 
     private lateinit var mTranslations: List<String>
     private lateinit var mExamles: List<Example>
-    private lateinit var mCharacters: List<com.yingenus.pocketchinese.domain.dto.ChinChar>
+    private lateinit var mCharacters: List<com.yingenus.pocketchinese.domain.dto.DictionaryItem>
 
     private var isFirstCall = true
 
@@ -135,7 +132,7 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
         charTags.visibility = View.VISIBLE
     }
 
-    override fun startAddNewStudy(word: com.yingenus.pocketchinese.domain.dto.ChinChar) {
+    override fun startAddNewStudy(word: com.yingenus.pocketchinese.domain.dto.DictionaryItem) {
         val intent= CreateWordActivity.getIntent(requireContext(),word)
         requireContext().startActivity(intent)
     }
@@ -150,7 +147,7 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
         reInitPages()
     }
 
-    override fun setCharacters(entrysChars: List<com.yingenus.pocketchinese.domain.dto.ChinChar>) {
+    override fun setCharacters(entrysChars: List<com.yingenus.pocketchinese.domain.dto.DictionaryItem>) {
         mCharacters = entrysChars
         reInitPages()
     }
@@ -486,7 +483,7 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
     }
 
     private class CharactersHolder: ViewViewHolder{
-        constructor( parent: ViewGroup, chars : List<com.yingenus.pocketchinese.domain.dto.ChinChar>):
+        constructor(parent: ViewGroup, dictionaryItems : List<com.yingenus.pocketchinese.domain.dto.DictionaryItem>):
                 super(LinearLayout(parent.context).apply {
                     orientation = LinearLayout.VERTICAL
                     layoutParams = ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT)
@@ -502,13 +499,13 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
 
             val inflater = parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-            for (char in chars){
+            for (char in dictionaryItems){
                 view.addView(createItemView(inflater,char),itemLayoutParams)
             }
 
         }
         @SuppressLint("ResourceAsColor")
-        private fun createItemView(inflater: LayoutInflater, char : com.yingenus.pocketchinese.domain.dto.ChinChar): View{
+        private fun createItemView(inflater: LayoutInflater, dictionaryItem : com.yingenus.pocketchinese.domain.dto.DictionaryItem): View{
             val view = inflater.inflate(R.layout.inner_char_item, null)
 
             val chn = view.findViewById<TextView>(R.id.character)
@@ -516,17 +513,17 @@ class CharacterSheetDialog(chinChar: com.yingenus.pocketchinese.domain.dto.ChinC
             val tgs = view.findViewById<TextView>(R.id.tags)
             val linerLayout = view.findViewById<LinearLayout>(R.id.translation_layout)
 
-            chn.text = char.chinese
-            pin.text = char.pinyin
-            if (char.generalTag.isNotEmpty()){
-                tgs.text = char.generalTag
+            chn.text = dictionaryItem.chinese
+            pin.text = dictionaryItem.pinyin
+            if (dictionaryItem.generalTag.isNotEmpty()){
+                tgs.text = dictionaryItem.generalTag
                 tgs.visibility = View.VISIBLE
             }
 
             val translationLayoutParam = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
 
             var counter = 1
-            for (translation in char.translation){
+            for (translation in dictionaryItem.translation){
                 if (translation.contains("\$link"))
                     continue
 

@@ -1,12 +1,6 @@
 package com.yingenus.pocketchinese.model.pinplayer
 
-import android.content.Context
 import com.yingenus.pocketchinese.domain.repository.ToneRepository
-import com.yingenus.pocketchinese.model.database.DictionaryDBOpenManger
-import com.yingenus.pocketchinese.model.database.PocketDBOpenManger
-import com.yingenus.pocketchinese.model.database.dictionaryDB.DictionaryDBHelper
-import com.yingenus.pocketchinese.model.database.dictionaryDB.ToneDaoImpl
-import com.yingenus.pocketchinese.model.dictionary.search.WordsIndexer
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.lang.ref.SoftReference

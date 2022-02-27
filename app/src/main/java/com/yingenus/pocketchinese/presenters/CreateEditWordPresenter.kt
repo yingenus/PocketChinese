@@ -2,12 +2,8 @@ package com.yingenus.pocketchinese.presenters
 
 import android.content.Context
 import com.yingenus.pocketchinese.controller.fragment.CreateWordInterface
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
-import com.yingenus.pocketchinese.model.database.DictionaryDBOpenManger
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.model.database.PocketDBOpenManger
-import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
-import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinCharDaoImpl
-import com.yingenus.pocketchinese.model.database.dictionaryDB.DictionaryDBHelper
 import com.yingenus.pocketchinese.model.words.checkTrainStandards
 import com.yingenus.pocketchinese.model.database.pocketDB.ConnectionDAO
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyListDAO
@@ -18,7 +14,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-open class CreateEditWordPresenter(val view: CreateWordInterface, val chinCharRepository: ChinCharRepository) {
+open class CreateEditWordPresenter(val view: CreateWordInterface, val dictionaryItemRepository: DictionaryItemRepository) {
 
     protected lateinit var wordDAO: StudyWordDAO
     protected lateinit var listDAO: StudyListDAO
@@ -69,7 +65,7 @@ open class CreateEditWordPresenter(val view: CreateWordInterface, val chinCharRe
         observable
                 .observeOn(Schedulers.io())
                 .map { text ->
-                    val result= chinCharRepository.findByChinese(text)
+                    val result= dictionaryItemRepository.findByChinese(text)
                     result.first{ it.chinese == text }
                     }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -88,9 +84,9 @@ open class CreateEditWordPresenter(val view: CreateWordInterface, val chinCharRe
         checkStandards()
     }
 
-    protected fun chinCharFounded(chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar){
-        view.setText(CreateWordInterface.FIELD.PIN, chinChar.pinyin)
-        view.setText(CreateWordInterface.FIELD.TRN,chinChar.translation.first())
+    protected fun chinCharFounded(dictionaryItem: com.yingenus.pocketchinese.domain.dto.DictionaryItem){
+        view.setText(CreateWordInterface.FIELD.PIN, dictionaryItem.pinyin)
+        view.setText(CreateWordInterface.FIELD.TRN,dictionaryItem.translation.first())
         checkStandards()
     }
 

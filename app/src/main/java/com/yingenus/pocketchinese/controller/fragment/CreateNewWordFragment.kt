@@ -1,7 +1,6 @@
 package com.yingenus.pocketchinese.controller.fragment
 
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
-import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.presenters.CreateEditWordPresenter
 import com.yingenus.pocketchinese.presenters.CreateWordPresenter
 import java.util.*
@@ -14,12 +13,12 @@ class CreateNewWordFragment: CreateEditWordFragment,CreateWordInterface{
         return presenter
     }
 
-    constructor(studyListUUID: UUID, chinCharRepository: ChinCharRepository): super(){
-        presenter = CreateWordPresenter.Builder.getPresenter(studyListUUID,this,chinCharRepository)
+    constructor(studyListUUID: UUID, dictionaryItemRepository: DictionaryItemRepository): super(){
+        presenter = CreateWordPresenter.Builder.getPresenter(studyListUUID,this,dictionaryItemRepository)
     }
 
-    constructor(chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar,chinCharRepository: ChinCharRepository):super(){
-        presenter = CreateWordPresenter.Builder.getPresenter(chinChar,this,chinCharRepository)
+    constructor(dictionaryItem: com.yingenus.pocketchinese.domain.dto.DictionaryItem, dictionaryItemRepository: DictionaryItemRepository):super(){
+        presenter = CreateWordPresenter.Builder.getPresenter(dictionaryItem,this,dictionaryItemRepository)
     }
 
 }

@@ -6,7 +6,6 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.solver.state.ConstraintReference;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentTransaction;
@@ -14,9 +13,10 @@ import androidx.fragment.app.FragmentTransaction;
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.controller.PocketApplication;
 import com.yingenus.pocketchinese.di.ServiceLocator;
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository;
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository;
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository;
 import com.yingenus.pocketchinese.domain.repository.ToneRepository;
+import com.yingenus.pocketchinese.domain.usecase.WordsSearchUseCase;
 import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryFragment;
 import com.yingenus.pocketchinese.controller.fragment.EmptyFragment;
 import com.yingenus.pocketchinese.presentation.views.settings.SettingsFragment;
@@ -27,15 +27,17 @@ public class MainActivity  extends AppCompatActivity {
 
     static class MainFragmentFactory  extends FragmentFactory{
 
-        ChinCharRepository chinCharRepository;
+        DictionaryItemRepository dictionaryItemRepository;
         ExampleRepository exampleRepository;
         ToneRepository toneRepository;
+        WordsSearchUseCase wordsSearchUseCase;
 
-        public MainFragmentFactory(ChinCharRepository chinCharRepository, ExampleRepository exampleRepository, ToneRepository toneRepository){
+        public MainFragmentFactory(DictionaryItemRepository dictionaryItemRepository, ExampleRepository exampleRepository, ToneRepository toneRepository, WordsSearchUseCase wordsSearchUseCase){
             super();
-            this.chinCharRepository = chinCharRepository;
+            this.dictionaryItemRepository = dictionaryItemRepository;
             this.exampleRepository = exampleRepository;
             this.toneRepository = toneRepository;
+            this.wordsSearchUseCase = wordsSearchUseCase;
         }
 
         @NonNull
@@ -43,7 +45,7 @@ public class MainActivity  extends AppCompatActivity {
         public Fragment instantiate(@NonNull ClassLoader classLoader, @NonNull String className) {
             if (className.equals(DictionaryFragment.class.getName())) {
                 Log.d("MainFragmentFactory","create Fragment: DictionaryFragment");
-                return new DictionaryFragment(chinCharRepository,exampleRepository,toneRepository);
+                return new DictionaryFragment(dictionaryItemRepository,exampleRepository,toneRepository,wordsSearchUseCase);
             }
             if (className.equals(TrainListsFragment.class.getName())) {
                 Log.d("MainFragmentFactory","create Fragment: TrainListsFragment");
@@ -76,9 +78,10 @@ public class MainActivity  extends AppCompatActivity {
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         getSupportFragmentManager().setFragmentFactory(
                 new MainFragmentFactory(
-                        ServiceLocator.INSTANCE.get(getApplicationContext(),ChinCharRepository.class.getName()),
+                        ServiceLocator.INSTANCE.get(getApplicationContext(), DictionaryItemRepository.class.getName()),
                         ServiceLocator.INSTANCE.get(getApplicationContext(),ExampleRepository.class.getName()),
-                        ServiceLocator.INSTANCE.get(getApplicationContext(),ToneRepository.class.getName())
+                        ServiceLocator.INSTANCE.get(getApplicationContext(),ToneRepository.class.getName()),
+                        ServiceLocator.INSTANCE.get(getApplicationContext(),WordsSearchUseCase.class.getName())
                 ));
         super.onCreate(savedInstanceState);
         PocketApplication.Companion.postStartActivity(true);
