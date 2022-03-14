@@ -1,9 +1,8 @@
 package com.yingenus.pocketchinese.data.local
 
-import androidx.work.ListenableWorker
 import com.yingenus.pocketchinese.common.Result
 import com.yingenus.pocketchinese.domain.repository.search.UnitWordRepository
-import main.newsearch.dto.UnitWord
+import com.yingenus.pocketchinese.domain.dto.UnitWord
 
 class BruteUnitWordsRepository( private val unitWordRepository: UnitWordRepository) : UnitWordRepository {
     override fun getUnitWord(unitWordId: Int): Result<UnitWord> {

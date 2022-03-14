@@ -3,8 +3,8 @@ package com.yingenus.pocketchinese.domain.entities.dictionarysearch
 import com.yingenus.pocketchinese.common.Result
 import com.yingenus.pocketchinese.domain.entities.dictionarysearch.ngram.NgramSearch
 import com.yingenus.pocketchinese.domain.repository.search.UnitWordRepository
-import main.newsearch.dto.UnitWord
-import main.newsearch.dto.VariantWord
+import com.yingenus.pocketchinese.domain.dto.UnitWord
+import com.yingenus.pocketchinese.domain.dto.VariantWord
 import kotlin.system.measureTimeMillis
 
 class NComSearch(
@@ -34,7 +34,7 @@ class NComSearch(
         //println("(The operation search ngrams took $timeInMillis1 ms)")
 
         // Triple< Колличество попавших слов, Сумма растояний левенштейна всех слов ,VariantWord>
-        val result = mutableMapOf<VariantWord,Triple<Int,Int,VariantWord>>()
+        val result = mutableMapOf<VariantWord,Triple<Int,Int, VariantWord>>()
 
         val minN = if (query.length == 1) 1 else 1
 
@@ -66,7 +66,7 @@ class NComSearch(
                     }
                 }
 
-            val sorted = result.values.sortedWith( compareByDescending<Triple<Int,Int,VariantWord>>{ it.first }.thenBy{it.second}.thenBy{it.third.weight})
+            val sorted = result.values.sortedWith( compareByDescending<Triple<Int,Int, VariantWord>>{ it.first }.thenBy{it.second}.thenBy{it.third.weight})
             //val first100 = sorted.subList(0, min(100,sorted.size))
 
             return Result.Success(sorted.map { it.third.id })

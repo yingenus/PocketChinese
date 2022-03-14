@@ -2,11 +2,9 @@ package com.yingenus.pocketchinese.data.local
 
 import com.yingenus.pocketchinese.common.Result
 import com.yingenus.pocketchinese.data.local.room.WordsDb
-import com.yingenus.pocketchinese.domain.repository.search.NgramM3Repository
 import com.yingenus.pocketchinese.domain.repository.search.UnitWordRepository
-import main.newsearch.dto.UnitWord
+import com.yingenus.pocketchinese.domain.dto.UnitWord
 import java.sql.SQLException
-import java.util.*
 
 class RoomRusSearchRepository(val wordsDb: WordsDb) : UnitWordRepository, NgramM3AllAccessRep<Int>{
     override fun getUnitWord(unitWordId: Int): Result<UnitWord> {

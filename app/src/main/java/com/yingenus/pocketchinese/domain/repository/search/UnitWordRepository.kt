@@ -1,7 +1,7 @@
 package com.yingenus.pocketchinese.domain.repository.search
 
 import com.yingenus.pocketchinese.common.Result
-import main.newsearch.dto.UnitWord
+import com.yingenus.pocketchinese.domain.dto.UnitWord
 
 interface UnitWordRepository {
     fun getUnitWord( unitWordId : Int): Result<UnitWord>

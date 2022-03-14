@@ -2,8 +2,6 @@ package com.yingenus.pocketchinese.domain.entities.dictionarysearch
 
 import com.yingenus.pocketchinese.common.Result
 import com.yingenus.pocketchinese.data.local.BruteUnitWordsRepository
-import com.yingenus.pocketchinese.data.local.NgramM3AllAccessRep
-import com.yingenus.pocketchinese.data.local.hot.NgramM3HotRepo
 import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.domain.entities.dictionarysearch.ngram.NgramM3Search
 import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
@@ -11,9 +9,8 @@ import com.yingenus.pocketchinese.domain.repository.search.NgramM3Repository
 import com.yingenus.pocketchinese.domain.repository.search.NgramRepository
 import com.yingenus.pocketchinese.domain.repository.search.UnitWordRepository
 import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 import main.newsearch.NGramSearch.NgramM1Search
-import main.newsearch.dto.VariantWord
+import com.yingenus.pocketchinese.domain.dto.VariantWord
 
 class FuzzySearchEngine(
         private val dictionaryItemRepository: DictionaryItemRepository,

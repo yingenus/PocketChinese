@@ -2,10 +2,10 @@ package com.yingenus.pocketchinese.domain.entities.dictionarysearch
 
 import com.yingenus.pocketchinese.common.Result
 import com.yingenus.pocketchinese.domain.entities.dictionarysearch.ngram.NgramSearch
-import main.newsearch.dto.VariantWord
+import com.yingenus.pocketchinese.domain.dto.VariantWord
 
 
-class TwoNgramsSearch( val n1gramSearch : NgramSearch<VariantWord>, val n2gramSearch : NgramSearch<VariantWord>): Searcher {
+class TwoNgramsSearch(val n1gramSearch : NgramSearch<VariantWord>, val n2gramSearch : NgramSearch<VariantWord>): Searcher {
 
 
     override fun find(query: String): Result<List<Int>>{
@@ -37,7 +37,7 @@ class TwoNgramsSearch( val n1gramSearch : NgramSearch<VariantWord>, val n2gramSe
 
         val sorted = gramResults.map { Triple(it.value.second, it.value.first, it.key) }
                 .sortedWith(
-                        compareByDescending<Triple<Int,Int,VariantWord>>{ it.first}
+                        compareByDescending<Triple<Int,Int, VariantWord>>{ it.first}
                                 .thenByDescending { it.second }.thenBy { it.third.weight }).map { it.third.id }.distinct()
 
 

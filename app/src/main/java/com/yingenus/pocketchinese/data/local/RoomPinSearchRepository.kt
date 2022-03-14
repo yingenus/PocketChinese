@@ -2,9 +2,8 @@ package com.yingenus.pocketchinese.data.local
 
 import com.yingenus.pocketchinese.common.Result
 import com.yingenus.pocketchinese.data.local.room.WordsDb
-import com.yingenus.pocketchinese.domain.repository.search.NgramM3Repository
 import com.yingenus.pocketchinese.domain.repository.search.UnitWordRepository
-import main.newsearch.dto.UnitWord
+import com.yingenus.pocketchinese.domain.dto.UnitWord
 import java.sql.SQLException
 
 class RoomPinSearchRepository(val wordsDb: WordsDb) : UnitWordRepository, NgramM3AllAccessRep<Int>{

@@ -3,8 +3,8 @@ package com.yingenus.pocketchinese.data.local.room.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import main.newsearch.dto.UnitWord
-import main.newsearch.dto.VariantWord
+import com.yingenus.pocketchinese.domain.dto.UnitWord
+import com.yingenus.pocketchinese.domain.dto.VariantWord
 
 
 @Entity(tableName = "rus_words")

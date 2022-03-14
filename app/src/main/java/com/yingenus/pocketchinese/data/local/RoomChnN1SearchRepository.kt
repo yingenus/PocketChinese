@@ -1,11 +1,9 @@
 package com.yingenus.pocketchinese.data.local
 
-import androidx.work.workDataOf
 import com.yingenus.pocketchinese.common.Result
-import com.yingenus.pocketchinese.data.local.room.VariantsDao
 import com.yingenus.pocketchinese.data.local.room.WordsDb
 import com.yingenus.pocketchinese.domain.repository.search.NgramRepository
-import main.newsearch.dto.VariantWord
+import com.yingenus.pocketchinese.domain.dto.VariantWord
 import java.sql.SQLException
 
 class RoomChnN1SearchRepository(val wordsDb: WordsDb): NgramRepository<VariantWord>{

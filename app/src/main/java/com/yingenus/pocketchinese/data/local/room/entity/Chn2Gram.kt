@@ -4,8 +4,7 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.Index
 import androidx.room.PrimaryKey
-import main.newsearch.dto.UnitWord
-import main.newsearch.dto.VariantWord
+import com.yingenus.pocketchinese.domain.dto.VariantWord
 
 @Entity( tableName = "chin_2gram",
         indices = [Index(
