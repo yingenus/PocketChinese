@@ -17,10 +17,11 @@
         android:theme="@style/Theme.PocketChinese"
         >
         <activity
-            android:theme="@style/Theme.PocketChinese.NoActionBar"
+            android:theme="@style/Theme.PocketChinese.Start.NoActionBar"
             android:name="com.yingenus.pocketchinese.controller.activity.MainActivity"
             android:screenOrientation="portrait"
-            android:windowSoftInputMode="adjustNothing">
+            android:windowSoftInputMode="adjustNothing"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -49,7 +50,7 @@
         <activity
             android:name="com.yingenus.pocketchinese.controller.activity.RepeatableUserListsActivity"
             android:parentActivityName="com.yingenus.pocketchinese.controller.activity.MainActivity"
-            android:theme="@style/Theme.PocketChinese.NoActionBar"
+            android:theme="@style/Theme.PocketChinese.Start.NoActionBar"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.yingenus.pocketchinese.controller.activity.SuggestWordsActivity"

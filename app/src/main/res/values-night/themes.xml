@@ -34,6 +34,13 @@
 
     </style>
 
+    <style name="Theme.PocketChinese.Start" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_darck</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="windowSplashScreenBackground">@color/black_light_plus</item>
+        <item name="postSplashScreenTheme">@style/Theme.PocketChinese</item>
+    </style>
+
     <style name="Theme.PocketChinese.Nav" parent="Theme.PocketChinese">
         <item name="colorOnPrimary">@color/black_light_plus</item>
         <item name="colorOnSecondary">@color/gray_light</item>

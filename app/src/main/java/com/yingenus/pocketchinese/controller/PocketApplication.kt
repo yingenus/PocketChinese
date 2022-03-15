@@ -16,6 +16,7 @@ import java.util.concurrent.TimeUnit
 
 class PocketApplication: Application(), Configuration.Provider {
     private var isApplicationStared = false
+    private var isApplicationSetUp = false
 
     companion object{
 
@@ -24,6 +25,10 @@ class PocketApplication: Application(), Configuration.Provider {
 
         fun postStartActivity(fromLaunch : Boolean){
             pocketApplication?.postStartActivity(fromLaunch)
+        }
+
+        fun setupApplication(){
+            pocketApplication?.setup()
         }
 
         fun updateNotificationStatus(){
@@ -41,7 +46,7 @@ class PocketApplication: Application(), Configuration.Provider {
     override fun onCreate() {
         pocketApplication = this
         super.onCreate()
-        setup()
+        //setup()
 
         if (Settings.isNightModeOn(applicationContext)){
             AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -52,10 +57,13 @@ class PocketApplication: Application(), Configuration.Provider {
     }
 
     private fun setup(){
-        copyDBs()
-        setupNotifyChannels()
-        initWorks()
-        initNotifications()
+        if (!isApplicationSetUp){
+            copyDBs()
+            setupNotifyChannels()
+            initWorks()
+            initNotifications()
+            isApplicationSetUp = true
+        }
     }
 
     private fun setupNotifyChannels(){

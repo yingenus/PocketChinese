@@ -16,7 +16,7 @@ fun rotationAnimation(view: View, up: Boolean, duration : Int) {
 }
 
 fun alphaAnimation(view: View, initialAlpha : Int, finalAlpha : Int, duration : Int) {
-    TODO()
+    //TODO()
 }
 
 fun expandAnimation(view: View, up: Boolean, duration : Int) {

@@ -129,11 +129,11 @@ class StudyListAnalyzer(var repeatType: RepeatType = RepeatType.default, val rep
         if ( !repeatType.ignoreTRN)
             ints.add(worstTrn)
 
-        return ints.toTypedArray().min()!!
+        return ints.toTypedArray().minOrNull()?:worstChn
     }
 
 
-    private fun howExpired(words : List<StudyWord>): Int =  words.map { howExpired(it) }.max() ?: RepeatHelper.Expired.GOOD
+    private fun howExpired(words : List<StudyWord>): Int =  words.map { howExpired(it) }.maxOrNull() ?: RepeatHelper.Expired.GOOD
 
     private fun howExpired(word : StudyWord): Int{
 

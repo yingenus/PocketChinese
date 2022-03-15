@@ -37,6 +37,17 @@
 
     </style>
 
+    <style name="Theme.PocketChinese.Start" parent="Theme.SplashScreen.IconBackground">
+        <item name="windowSplashScreenAnimatedIcon">@drawable/ic_splash_light</item>
+        <item name="windowSplashScreenAnimationDuration">1000</item>
+        <item name="windowSplashScreenBackground">@color/pink_light</item>
+        <item name="postSplashScreenTheme">@style/Theme.PocketChinese</item>
+    </style>
+
+    <style name="Theme.PocketChinese.Start.NoActionBar" parent="Theme.PocketChinese.Start">
+        <item name="postSplashScreenTheme">@style/Theme.PocketChinese.NoActionBar</item>
+    </style>
+
     <style name="Theme.PocketChinese.PrimaryStatusBar" parent="Theme.PocketChinese">
         <item name="android:statusBarColor">?attr/colorPrimary</item>
     </style>

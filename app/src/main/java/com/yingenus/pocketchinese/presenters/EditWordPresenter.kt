@@ -61,7 +61,7 @@ class EditWordPresenter(private val studyWordUUID: UUID, private val studyListUU
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { onSuccess ->
-                    view.setBlocks(onSuccess?.keys?.max() ?: 0)
+                    view.setBlocks(onSuccess?.keys?.maxOrNull() ?: 0)
                     for (key in onSuccess?.keys!!){
 
                         val st=onSuccess[key]?.find { it.uuid.equals(studyWordUUID) }
