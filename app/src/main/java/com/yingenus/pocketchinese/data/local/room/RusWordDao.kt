@@ -13,5 +13,7 @@ interface RusWordDao {
     fun getWord(wordId : Int): RusWord?
     @Query("SELECT * FROM rus_words WHERE word_id IN (:wordsIds)")
     fun getWords(wordsIds : IntArray) : List<RusWord>
+    @Query("SELECT MAX(word_id) FROM rus_words")
+    fun getMaxId() : Int
 
 }

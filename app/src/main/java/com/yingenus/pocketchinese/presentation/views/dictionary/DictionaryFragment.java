@@ -25,9 +25,8 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yingenus.pocketchinese.R;
-import com.yingenus.pocketchinese.common.Result;
 import com.yingenus.pocketchinese.controller.InPutUtilsKt;
-import com.yingenus.pocketchinese.controller.Settings;
+import com.yingenus.pocketchinese.Settings;
 import com.yingenus.pocketchinese.controller.dialog.CharacterSheetDialog;
 import com.yingenus.pocketchinese.controller.holders.ViewViewHolder;
 import com.yingenus.pocketchinese.domain.usecase.WordsSearchUseCase;
@@ -44,7 +43,6 @@ import com.google.android.material.button.MaterialButtonToggleGroup;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 import io.reactivex.rxjava3.core.Observable;

@@ -1,5 +1,6 @@
 package com.yingenus.pocketchinese.domain.entities.dictionarysearch
 
+import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.common.Result
 import com.yingenus.pocketchinese.data.local.BruteUnitWordsRepository
 import com.yingenus.pocketchinese.domain.dto.DictionaryItem
@@ -96,7 +97,7 @@ class FuzzySearchEngine(
 
     private fun getSearcher(language: Language) = when(language){
         Language.CHINESE -> chnSearcher
-        Language.PINYIN -> pinSearcher
-        Language.RUSSIAN -> rusSearcher
+        Language.PINYIN -> PocketApplication.pinSearcher
+        Language.RUSSIAN -> PocketApplication.rusSearcher
     }
 }

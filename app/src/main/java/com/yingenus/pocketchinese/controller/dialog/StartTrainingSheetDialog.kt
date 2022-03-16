@@ -17,7 +17,7 @@ import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.viewpager2.widget.ViewPager2
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.controller.Settings
+import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.controller.activity.TrainActivity
 import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.controller.getDisplayHeight

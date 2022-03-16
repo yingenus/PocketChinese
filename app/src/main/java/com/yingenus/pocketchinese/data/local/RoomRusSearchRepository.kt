@@ -6,7 +6,7 @@ import com.yingenus.pocketchinese.domain.repository.search.UnitWordRepository
 import com.yingenus.pocketchinese.domain.dto.UnitWord
 import java.sql.SQLException
 
-class RoomRusSearchRepository(val wordsDb: WordsDb) : UnitWordRepository, NgramM3AllAccessRep<Int>{
+class RoomRusSearchRepository(val wordsDb: WordsDb) : UnitWordRepository, NgramM3AllAccessRep<Int>, com.yingenus.pocketchinese.functions.search.UnitWordRepository{
     override fun getUnitWord(unitWordId: Int): Result<UnitWord> {
         try {
             var result = wordsDb.rusWordDao().getWord(unitWordId)
@@ -16,6 +16,16 @@ class RoomRusSearchRepository(val wordsDb: WordsDb) : UnitWordRepository, NgramM
             else
                 return Result.Empty()
 
+        }catch (e : SQLException){
+            return Result.Failure(e.toString())
+        }
+    }
+
+    override fun getSize(): Result<Int> {
+        try {
+            val result = wordsDb.rusWordDao().getMaxId()
+
+            return Result.Success(result)
         }catch (e : SQLException){
             return Result.Failure(e.toString())
         }

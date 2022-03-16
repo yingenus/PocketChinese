@@ -2,7 +2,7 @@ package com.yingenus.pocketchinese.presenters
 
 import android.content.Context
 import android.util.Log
-import com.yingenus.pocketchinese.controller.Settings
+import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.controller.fragment.StudyListInterface
 import com.yingenus.pocketchinese.controller.logErrorMes
 import com.yingenus.pocketchinese.model.RepeatType

@@ -3,7 +3,9 @@ package com.yingenus.pocketchinese.di
 import android.content.Context
 import androidx.room.Room
 import com.yingenus.pocketchinese.data.local.*
-import com.yingenus.pocketchinese.data.local.hot.NgramM3HotRepo
+import com.yingenus.pocketchinese.data.local.db.DatabaseManager
+import com.yingenus.pocketchinese.data.local.db.InAssetsDatabaseManager
+
 import com.yingenus.pocketchinese.data.local.room.ExamplesDb
 import com.yingenus.pocketchinese.data.local.room.WordsDb
 import com.yingenus.pocketchinese.domain.entities.dictionarysearch.FuzzySearchEngine
@@ -42,11 +44,20 @@ object ServiceLocator {
     private var roomChnN1SearchRepository : RoomChnN1SearchRepository? = null
     @Volatile
     private var roomChnN2SearchRepository : RoomChnN2SearchRepository? = null
-
+    @Volatile
+    private var databaseManager : DatabaseManager? = null
 
     fun <T> get( context : Context, className : String): T{
         return when(className){
+
+            DatabaseManager::class.java.name ->{
+                if(databaseManager == null){
+                    databaseManager = InAssetsDatabaseManager()
+                }
+                return databaseManager!! as T
+            }
             ExamplesDb::class.java.name ->{
+                /*
                 if (examplesDb == null){
                     val db = Room.databaseBuilder(context,ExamplesDb::class.java,"exampleDB.db")
                             .createFromAsset("exampleDB.db")
@@ -56,8 +67,13 @@ object ServiceLocator {
                     examplesDb = db
                 }
                 examplesDb!! as T
+
+                 */
+                return (get(context,DatabaseManager::class.java.name) as DatabaseManager)
+                    .getExampleDatabase(context) as T
             }
             WordsDb::class.java.name ->{
+                /*
                 if (wordsDb == null){
                     val db = Room.databaseBuilder(context,WordsDb::class.java,"dictionaryDB.db")
                             .createFromAsset("dictionaryDB.db")
@@ -67,6 +83,9 @@ object ServiceLocator {
                     wordsDb = db
                 }
                 wordsDb!! as T
+                 */
+                return (get(context,DatabaseManager::class.java.name) as DatabaseManager)
+                    .getWordsDatabase( context) as T
             }
             RoomExampleRepository::class.java.name ->{
                 if (roomExampleRepository == null)
@@ -140,10 +159,10 @@ object ServiceLocator {
     }
 
     private fun getRusNgramRepository(context: Context): NgramM3Repository<Int>{
-        return NgramM3HotRepo( get(context,RoomRusSearchRepository::class.java.name))
+        return get(context,RoomRusSearchRepository::class.java.name)
     }
 
     private fun getPinNgramRepository(context: Context): NgramM3Repository<Int>{
-        return NgramM3HotRepo( get(context, RoomPinSearchRepository::class.java.name))
+        return get(context, RoomPinSearchRepository::class.java.name)
     }
 }

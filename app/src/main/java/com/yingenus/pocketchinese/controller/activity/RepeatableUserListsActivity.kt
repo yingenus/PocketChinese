@@ -7,7 +7,7 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.controller.PocketApplication
+import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.controller.fragment.RepeatableUserListsFragment
 
 class RepeatableUserListsActivity : AppCompatActivity() {

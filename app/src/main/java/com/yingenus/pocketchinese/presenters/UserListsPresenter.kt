@@ -2,7 +2,7 @@ package com.yingenus.pocketchinese.presenters
 
 import android.content.Context
 import android.util.Log
-import com.yingenus.pocketchinese.controller.Settings
+import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.controller.fragment.UserListsInterface
 import com.yingenus.pocketchinese.controller.logErrorMes
 import com.yingenus.pocketchinese.model.database.PocketDBOpenManger
@@ -14,7 +14,6 @@ import com.yingenus.pocketchinese.model.words.statistic.RepeatHelper
 import com.yingenus.pocketchinese.model.words.statistic.StudyListAnalyzer
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyList
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyWord
-import com.yingenus.pocketchinese.model.imageDir
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers

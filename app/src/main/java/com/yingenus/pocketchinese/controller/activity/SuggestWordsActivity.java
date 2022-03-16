@@ -35,7 +35,7 @@ import androidx.transition.TransitionManager;
 
 import com.yingenus.pocketchinese.R;
 
-import com.yingenus.pocketchinese.controller.Settings;
+import com.yingenus.pocketchinese.Settings;
 import com.yingenus.pocketchinese.controller.dialog.AddWordsSheetDialog;
 import com.yingenus.pocketchinese.controller.fragment.AddWordFragment;
 import com.yingenus.pocketchinese.controller.holders.SuggestWordsAdapter;

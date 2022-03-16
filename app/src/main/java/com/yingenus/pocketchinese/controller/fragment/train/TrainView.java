@@ -1,28 +1,16 @@
 package com.yingenus.pocketchinese.controller.fragment.train;
 
 import android.content.Context;
-import android.text.Editable;
-import android.text.InputFilter;
-import android.text.Spanned;
-import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
-import android.widget.CheckBox;
-import android.widget.CompoundButton;
-import android.widget.EditText;
-import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.google.android.material.textfield.TextInputLayout;
 import com.yingenus.pocketchinese.R;
-import com.yingenus.pocketchinese.controller.Settings;
-import com.yingenus.pocketchinese.view.pintext.PinTextView;
-
-import java.util.Arrays;
+import com.yingenus.pocketchinese.Settings;
 
 public abstract class TrainView extends RecyclerView.ViewHolder implements View.OnAttachStateChangeListener {
 

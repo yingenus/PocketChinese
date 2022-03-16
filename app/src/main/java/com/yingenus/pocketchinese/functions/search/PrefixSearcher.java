@@ -1,5 +1,7 @@
 package com.yingenus.pocketchinese.functions.search;
 
+import com.yingenus.pocketchinese.common.Language;
+
 public class PrefixSearcher {
 
     public static final int RUSSIAN = 0;
@@ -19,8 +21,21 @@ public class PrefixSearcher {
         init(fileName,nativePointer);
     }
 
-    public void setLanguage(int language){
-        setLanguage(language,nativePointer);
+    public void setLanguage(Language language){
+
+        int languageCode;
+
+        if (language == Language.RUSSIAN){
+            languageCode = RUSSIAN;
+        }
+        else if (language == Language.PINYIN){
+            languageCode = PINYIN;
+        }
+        else {
+            throw new IllegalArgumentException("unsupported language :"+language.name());
+        }
+
+        setLanguage(languageCode,nativePointer);
     }
 
     public int[] find(byte[] query){

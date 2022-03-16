@@ -1,5 +1,6 @@
 package com.yingenus.pocketchinese.functions.search
 
+import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.domain.dto.UnitWord
 import com.yingenus.pocketchinese.domain.dto.VariantWord
 import com.yingenus.pocketchinese.model.LanguageCase
@@ -14,8 +15,8 @@ class IndexCreatorImpl(val iterator : Iterator<UnitWord>, val charset: Charset) 
 
     companion object{
 
-        fun getIndexCreator(iterator: Iterator<UnitWord>, languageCase: LanguageCase) =
-                IndexCreatorImpl(iterator, getCharset(languageCase))
+        fun getIndexCreator(iterator: Iterator<UnitWord>, language: Language) : IndexCreator =
+                IndexCreatorImpl(iterator, getCharset(language))
 
         private fun UnitWord.toWordLink(): WordLink{
 

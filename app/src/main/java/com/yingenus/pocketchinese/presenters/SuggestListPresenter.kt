@@ -1,7 +1,7 @@
 package com.yingenus.pocketchinese.presenters
 
 import android.content.Context
-import com.yingenus.pocketchinese.controller.Settings
+import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.controller.fragment.SuggestListsInterface
 import com.yingenus.pocketchinese.model.words.suggestwords.JSONHelper
 import com.yingenus.pocketchinese.model.words.suggestwords.JSONObjects

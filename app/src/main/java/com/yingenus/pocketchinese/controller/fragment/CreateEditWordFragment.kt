@@ -19,7 +19,7 @@ import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.controller.KeyboardCallbackInterface
-import com.yingenus.pocketchinese.controller.Settings
+import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.controller.hideKeyboard
 import com.yingenus.pocketchinese.model.database.pocketDB.StudyWord
 import com.yingenus.pocketchinese.presenters.CreateEditWordPresenter

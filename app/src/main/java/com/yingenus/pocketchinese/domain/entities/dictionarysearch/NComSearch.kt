@@ -79,4 +79,8 @@ class NComSearch(
 
 
     }
+
+    override fun release() {
+        // to do nothing
+    }
 }

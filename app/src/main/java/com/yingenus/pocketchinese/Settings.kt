@@ -1,8 +1,6 @@
-package com.yingenus.pocketchinese.controller
+package com.yingenus.pocketchinese
 
 import android.content.Context
-import android.os.Build
-import com.yingenus.pocketchinese.BuildConfig
 import com.yingenus.pocketchinese.model.RepeatType
 
 object Settings{
@@ -50,7 +48,7 @@ object Settings{
     fun getSearchHistory(context: Context): Array<Int>{
         val preference = context.getSharedPreferences(APP_PREFERENCE,0);
 
-        val iDs = Utils.getIDs( preference.getString(SEARCH_HISTORY, "")?:"")
+        val iDs = Utils.getIDs(preference.getString(SEARCH_HISTORY, "") ?: "")
 
         return iDs
     }
@@ -59,7 +57,7 @@ object Settings{
         val preferences = context.getSharedPreferences(APP_PREFERENCE,0)
         val history = preferences.getString(SEARCH_HISTORY,"")
 
-        val newHistory = Utils.setIDs(history?:"", iD)
+        val newHistory = Utils.setIDs(history ?: "", iD)
 
         preferences.edit().putString(SEARCH_HISTORY,newHistory).apply()
     }
@@ -88,7 +86,7 @@ object Settings{
 
         val editPreferences = preferences.edit()
 
-        viewed!!.add(version.toString()+ SEPARATOR+name)
+        viewed!!.add(version.toString()+ SEPARATOR +name)
 
         editPreferences.putStringSet(VIEWED_LISTS, viewed.toSet())
         editPreferences.apply()

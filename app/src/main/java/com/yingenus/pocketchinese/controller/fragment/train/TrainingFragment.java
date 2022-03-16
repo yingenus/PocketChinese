@@ -25,7 +25,7 @@ import com.daimajia.androidanimations.library.YoYo;
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.controller.Durations;
 import com.yingenus.pocketchinese.controller.KeyboardCallbackInterface;
-import com.yingenus.pocketchinese.controller.Settings;
+import com.yingenus.pocketchinese.Settings;
 import com.yingenus.pocketchinese.controller.VibrationUtilsKt;
 import com.yingenus.pocketchinese.model.LanguageCase;
 import com.yingenus.pocketchinese.model.database.pocketDB.PocketBaseHelper;
@@ -39,7 +39,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
-import java.util.function.ToDoubleBiFunction;
 
 public class TrainingFragment extends Fragment{
     private MultiColorProgressBar progressBar;

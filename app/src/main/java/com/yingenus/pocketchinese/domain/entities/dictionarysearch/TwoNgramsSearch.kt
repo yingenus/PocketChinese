@@ -44,5 +44,7 @@ class TwoNgramsSearch(val n1gramSearch : NgramSearch<VariantWord>, val n2gramSea
         return if (sorted.isEmpty()) Result.Empty() else Result.Success(sorted)
     }
 
-
+    override fun release() {
+        // to do nothing
+    }
 }

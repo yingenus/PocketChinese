@@ -11,7 +11,7 @@ import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentTransaction;
 
 import com.yingenus.pocketchinese.R;
-import com.yingenus.pocketchinese.controller.PocketApplication;
+import com.yingenus.pocketchinese.PocketApplication;
 import com.yingenus.pocketchinese.di.ServiceLocator;
 import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository;
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository;

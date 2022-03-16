@@ -4,4 +4,5 @@ import com.yingenus.pocketchinese.common.Result
 
 interface Searcher {
     fun find( query : String ) : Result<List<Int>>
+    fun release()
 }
