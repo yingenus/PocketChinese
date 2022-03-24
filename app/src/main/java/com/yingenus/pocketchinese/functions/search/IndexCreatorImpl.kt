@@ -1,5 +1,6 @@
 package com.yingenus.pocketchinese.functions.search
 
+import android.util.Log
 import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.domain.dto.UnitWord
 import com.yingenus.pocketchinese.domain.dto.VariantWord
@@ -7,6 +8,8 @@ import com.yingenus.pocketchinese.model.LanguageCase
 import java.io.File
 import java.io.OutputStream
 import java.nio.charset.Charset
+import kotlin.time.ExperimentalTime
+import kotlin.time.measureTimedValue
 
 class IndexCreatorImpl(val iterator : Iterator<UnitWord>, val charset: Charset) : IndexCreator {
 
@@ -41,37 +44,41 @@ class IndexCreatorImpl(val iterator : Iterator<UnitWord>, val charset: Charset) 
                 CharArray(size){index -> (data.toLong() shr (index * 8)).toChar()}
     }
 
+    @OptIn(ExperimentalTime::class)
     override fun createIndex(file: File) {
 
-        require( file.isFile)
-        require( file.canWrite())
+        val time = measureTimedValue {
+            require(file.isFile)
+            require(file.canWrite())
 
-        val out = file.outputStream()
-        val indexW = IndexedOutPut(out);
+            val out = file.outputStream()
+            val indexW = IndexedOutPut(out);
 
-        iterator.forEach { it ->
+            iterator.forEach { it ->
 
-            val word = it.toWordLink()
+                val word = it.toWordLink()
 
-            //write word length to the file 2 byte
-            indexW.write(toByteArray(word.word.length,2))
-            //write word
-            word.word.format()
-            indexW.write(word.word.toByteArray(charset))
-            val startIndex = indexW.position + 8
-            //write variants words data
-            indexW.write(toByteArray(startIndex,4))
-            //write length of variants word
-            indexW.write(toByteArray(word.data.size * 6))
-            //write variants word
-            word.data.forEach {
-                indexW.write(it.byteArray)
+                //write word length to the file 2 byte
+                indexW.write(toByteArray(word.word.length, 2))
+                //write word
+                //word.word.format()
+                indexW.write(word.word.toByteArray(charset))
+                val startIndex = indexW.position + 8
+                //write variants words data
+                indexW.write(toByteArray(startIndex, 4))
+                //write length of variants word
+                indexW.write(toByteArray(word.data.size * 6))
+                //write variants word
+                word.data.forEach {
+                    indexW.write(it.byteArray)
+                }
             }
-        }
 
-        indexW.flush()
-        indexW.close()
-        out.close()
+            indexW.flush()
+            indexW.close()
+            out.close()
+        }
+        Log.d("IndexCreatorImpl"," The init operation took: $time ms")
     }
 
 

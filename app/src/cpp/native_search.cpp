@@ -115,7 +115,7 @@ JNIEXPORT jintArray JNICALL Java_com_yingenus_pocketchinese_functions_search_Pre
     }
     catch (const std::exception& excpt)
     {
-        jclass excp = jnienv->FindClass("");
+        jclass excp = jnienv->FindClass("java/lang/Exception");
         jnienv->ThrowNew(excp, excpt.what());
     }
     return jnienv->NewIntArray(0);

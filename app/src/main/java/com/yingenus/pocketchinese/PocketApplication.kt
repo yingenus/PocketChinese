@@ -9,7 +9,12 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.work.*
 import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.data.local.RoomPinSearchRepository
-import com.yingenus.pocketchinese.data.local.db.DatabaseManager
+import com.yingenus.pocketchinese.data.local.RoomRusSearchRepository
+import com.yingenus.pocketchinese.data.local.SqlitePinSearchRepository
+import com.yingenus.pocketchinese.data.local.SqliteRusSearchRepository
+import com.yingenus.pocketchinese.data.local.db.DictionaryDatabaseVersion
+import com.yingenus.pocketchinese.data.local.db.room.RoomDatabaseManager
+import com.yingenus.pocketchinese.data.local.db.sqlite.SqliteDatabaseManager
 import com.yingenus.pocketchinese.di.ServiceLocator
 import com.yingenus.pocketchinese.domain.entities.dictionarysearch.Searcher
 import com.yingenus.pocketchinese.functions.search.CreateNativeSearcherIterator
@@ -64,6 +69,10 @@ class PocketApplication: Application(), Configuration.Provider {
 
     }
 
+    override fun onTerminate() {
+        super.onTerminate()
+    }
+
     private fun setup(){
         setupChain.setup(this)
     }
@@ -111,6 +120,13 @@ abstract class SetupChain(private val next : SetupChain?){
         next?.setup(context)
     }
     abstract fun setupActions(context: PocketApplication)
+}
+abstract class TerminateChain(private val next : TerminateChain?){
+    fun terminate(context: PocketApplication){
+        terminateActions(context)
+        next?.terminate(context)
+    }
+    abstract fun terminateActions(context: PocketApplication)
 }
 
 class SetUpNotifyChannels( next : SetupChain?): SetupChain(next){
@@ -165,17 +181,21 @@ class SetUpNotifications( next : SetupChain?): SetupChain(next){
 
 class SetUpCreteNativeSearcher( next : SetupChain?): SetupChain(next){
     override fun setupActions(context: PocketApplication) {
-        val pinRepo = ServiceLocator.get<RoomPinSearchRepository>(context,RoomPinSearchRepository::class.java.name)
-        val rusRepo = ServiceLocator.get<RoomPinSearchRepository>(context,RoomPinSearchRepository::class.java.name)
+        val pinRepo = ServiceLocator.get<SqlitePinSearchRepository>(context, SqlitePinSearchRepository::class.java.name)
+        val rusRepo = ServiceLocator.get<SqliteRusSearchRepository>(context,SqliteRusSearchRepository::class.java.name)
 
         val iterator : CreateNativeSearcherIterator = CreatePrefixSearchIteratorImpl(
-            ServiceLocator.get(context,DatabaseManager::class.java.name),
+            (ServiceLocator.get(context, SqliteDatabaseManager::class.java.name) as DictionaryDatabaseVersion).getVersion(context),
             Language.RUSSIAN to rusRepo,
             Language.PINYIN to pinRepo
         )
 
         PocketApplication.rusSearcher = iterator.createNativeSearcher(Language.RUSSIAN, context)
-        PocketApplication.pinSearcher = iterator.createNativeSearcher(Language.CHINESE, context)
+        PocketApplication.pinSearcher = iterator.createNativeSearcher(Language.PINYIN, context)
 
     }
+}
+
+class TerminateDatabases(){
+
 }

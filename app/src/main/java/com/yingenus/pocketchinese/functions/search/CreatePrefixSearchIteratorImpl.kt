@@ -1,15 +1,13 @@
 package com.yingenus.pocketchinese.functions.search
 
 import android.content.Context
-import com.yingenus.pocketchinese.data.local.db.DatabaseManager
-import com.yingenus.pocketchinese.data.local.room.WordsDb
 import com.yingenus.pocketchinese.common.Language
 import java.io.File
 import java.lang.IllegalArgumentException
 import java.lang.RuntimeException
 
 class CreatePrefixSearchIteratorImpl(
-    private val databaseManager: DatabaseManager,
+    private val unitWordsVersion : Int,
     vararg wordRepositorys: Pair<Language, UnitWordRepository>
     ) : CreateNativeSearcherIterator{
 
@@ -37,9 +35,11 @@ class CreatePrefixSearchIteratorImpl(
     }
 
     override fun createNativeSearcher(language: Language, context: Context): NativeSearcher {
-        val dbVersion : Int = databaseManager.getDatabaseVersion(WordsDb::class.java.name,context)
+        val dbVersion : Int = unitWordsVersion
 
         val path : String = context.filesDir.absolutePath + "/" + index_directory
+
+        checkPath(path)
 
         val oldIndex = getOldIndex(path,language)
 
@@ -62,18 +62,31 @@ class CreatePrefixSearchIteratorImpl(
         return NativeSearcher(searcher, getCharset(language))
     }
 
+    private fun checkPath(absolutPath : String){
+        val folder = File(absolutPath)
+        if(!folder.exists()){
+            folder.mkdirs()
+        }
+    }
+
     private fun createIndex(absolutName : String, lang: Language){
 
         val iterator = UnitWordIterator(getRepository(lang))
 
         val indexCreator = IndexCreatorImpl.getIndexCreator(iterator, lang)
 
+        val file = File(absolutName)
+
+        if (!file.exists()){
+            file.createNewFile()
+        }
+
         indexCreator.createIndex(File(absolutName))
     }
 
     private fun getRepository(lang: Language): UnitWordRepository{
         return reposytorys.find { it.first == lang }?.second
-            ?: throw IllegalArgumentException("cent find such language :${lang::name}")
+            ?: throw IllegalArgumentException("cant find such language :${lang::name}")
     }
 
     private fun getOldIndex(path : String, lang: Language): Pair<Int,File>?{

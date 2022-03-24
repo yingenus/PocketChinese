@@ -82,7 +82,8 @@ class FuzzySearchEngine(
 
         //.observeOn(Schedulers.io())
         return Observable.defer {
-            when(val result = getSearcher(language).find(preparedQuery)){
+            val result = getSearcher(language).find(preparedQuery)
+            when(result){
                 is Result.Failure -> Observable.error<Int>( Throwable(result.msg,null))
                 is Result.Success -> Observable.fromIterable(result.value)
                 else -> Observable.empty<Int>()

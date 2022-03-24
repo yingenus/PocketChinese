@@ -27,7 +27,7 @@ public:
 
 private:
 	int array_lenght = 0;
-	Link** links;
+	Link** links = nullptr;
 	Word* leaf = nullptr;
 
 	Node* findNode(char key);

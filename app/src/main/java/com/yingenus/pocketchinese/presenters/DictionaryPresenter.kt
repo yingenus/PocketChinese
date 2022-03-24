@@ -61,9 +61,21 @@ class DictionaryPresenter(
     private fun registerSubscribers(){
 
         val searchObserver = getSearchObserver()
-        val filtered = searchObserver.filter { it.second.isEmpty()||(!(witchLanguage(it.second) == Language.RUSSIAN && it.second.length == 1)) }
-        filtered.subscribe { view.showSearchEmptyQuery(true) }
-        val notPass = searchObserver.filter { !(it.second.isEmpty()||(!(witchLanguage(it.second) == Language.RUSSIAN && it.second.length == 1))) }
+        val filtered = searchObserver.filter {
+            if(witchLanguage(it.second) == Language.RUSSIAN){
+                it.second.length > 1
+            }else{
+                !it.second.isEmpty()
+            }
+        }
+        filtered.subscribe { view.showSearchEmptyQuery(false) }
+        val notPass = searchObserver.filter {
+            if(witchLanguage(it.second) == Language.RUSSIAN){
+                it.second.length <= 1
+            }else{
+                it.second.isEmpty()
+            }
+        }
         notPass.subscribe { view.showSearchEmptyQuery(true) }
 
         //.observeOn(Schedulers.io())
@@ -71,14 +83,14 @@ class DictionaryPresenter(
         filtered
                 .debounce(150, TimeUnit.MILLISECONDS)
                 .switchMap { query ->
-                    val results = wordsSearchUseCase.search(query.second, WordsSearchUseCase.SearchParams(query.first))
+                    val results = wordsSearchUseCase.search(query.second, WordsSearchUseCase.SearchParams(query.first)).publish().autoConnect(3)
                     val indexes = results.scan( 0){ acc , _ -> acc + 1 }
                     val count = results.count().filter { it!! == 0L }.map { Result.Empty<Pair<Int,DictionaryItem>>() }
 
                     indexes.zipWith(results, BiFunction<Int,DictionaryItem,Result<Pair<Int,DictionaryItem>>> { index, result-> Result.Success( index to result)})
                             .mergeWith(count).map { query.second to it}
 
-                }
+                } 
                 .observeOn(AndroidSchedulers.mainThread())
                 .doOnError { msg ->
                     Log.i("Dictionary", "Cant compl Query = ${msg.logErrorMes()}")

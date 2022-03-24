@@ -86,8 +86,9 @@ void Node::add(string &key, Word &word) {
 
 			}
 		}
-
-		delete[] links;
+		if(links != nullptr){
+			delete[] links;
+		}
 		links = new_links;
 		array_lenght = new_size;
 	}
@@ -590,7 +591,7 @@ Node* Node::findNode(char key) {
 int Node::my_size() {
 	int self_size = sizeof(this);
 
-	int arry_size = sizeof(*links);
+	int arry_size = 0;
 
 	int all_links_size = 0;
 
@@ -601,6 +602,7 @@ int Node::my_size() {
 			all_links_size += sizeof(node->node);
 			all_links_size += sizeof(node);
 		}
+		arry_size = sizeof(*links);
 	}
 
 	int leaf_size = sizeof(*leaf);
@@ -619,9 +621,8 @@ Node::~Node() {
 			delete node->node;
 			delete node;
 		}
+		delete[] links;
 	}
-
-	delete[] links;
 }
 
 

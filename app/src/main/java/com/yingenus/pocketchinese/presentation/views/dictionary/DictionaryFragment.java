@@ -439,6 +439,8 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
 
     @Override
     public void showSearchEmptyQuery(boolean show) {
+        Log.d("Dictionary fragment", "showSearchEmptyQuery :"+show);
+
         if (dictionaryRecycle == null) return;
         if (isSearchEmptyBannerShowing == show) return;
         if (show){
