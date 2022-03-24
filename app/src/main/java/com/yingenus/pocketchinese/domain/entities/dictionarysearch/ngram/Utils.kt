@@ -5,8 +5,8 @@ package com.yingenus.pocketchinese.domain.entities.dictionarysearch.ngram
 
      val splited = mutableListOf<String>()
 
-     for (i in 0..str.length - 3){
-         splited.add(str.substring(i,i+3))
+     for (i in 0..str.length - splitLength){
+         splited.add(str.substring(i,i+splitLength))
      }
      return splited
  }

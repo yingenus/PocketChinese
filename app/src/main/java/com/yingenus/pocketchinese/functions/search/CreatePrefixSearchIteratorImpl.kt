@@ -30,7 +30,7 @@ class CreatePrefixSearchIteratorImpl(
                 Language.PINYIN -> "pin"
             }
 
-        fun getName(lang: Language, version: Int) = "${name(lang)}_${version}${extension}"
+        fun getFileName(lang: Language, version: Int) = "${name(lang)}_${version}${extension}"
 
     }
 
@@ -46,7 +46,7 @@ class CreatePrefixSearchIteratorImpl(
         val indexAbsolutName : String
 
         if (oldIndex == null || oldIndex.first < dbVersion){
-            indexAbsolutName = path+"/"+getName(language,dbVersion)
+            indexAbsolutName = path+"/"+getFileName(language,dbVersion)
             createIndex(indexAbsolutName, language)
         }
         else{
@@ -93,8 +93,8 @@ class CreatePrefixSearchIteratorImpl(
 
         val langCode = name(lang)
 
-        val file = File(path).listFiles { file, s -> file.name.contains(langCode)}?: emptyArray()
-        val fileByVersion : List<Pair<Int, File>> = file
+        val files = File(path).listFiles()?: emptyArray()
+        val fileByVersion : List<Pair<Int, File>> = files.filter { it.name.contains(name(lang)) }
             .filterNotNull()
             .map {
                 getVersion(it.name) to it
@@ -115,6 +115,7 @@ class CreatePrefixSearchIteratorImpl(
 
         return version.toIntOrNull()?: throw RuntimeException("cant get version of index in :${fileName}")
     }
+
 
 
 }

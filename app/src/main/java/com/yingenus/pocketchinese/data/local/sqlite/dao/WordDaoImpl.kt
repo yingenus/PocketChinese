@@ -23,19 +23,19 @@ class WordDaoImpl(connectionSource: ConnectionSource) : BaseDaoImpl<Word,String>
     //@Query("SELECT * FROM words WHERE chinese_word LIKE '%' || :entry || '%'")
     override fun loadByEntryChinese( entry : String): List<Word>{
         val preparedQuery : PreparedQuery<Word> =
-            queryBuilder().where().like("chinese_word", "'%${entry}%'").prepare()
+            queryBuilder().where().like("chinese_word", "%${entry}%").prepare()
         return query(preparedQuery)
     }
     //@Query("SELECT * FROM words WHERE pinyin LIKE '%' || :entry || '%'")
     override fun loadByEntryPinyin( entry : String): List<Word>{
         val preparedQuery : PreparedQuery<Word> =
-            queryBuilder().where().like("pinyin", "'%${entry}%'").prepare()
+            queryBuilder().where().like("pinyin", "%${entry}%").prepare()
         return query(preparedQuery)
     }
     //@Query("SELECT * FROM words WHERE translation LIKE '%' || :entry || '%'")
     override fun loadByEntryTranslation( entry : String): List<Word>{
         val preparedQuery : PreparedQuery<Word> =
-            queryBuilder().where().like("translation", "'%${entry}%'").prepare()
+            queryBuilder().where().like("translation", "%${entry}%").prepare()
         return query(preparedQuery)
     }
 }

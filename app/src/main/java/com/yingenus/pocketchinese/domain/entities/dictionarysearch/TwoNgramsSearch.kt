@@ -37,8 +37,8 @@ class TwoNgramsSearch(val n1gramSearch : NgramSearch<VariantWord>, val n2gramSea
 
         val sorted = gramResults.map { Triple(it.value.second, it.value.first, it.key) }
                 .sortedWith(
-                        compareByDescending<Triple<Int,Int, VariantWord>>{ it.first}
-                                .thenByDescending { it.second }.thenBy { it.third.weight }).map { it.third.id }.distinct()
+                        compareByDescending<Triple<Int,Int, VariantWord>>{ it.second}
+                                .thenByDescending { it.first }.thenBy { it.third.weight }).map { it.third.id }.distinct()
 
 
         return if (sorted.isEmpty()) Result.Empty() else Result.Success(sorted)
