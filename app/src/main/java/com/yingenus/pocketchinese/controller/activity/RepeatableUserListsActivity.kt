@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
+import androidx.core.splashscreen.SplashScreen
+import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.fragment.app.Fragment
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.PocketApplication
@@ -19,6 +21,10 @@ class RepeatableUserListsActivity : AppCompatActivity() {
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
+
+        installSplashScreen()
+        PocketApplication.setupApplication()
+
         super.onCreate(savedInstanceState)
         PocketApplication.postStartActivity(false)
         setContentView(R.layout.repeatable_list_layout)

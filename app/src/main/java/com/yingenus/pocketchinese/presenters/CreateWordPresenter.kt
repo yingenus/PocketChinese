@@ -82,7 +82,7 @@ open class CreateWordPresenter(view: CreateWordInterface, dictionaryItemReposito
 
             observable
                     .map {
-                    wordDAO.getAllIn(it!!)!!.groupBy({it.first},{it.second})?.keys?.max()?:0 }
+                    wordDAO.getAllIn(it!!)!!.groupBy({it.first},{it.second})?.keys?.maxOrNull()?:0 }
                     .doOnError { Log.i("Create word error", it.message?:" un known")  }
                     .retry()
                     .observeOn(AndroidSchedulers.mainThread())
@@ -120,7 +120,7 @@ open class CreateWordPresenter(view: CreateWordInterface, dictionaryItemReposito
             singleObservable
                     .map { list -> list.find { it.uuid.equals(studyListUUID) } }
                     .map { studyList ->
-                        wordDAO.getAllIn(studyList!!)?.groupBy({it.first},{it.second})?.keys?.max()
+                        wordDAO.getAllIn(studyList!!)?.groupBy({it.first},{it.second})?.keys?.maxOrNull()
                                 ?: 0
                     }
                     .observeOn(AndroidSchedulers.mainThread())

@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.yingenus.pocketchinese.controller.PocketApplication
 import com.yingenus.pocketchinese.logErrorMes
 import com.yingenus.pocketchinese.model.database.PocketDBOpenManger
 import com.yingenus.pocketchinese.model.database.pocketDB.*
@@ -13,6 +14,7 @@ class DbCleanWorker(context : Context, workerParams : WorkerParameters ) : Worke
 
     override fun doWork(): Result {
         Log.d("dbCleaner","Worker start")
+        PocketApplication.setupApplication()
         return try{
             val cleaner = Cleaner(applicationContext)
 

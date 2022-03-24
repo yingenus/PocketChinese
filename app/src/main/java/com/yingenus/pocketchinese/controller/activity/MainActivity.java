@@ -6,6 +6,7 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentTransaction;
@@ -76,6 +77,10 @@ public class MainActivity  extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        SplashScreen splashScreen= SplashScreen.installSplashScreen(this);
+
+        PocketApplication.Companion.setupApplication();
+
         getSupportFragmentManager().setFragmentFactory(
                 new MainFragmentFactory(
                         ServiceLocator.INSTANCE.get(getApplicationContext(), DictionaryItemRepository.class.getName()),
@@ -84,6 +89,7 @@ public class MainActivity  extends AppCompatActivity {
                         ServiceLocator.INSTANCE.get(getApplicationContext(),WordsSearchUseCase.class.getName())
                 ));
         super.onCreate(savedInstanceState);
+
         PocketApplication.Companion.postStartActivity(true);
         setContentView(R.layout.main_activity);
 

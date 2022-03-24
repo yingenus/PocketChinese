@@ -10,6 +10,8 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.Settings
+import com.yingenus.pocketchinese.controller.PocketApplication
+import com.yingenus.pocketchinese.controller.Settings
 import com.yingenus.pocketchinese.controller.activity.RepeatableUserListsActivity
 import com.yingenus.pocketchinese.logErrorMes
 import com.yingenus.pocketchinese.model.RepeatType
@@ -50,8 +52,13 @@ class CheckRepeatableWordsWorker( context: Context, workerParameters: WorkerPara
         }
     }
 
+
+
     override fun doWork(): Result{
         Log.d("CheckRepeatable","Worker start")
+
+        PocketApplication.setupApplication()
+
         try {
             val checker = RepeatableChecker(applicationContext, Settings.getRepeatType(applicationContext))
             val expired = checker.haveExpired()
