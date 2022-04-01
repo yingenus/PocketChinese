@@ -4,6 +4,8 @@ import android.content.Context
 import android.util.Log
 import com.yingenus.pocketchinese.common.Result
 import com.yingenus.pocketchinese.Settings
+import com.yingenus.pocketchinese.AppSettings
+import com.yingenus.pocketchinese.ISettings
 import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryInterface
 import com.yingenus.pocketchinese.controller.logErrorMes
 import com.yingenus.pocketchinese.domain.dto.DictionaryItem
@@ -21,7 +23,7 @@ import java.util.concurrent.TimeUnit
 class DictionaryPresenter(
         val  view: DictionaryInterface,
         private  val dictionaryItemRepository: DictionaryItemRepository,
-        private val wordsSearchUseCase: WordsSearchUseCase) {
+        private val wordsSearchUseCase: WordsSearchUseCase,private val appSettings: ISettings) {
 
     //private val searcher = DictionarySearch()
 
@@ -30,13 +32,14 @@ class DictionaryPresenter(
     private lateinit var typeChangedPublisher : PublishSubject<WordsSearchUseCase.SearchParams.SearchType>
     private lateinit var searchObservable: Observable<Pair<WordsSearchUseCase.SearchParams.SearchType,String>>
 
-    fun onCreate( context: Context){
+    fun onCreate(){
 
         //searcher.initDictionary(dictionaryItemRepository, context)
 
         typeChangedPublisher = PublishSubject.create<WordsSearchUseCase.SearchParams.SearchType>()
 
         registerSubscribers()
+        updateHistory()
     }
 
     fun searchTypeChanged(newState: DictionaryInterface.States){
@@ -121,27 +124,35 @@ class DictionaryPresenter(
 
     fun chinCharClicked(dictionaryItem: DictionaryItem){
         view.showChinChar(dictionaryItem)
+        appSettings.addSearchItem(dictionaryItem.id)
+        updateHistory()
     }
 
     fun onDestroy(){
         //searcher.close()
     }
 
+    fun onResume(){
+        updateHistory()
+    }
 
-    fun getHistory(context: Context): List<DictionaryItem>{
+    private fun updateHistory(){
+        view.setHistory(getHistory())
+    }
+
+
+    fun getHistory(): List<DictionaryItem>{
         val history = mutableListOf<DictionaryItem>()
 
-        if (context != null){
-            val ids = Settings.getSearchHistory(context!!)
 
-            for (id in ids){
-                val chinChar = dictionaryItemRepository.findById(id)
-                if (chinChar != null )history.add(chinChar)
-            }
-            return history
+        val ids = appSettings.getSearchHistory()
+
+        for (id in ids){
+            val chinChar = dictionaryItemRepository.findById(id)
+            if (chinChar != null )history.add(chinChar)
         }
+        return history
 
-        return emptyList()
     }
 
 }

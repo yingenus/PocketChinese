@@ -11,8 +11,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.yingenus.pocketchinese.ISettings;
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.PocketApplication;
+import com.yingenus.pocketchinese.Settings;
 import com.yingenus.pocketchinese.di.ServiceLocator;
 import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository;
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository;
@@ -32,13 +34,20 @@ public class MainActivity  extends AppCompatActivity {
         ExampleRepository exampleRepository;
         ToneRepository toneRepository;
         WordsSearchUseCase wordsSearchUseCase;
+        ISettings settings;
 
-        public MainFragmentFactory(DictionaryItemRepository dictionaryItemRepository, ExampleRepository exampleRepository, ToneRepository toneRepository, WordsSearchUseCase wordsSearchUseCase){
+        public MainFragmentFactory(
+                DictionaryItemRepository dictionaryItemRepository,
+                ExampleRepository exampleRepository,
+                ToneRepository toneRepository,
+                WordsSearchUseCase wordsSearchUseCase,
+                ISettings settings){
             super();
             this.dictionaryItemRepository = dictionaryItemRepository;
             this.exampleRepository = exampleRepository;
             this.toneRepository = toneRepository;
             this.wordsSearchUseCase = wordsSearchUseCase;
+            this.settings = settings;
         }
 
         @NonNull
@@ -46,7 +55,7 @@ public class MainActivity  extends AppCompatActivity {
         public Fragment instantiate(@NonNull ClassLoader classLoader, @NonNull String className) {
             if (className.equals(DictionaryFragment.class.getName())) {
                 Log.d("MainFragmentFactory","create Fragment: DictionaryFragment");
-                return new DictionaryFragment(dictionaryItemRepository,exampleRepository,toneRepository,wordsSearchUseCase);
+                return new DictionaryFragment(dictionaryItemRepository,exampleRepository,toneRepository,wordsSearchUseCase,settings);
             }
             if (className.equals(TrainListsFragment.class.getName())) {
                 Log.d("MainFragmentFactory","create Fragment: TrainListsFragment");
@@ -86,11 +95,12 @@ public class MainActivity  extends AppCompatActivity {
                         ServiceLocator.INSTANCE.get(getApplicationContext(), DictionaryItemRepository.class.getName()),
                         ServiceLocator.INSTANCE.get(getApplicationContext(),ExampleRepository.class.getName()),
                         ServiceLocator.INSTANCE.get(getApplicationContext(),ToneRepository.class.getName()),
-                        ServiceLocator.INSTANCE.get(getApplicationContext(),WordsSearchUseCase.class.getName())
+                        ServiceLocator.INSTANCE.get(getApplicationContext(),WordsSearchUseCase.class.getName()),
+                        Settings.INSTANCE.getSettings(getApplicationContext())
                 ));
         super.onCreate(savedInstanceState);
 
-        PocketApplication.Companion.postStartActivity(true);
+        PocketApplication.Companion.postStartActivity(this,true);
         setContentView(R.layout.main_activity);
 
         buttonNavigationMenu=findViewById(R.id.main_bubble_tab_bar);

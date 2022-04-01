@@ -1,50 +1,77 @@
-package com.yingenus.pocketchinese.controller
+package com.yingenus.pocketchinese
 
+import android.annotation.SuppressLint
 import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
-import android.util.Log
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.FragmentActivity
 import androidx.work.*
 import com.yingenus.pocketchinese.common.Language
-import com.yingenus.pocketchinese.data.local.RoomPinSearchRepository
-import com.yingenus.pocketchinese.data.local.RoomRusSearchRepository
-import com.yingenus.pocketchinese.data.local.SqlitePinSearchRepository
-import com.yingenus.pocketchinese.data.local.SqliteRusSearchRepository
-import com.yingenus.pocketchinese.data.local.db.DictionaryDatabaseVersion
-import com.yingenus.pocketchinese.data.local.db.room.RoomDatabaseManager
+import com.yingenus.pocketchinese.data.local.*
+import com.yingenus.pocketchinese.data.local.db.sqlite.InAssetsSqliteDatabaseManager
 import com.yingenus.pocketchinese.data.local.db.sqlite.SqliteDatabaseManager
+import com.yingenus.pocketchinese.data.local.sqlite.DictionaryDBHelper
+import com.yingenus.pocketchinese.data.local.sqlite.ExamplesDBHelper
+import com.yingenus.pocketchinese.data.proxy.*
 import com.yingenus.pocketchinese.di.ServiceLocator
+import com.yingenus.pocketchinese.domain.dto.VariantWord
+import com.yingenus.pocketchinese.domain.entities.dictionarysearch.ProxySearcher
 import com.yingenus.pocketchinese.domain.entities.dictionarysearch.Searcher
-import com.yingenus.pocketchinese.functions.search.CreateNativeSearcherIterator
-import com.yingenus.pocketchinese.functions.search.CreatePrefixSearchIteratorImpl
-import com.yingenus.pocketchinese.model.database.CopierDBs
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
+import com.yingenus.pocketchinese.domain.repository.ExampleRepository
+import com.yingenus.pocketchinese.domain.repository.RadicalsRepository
+import com.yingenus.pocketchinese.domain.repository.ToneRepository
+import com.yingenus.pocketchinese.domain.repository.search.NgramRepository
+import com.yingenus.pocketchinese.domain.repository.search.UnitWordRepository
+import com.yingenus.pocketchinese.functions.search.*
 import com.yingenus.pocketchinese.notifications.getNotificationsChannels
-import com.yingenus.pocketchinese.workers.CheckRepeatableWordsWorker
-import com.yingenus.pocketchinese.workers.DbCleanWorker
-import java.io.IOException
+import com.yingenus.pocketchinese.presentation.dialogs.LoadingDialog
+import com.yingenus.pocketchinese.workers.*
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.subjects.PublishSubject
+import java.util.*
 import java.util.concurrent.TimeUnit
 
 class PocketApplication: Application(), Configuration.Provider {
     private var isApplicationStared = false
     private var isApplicationSetUp = false
+    private var isSearchersInited = false
 
     private val setupChain =
-        SetUpNotifyChannels(SetUpWorkers(SetUpNotifications(SetUpCreteNativeSearcher(null))))
+        SetUpNotifyChannels(SetUpDbIndexInstallation(SetUpWorkers(SetUpNotifications(null))))
+    //private val setUpNativeSearchChain = SetUpCreteNativeSearcher(null)
+
+    val initWorkersId = mutableListOf<UUID>()
 
     companion object{
 
+        const val INIT_APP_UNIQUE_WORK = "database_init"
+
         private var pocketApplication : PocketApplication? = null
 
-        lateinit var rusSearcher: Searcher;
-        lateinit var pinSearcher: Searcher;
+        private val _rusSearcher: ProxySearcher = ProxySearcher()
+        val rusSearcher : Searcher
+            get() = _rusSearcher
 
+        private val _pinSearcher: ProxySearcher = ProxySearcher()
+        val pinSearcher : Searcher
+            get() = _pinSearcher
 
-        fun postStartActivity(fromLaunch : Boolean){
-            pocketApplication?.postStartActivity(fromLaunch)
+        fun setRusSearcher( searcher: Searcher){
+            _rusSearcher.initSearcher(searcher)
         }
 
+        fun setPinSearcher( searcher: Searcher){
+            _pinSearcher.initSearcher(searcher)
+        }
+
+        fun postStartActivity(activity: FragmentActivity, fromLaunch : Boolean): Completable{
+            val initComplete =  pocketApplication!!.postStartActivity(activity, fromLaunch)
+            return initComplete
+        }
         fun setupApplication(){
             pocketApplication?.setup()
         }
@@ -78,15 +105,19 @@ class PocketApplication: Application(), Configuration.Provider {
         super.onTerminate()
     }
 
+
+
+    @SuppressLint("EnqueueWork")
     private fun setup(){
         if (!isApplicationSetUp) {
+            isApplicationSetUp =true
             setupChain.setup(this)
         }
     }
 
-    private fun postStartActivity(fromLaunch : Boolean){
-        if (isApplicationStared) return
-        else isApplicationStared = true
+    private fun postStartActivity(activity: FragmentActivity, fromLaunch : Boolean): Completable{
+
+        if (isApplicationStared) Completable.create { it.onComplete() }
 
         if (fromLaunch) {
             if(Settings.shouldShowNotifications(applicationContext)) {
@@ -96,29 +127,68 @@ class PocketApplication: Application(), Configuration.Provider {
                 wm.enqueueUniqueWork("check_repeatable_words_on_start", ExistingWorkPolicy.REPLACE, checkWork)
             }
         }
-    }
 
-    private fun copyDBs(){
-        //copyDB(2, "examplesDB.db")
-        //copyDB(2, "dictionaryDB.db")
-    }
+        val publishers: List<PublishSubject<Data>> = initWorkersId.map { PublishSubject.create() }
 
-    private fun copyDB(version : Int, name : String){
 
-        val copier = CopierDBs(name)
+        val uniqueLive = WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData(INIT_APP_UNIQUE_WORK)
 
-        if (!copier.isExist(applicationContext, version)){
-            Log.i("PocketApplication","copy db: $name, version: $version")
-            try {
-                copier.copyDB(applicationContext)
-            }catch (ioe : IOException){
-                Log.w("PocketApplication", "ioe wile copy $name")
+        uniqueLive.observe(activity){ infos : List<WorkInfo> ->
+            infos.forEach {  info ->
+                val index = initWorkersId.indexOf(info.id)
+                val publisher = publishers.getOrNull(index) ?: return@observe
+
+                when(info.state){
+                    WorkInfo.State.SUCCEEDED -> publisher.onComplete()
+                    WorkInfo.State.FAILED -> publisher.onError(Throwable("smh happened"))
+                    WorkInfo.State.RUNNING -> {
+                        publisher.onNext(info.progress)
+                    }
+                    else -> {
+                        //To do nothing yet
+                    }
+                }
             }
-        }else{
-            Log.i("PocketApplication","db: $name exist and last version")
         }
 
+        val progressObservables = publishers.mapIndexed { index, publishSubject ->
+
+            val del = publishers.size
+            val from = (100 / publishers.size) * index
+
+            publishSubject
+                .map {
+                val process = it.getInt(progressPercents, -1)
+                val state = it.getString(progressStageName)?:""
+                process to state
+            }
+                .filter { it.first != -1 }
+                .map { (from + it.first/del) to it.second }
+
+        }
+
+        val commonObservable = if (progressObservables.size == 1){
+            progressObservables.first()
+        }else{
+            Observable.concat(progressObservables)
+        }
+            .doOnComplete {
+                uniqueLive.removeObservers(activity)
+                isApplicationStared = true
+            }
+            .publish()
+
+        commonObservable.connect()
+
+        val loadingDialog = LoadingDialog()
+        loadingDialog.registerObserver(commonObservable)
+        val fm = activity.supportFragmentManager
+        loadingDialog.show(fm,"loading_dialog")
+
+
+        return commonObservable.ignoreElements()
     }
+
 }
 
 abstract class SetupChain(private val next : SetupChain?){
@@ -144,6 +214,69 @@ class SetUpNotifyChannels( next : SetupChain?): SetupChain(next){
                     as NotificationManager
             notificationManager.createNotificationChannels(channels)
         }
+    }
+}
+
+class SetUpDbIndexInstallation( next : SetupChain?): SetupChain(next){
+    override fun setupActions(context: PocketApplication) {
+        val wm = WorkManager.getInstance(context)
+
+        if (isLongInit(context)){
+            val copyDBWorker = OneTimeWorkRequestBuilder<CopyDBWorker>().build()
+            val createIndexWorker = OneTimeWorkRequestBuilder<CreateIndexWorker>().build()
+            val initPrefixWorker = OneTimeWorkRequestBuilder<InitNativeSearchers>().build()
+            val initDataBaseRepositorys = OneTimeWorkRequestBuilder<initDatabaseRepositorys>().build()
+
+            context.initWorkersId.add(copyDBWorker.id)
+            context.initWorkersId.add(createIndexWorker.id)
+            context.initWorkersId.add(initPrefixWorker.id)
+            context.initWorkersId.add(initDataBaseRepositorys.id)
+
+            wm.beginUniqueWork(PocketApplication.INIT_APP_UNIQUE_WORK, ExistingWorkPolicy.KEEP, copyDBWorker)
+                .then(createIndexWorker)
+                .then(initPrefixWorker)
+                .then(initDataBaseRepositorys)
+                .enqueue()
+        }else{
+            SetUpIndexes(SetUpDataBaseRepositorys(null)).setup(context)
+        }
+    }
+
+    private fun isLongInit(context: PocketApplication): Boolean{
+
+        val databaseManager : SqliteDatabaseManager = InAssetsSqliteDatabaseManager()
+        return true
+        return ! (databaseManager.isActualVersion(ExamplesDBHelper::class.java.name, context) &&
+        databaseManager.isActualVersion(DictionaryDBHelper::class.java.name, context))
+    }
+}
+
+class SetUpIndexes(next : SetupChain?): SetupChain(next){
+    override fun setupActions(context: PocketApplication) {
+        val indexManager = IndexManagerImpl()
+
+        val rusPath = indexManager.getIndexAbsolutePathLast(Language.RUSSIAN, context)
+        val pinPath = indexManager.getIndexAbsolutePathLast(Language.PINYIN, context)
+
+        val pinNative : PrefixSearcher
+        val rusNative : PrefixSearcher
+
+        rusNative = PrefixSearcher()
+        rusNative.setLanguage(Language.RUSSIAN)
+        rusNative.init(rusPath)
+
+        pinNative = PrefixSearcher()
+        pinNative.setLanguage(Language.PINYIN)
+        pinNative.init( pinPath)
+
+        PocketApplication.setPinSearcher(NativeSearcher.build(pinNative,Language.PINYIN))
+        PocketApplication.setRusSearcher(NativeSearcher.build(rusNative,Language.RUSSIAN))
+    }
+}
+
+class SetUpDataBaseRepositorys(next : SetupChain?): SetupChain(next){
+    override fun setupActions(context: PocketApplication) {
+        ServiceLocator.initAllProxy(context)
     }
 }
 
@@ -183,23 +316,6 @@ class SetUpNotifications( next : SetupChain?): SetupChain(next){
                 .build()
             wm.enqueueUniquePeriodicWork("check_repeatable_words", ExistingPeriodicWorkPolicy.KEEP,checkWork)
         }
-    }
-}
-
-class SetUpCreteNativeSearcher( next : SetupChain?): SetupChain(next){
-    override fun setupActions(context: PocketApplication) {
-        val pinRepo = ServiceLocator.get<SqlitePinSearchRepository>(context, SqlitePinSearchRepository::class.java.name)
-        val rusRepo = ServiceLocator.get<SqliteRusSearchRepository>(context,SqliteRusSearchRepository::class.java.name)
-
-        val iterator : CreateNativeSearcherIterator = CreatePrefixSearchIteratorImpl(
-            (ServiceLocator.get(context, SqliteDatabaseManager::class.java.name) as DictionaryDatabaseVersion).getVersion(context),
-            Language.RUSSIAN to rusRepo,
-            Language.PINYIN to pinRepo
-        )
-
-        PocketApplication.rusSearcher = iterator.createNativeSearcher(Language.RUSSIAN, context)
-        PocketApplication.pinSearcher = iterator.createNativeSearcher(Language.PINYIN, context)
-
     }
 }
 

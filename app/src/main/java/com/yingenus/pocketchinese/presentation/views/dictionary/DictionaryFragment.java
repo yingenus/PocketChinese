@@ -24,6 +24,8 @@ import androidx.fragment.app.FragmentFactory;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.yingenus.pocketchinese.ISettings;
+import com.yingenus.pocketchinese.PocketApplication;
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.controller.InPutUtilsKt;
 import com.yingenus.pocketchinese.Settings;
@@ -45,6 +47,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
 import kotlin.Pair;
 
@@ -71,11 +74,17 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     private boolean isAnimationAnimation = false;
     private boolean isSearchEmptyBannerShowing = false;
     private boolean isSearchNothingBannerShowing = false;
+    private boolean isPresenterInited = false;
 
 
-    public DictionaryFragment(DictionaryItemRepository dictionaryItemRepository, ExampleRepository exampleRepository, ToneRepository toneRepository, WordsSearchUseCase wordsSearchUseCase){
+    public DictionaryFragment(
+            DictionaryItemRepository dictionaryItemRepository,
+            ExampleRepository exampleRepository,
+            ToneRepository toneRepository,
+            WordsSearchUseCase wordsSearchUseCase,
+            ISettings settings){
         super(R.layout.dictionary_fragment);
-        presenter = new DictionaryPresenter( this, dictionaryItemRepository,wordsSearchUseCase);
+        presenter = new DictionaryPresenter( this, dictionaryItemRepository,wordsSearchUseCase, settings);
         this.dictionaryItemRepository = dictionaryItemRepository;
         this.exampleRepository =  exampleRepository;
         this.toneRepository = toneRepository;
@@ -118,6 +127,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
             factory.setShowedChinChar(dictionaryItem, dictionaryItemRepository, exampleRepository,toneRepository);
         }
         getChildFragmentManager().setFragmentFactory(factory);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -170,11 +180,21 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
 
         UnFilledAdapter unFilledAdapter = new UnFilledAdapter();
         unFilledAdapter.setMessageView(R.layout.dictionary_start_msg);
-        unFilledAdapter.setHistory(presenter.getHistory(getContext()));
+        //unFilledAdapter.setHistory(presenter.getHistory(getContext()));
 
-        presenter.onCreate(getContext());
+        //presenter.onCreate();
 
         registerHideTouchListener(view);
+
+        PocketApplication.Companion.postStartActivity(getActivity(),false)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> {
+                            presenter.onCreate();
+                            isPresenterInited = true;
+                        }
+                ,onError ->{/*To do nothing yet*/}
+                );
 
         return view;
     }
@@ -182,8 +202,9 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        presenter.onDestroy();
-
+        if (isPresenterInited){
+            presenter.onDestroy();
+        }
     }
 
     private void initObserver(){
@@ -229,7 +250,10 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     @Override
     public void onResume() {
         super.onResume();
-        tryUpdateHistory();
+        if (isPresenterInited){
+            presenter.onResume();
+        }
+        //tryUpdateHistory();
     }
 
     @Override
@@ -251,8 +275,6 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     }
 
     private void tryUpdateHistory(){
-        history = presenter.getHistory(getContext());
-
         if(dictionaryRecycle.getAdapter() instanceof UnFilledAdapter){
             UnFilledAdapter adapter = (UnFilledAdapter) dictionaryRecycle.getAdapter();
 
@@ -265,18 +287,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     }
 
     private void onChnCharClicked(com.yingenus.pocketchinese.domain.dto.DictionaryItem dictionaryItem){
-        ((CharacterFragmentFactory)getChildFragmentManager().getFragmentFactory()).setShowedChinChar(dictionaryItem, dictionaryItemRepository,exampleRepository,toneRepository);
-        BottomSheetDialogFragment bottomSheetDialog=(BottomSheetDialogFragment)
-                getChildFragmentManager().getFragmentFactory().instantiate(getContext()
-                                .getClassLoader(),CharacterSheetDialog.class.getName());
-
-        bottomSheetDialog.show(getChildFragmentManager(),"testtestestestes");
-        addToSetting(dictionaryItem);
-        tryUpdateHistory();
-    }
-
-    private void addToSetting( com.yingenus.pocketchinese.domain.dto.DictionaryItem dictionaryItem){
-        Settings.INSTANCE.addSearchItem(getContext(), dictionaryItem.getId());
+        presenter.chinCharClicked(dictionaryItem);
     }
 
     private void registerHideTouchListener(View view){
@@ -359,7 +370,16 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
 
     @Override
     public void setHistory(@NotNull List<DictionaryItem> history) {
+        this.history = history;
+        if(dictionaryRecycle.getAdapter() instanceof UnFilledAdapter){
+            UnFilledAdapter adapter = (UnFilledAdapter) dictionaryRecycle.getAdapter();
 
+            if (searchPanel.getText().length() ==0){
+                adapter.setMessageView(R.layout.dictionary_start_msg);
+            }
+            adapter.setHistory(history);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
@@ -495,8 +515,16 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     }
 
     @Override
-    public void showChinChar(@NotNull com.yingenus.pocketchinese.domain.dto.DictionaryItem dictionaryItem) {
-        onChnCharClicked(dictionaryItem);
+    public void showChinChar(@NotNull DictionaryItem dictionaryItem) {
+        //onChnCharClicked(dictionaryItem);
+        ((CharacterFragmentFactory)getChildFragmentManager().getFragmentFactory()).setShowedChinChar(dictionaryItem, dictionaryItemRepository,exampleRepository,toneRepository);
+        BottomSheetDialogFragment bottomSheetDialog=(BottomSheetDialogFragment)
+                getChildFragmentManager().getFragmentFactory().instantiate(getContext()
+                        .getClassLoader(),CharacterSheetDialog.class.getName());
+
+        bottomSheetDialog.show(getChildFragmentManager(),"testtestestestes");
+        //addToSetting(dictionaryItem);
+        //tryUpdateHistory();
     }
 
     private static class DictionaryItemHolder extends RecyclerView.ViewHolder {
@@ -609,7 +637,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         private static final int HISTORY_HEADER = 1;
         private static final int HISTORY = 2;
 
-        private List<com.yingenus.pocketchinese.domain.dto.DictionaryItem> mHistory;
+        private List<DictionaryItem> mHistory;
         private int massageContainerId = View.NO_ID;
         private View mMassage;
         private int mViewRes = -1;
@@ -723,11 +751,11 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
             }
         }
 
-        public void setHistory( List<com.yingenus.pocketchinese.domain.dto.DictionaryItem> history){
+        public void setHistory( List<DictionaryItem> history){
             mHistory = history;
         }
 
-        public List<com.yingenus.pocketchinese.domain.dto.DictionaryItem> getHistory(){
+        public List<DictionaryItem> getHistory(){
             return mHistory;
         }
 
@@ -742,7 +770,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     }
 
     private interface OnChinCharClickListener{
-        void onChinCharClick(com.yingenus.pocketchinese.domain.dto.DictionaryItem dictionaryItem);
+        void onChinCharClick(DictionaryItem dictionaryItem);
     }
 
     private static class BoundsDecorator extends RecyclerView.ItemDecoration{

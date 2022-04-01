@@ -9,9 +9,8 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.yingenus.pocketchinese.R
+import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.Settings
-import com.yingenus.pocketchinese.controller.PocketApplication
-import com.yingenus.pocketchinese.controller.Settings
 import com.yingenus.pocketchinese.controller.activity.RepeatableUserListsActivity
 import com.yingenus.pocketchinese.logErrorMes
 import com.yingenus.pocketchinese.model.RepeatType

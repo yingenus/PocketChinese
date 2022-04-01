@@ -13,6 +13,13 @@
         <item name="navigationIcon">@drawable/ic_close</item>
     </style>
 
+    <style name="Style.PocketChinese.CircularProgressIndicator" parent="Widget.MaterialComponents.CircularProgressIndicator">
+        <item name="indicatorColor">?attr/colorPrimaryVariant</item>
+        <item name="indicatorSize">100dp</item>
+        <item name="indicatorInset">5dp</item>
+        <item name="trackThickness">10dp</item>
+    </style>
+
     <style name="Style.PocketChinese.Rounded.ExposedDropdownMenu.WhiteBack" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense.ExposedDropdownMenu">
         <item name="shapeAppearanceOverlay">@style/Style.PocketChinese.Rounded</item>
         <!-- <item name="boxBackgroundColor">@color/background_color</item> -->

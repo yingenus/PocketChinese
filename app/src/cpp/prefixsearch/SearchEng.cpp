@@ -91,7 +91,7 @@ void SearchEng::setDistanse(Distanse& _distanse) {
 bool comp(Candidate *candidate1, Candidate *candidate2) {
     
 
-    if (candidate1->involc_words < candidate2->involc_words){
+    if (candidate1->involc_words > candidate2->involc_words){
         return true;
     }
     else if (candidate1->involc_words == candidate2->involc_words) {

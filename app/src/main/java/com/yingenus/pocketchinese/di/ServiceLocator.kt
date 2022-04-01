@@ -11,6 +11,7 @@ import com.yingenus.pocketchinese.data.local.room.ExamplesDb
 import com.yingenus.pocketchinese.data.local.room.WordsDb
 import com.yingenus.pocketchinese.data.local.sqlite.DictionaryDBHelper
 import com.yingenus.pocketchinese.data.local.sqlite.ExamplesDBHelper
+import com.yingenus.pocketchinese.data.proxy.*
 import com.yingenus.pocketchinese.domain.entities.dictionarysearch.FuzzySearchEngine
 import com.yingenus.pocketchinese.domain.entities.dictionarysearch.MatchSearchEngine
 import com.yingenus.pocketchinese.domain.entities.dictionarysearch.SearchEngine
@@ -61,6 +62,24 @@ object ServiceLocator {
     private var sqliteChnN2SearchRepository : SqliteChnN2SearchRepository? = null
     @Volatile
     private var databaseManager : SqliteDatabaseManager? = null
+    @Volatile
+    private var proxyChinN1Repository : ProxyChinN1Repository ?= null
+    @Volatile
+    private var proxyChinN2Repository : ProxyChinN2Repository ?= null
+    @Volatile
+    private var proxyDictionaryItemRepository : ProxyDictionaryItemRepository ?= null
+    @Volatile
+    private var proxyExampleRepository : ProxyExampleRepository ?= null
+    @Volatile
+    private var proxyPinUnitWordsRepository : ProxyPinUnitWordRepository ?= null
+    @Volatile
+    private var proxyRadicalsRepository : ProxyRadicalsRepository ?= null
+    @Volatile
+    private var proxyRusUnitWordsRepository  : ProxyRusUnitWordRepository ?= null
+    @Volatile
+    private var proxyToneRepository : ProxyToneRepository ?= null
+
+
 
     fun <T> get( context : Context, className : String): T{
         return when(className){
@@ -178,6 +197,54 @@ object ServiceLocator {
                 }
                 sqliteChnN1SearchRepository as T
             }
+            ProxyToneRepository::class.java.name ->{
+                if (proxyToneRepository == null){
+                    proxyToneRepository = ProxyToneRepository()
+                }
+                proxyToneRepository as T
+            }
+            ProxyRusUnitWordRepository::class.java.name ->{
+                if (proxyRusUnitWordsRepository == null){
+                    proxyRusUnitWordsRepository = ProxyRusUnitWordRepository()
+                }
+                proxyRusUnitWordsRepository as T
+            }
+            ProxyPinUnitWordRepository::class.java.name ->{
+                if (proxyPinUnitWordsRepository == null){
+                    proxyPinUnitWordsRepository = ProxyPinUnitWordRepository()
+                }
+                proxyPinUnitWordsRepository as T
+            }
+            ProxyRadicalsRepository::class.java.name ->{
+                if (proxyRadicalsRepository == null){
+                    proxyRadicalsRepository = ProxyRadicalsRepository()
+                }
+                proxyRadicalsRepository as T
+            }
+            ProxyExampleRepository::class.java.name ->{
+                if (proxyExampleRepository == null){
+                    proxyExampleRepository = ProxyExampleRepository()
+                }
+                proxyExampleRepository as T
+            }
+            ProxyDictionaryItemRepository::class.java.name ->{
+                if (proxyDictionaryItemRepository == null){
+                    proxyDictionaryItemRepository = ProxyDictionaryItemRepository()
+                }
+                proxyDictionaryItemRepository as T
+            }
+            ProxyChinN1Repository::class.java.name ->{
+                if (proxyChinN1Repository == null){
+                    proxyChinN1Repository  = ProxyChinN1Repository()
+                }
+                proxyChinN1Repository  as T
+            }
+            ProxyChinN2Repository::class.java.name ->{
+                if (proxyChinN2Repository == null){
+                    proxyChinN2Repository  = ProxyChinN2Repository()
+                }
+                proxyChinN2Repository  as T
+            }
             MatchSearchEngine::class.java.name -> {
                 if (matchSearchEngine == null){
                     matchSearchEngine = MatchSearchEngine( get(context,DictionaryItemRepository::class.java.name) as DictionaryItemRepository )
@@ -188,20 +255,20 @@ object ServiceLocator {
                 if (fuzzySearchEngine == null){
                     fuzzySearchEngine = FuzzySearchEngine(
                             dictionaryItemRepository = get(context,DictionaryItemRepository::class.java.name) as DictionaryItemRepository,
-                            rusNgramRepository = getRusNgramRepository(context),
-                            pinNgramRepository = getPinNgramRepository(context),
-                            chnN1gramRepository = get(context,SqliteChnN1SearchRepository::class.java.name),
-                            chnN2gramRepository = get(context,SqliteChnN2SearchRepository::class.java.name),
-                            rusUnitWordRepository = BruteUnitWordsRepository( get(context,SqliteRusSearchRepository::class.java.name)),
-                            pinUnitWordRepository = get(context,SqlitePinSearchRepository::class.java.name)
+                            //rusNgramRepository = getRusNgramRepository(context),
+                            //pinNgramRepository = getPinNgramRepository(context),
+                            chnN1gramRepository = get(context,ProxyChinN1Repository::class.java.name),
+                            chnN2gramRepository = get(context,ProxyChinN2Repository::class.java.name),
+                            //rusUnitWordRepository = BruteUnitWordsRepository( get(context,SqliteRusSearchRepository::class.java.name)),
+                            //pinUnitWordRepository = get(context,SqlitePinSearchRepository::class.java.name)
                     )
                 }
                 fuzzySearchEngine as T
             }
-            DictionaryItemRepository::class.java.name -> get(context,SqliteWordRepository::class.java.name) as T
-            RadicalsRepository::class.java.name -> get(context,SqliteWordRepository::class.java.name) as T
-            ToneRepository::class.java.name -> get(context,SqliteWordRepository::class.java.name) as T
-            ExampleRepository::class.java.name -> get(context,SqliteExampleRepository::class.java.name) as T
+            DictionaryItemRepository::class.java.name -> get(context,ProxyDictionaryItemRepository::class.java.name) as T
+            RadicalsRepository::class.java.name -> get(context,ProxyRadicalsRepository::class.java.name) as T
+            ToneRepository::class.java.name -> get(context,ProxyToneRepository::class.java.name) as T
+            ExampleRepository::class.java.name -> get(context,ProxyExampleRepository::class.java.name) as T
             WordsSearchUseCase::class.java.name -> {
                 if (wordsSearchUseCase == null){
                     wordsSearchUseCase = WordSearchUseCaseImpl(
@@ -222,4 +289,24 @@ object ServiceLocator {
     private fun getPinNgramRepository(context: Context): NgramM3Repository<Int>{
         return get(context, SqlitePinSearchRepository::class.java.name)
     }
+
+    fun initAllProxy(context: Context){
+        (get(context,ProxyChinN1Repository::class.java.name) as ProxyChinN1Repository)
+            .setRepository(get(context,SqliteChnN1SearchRepository::class.java.name))
+        (get(context,ProxyChinN2Repository::class.java.name) as ProxyChinN2Repository)
+            .setRepository(get(context,SqliteChnN2SearchRepository::class.java.name))
+        (get(context,ProxyDictionaryItemRepository::class.java.name) as ProxyDictionaryItemRepository)
+            .setRepository(get(context,SqliteWordRepository::class.java.name))
+        (get(context,ProxyExampleRepository::class.java.name) as ProxyExampleRepository)
+            .setRepository(get(context,SqliteExampleRepository::class.java.name))
+        (get(context,ProxyPinUnitWordRepository::class.java.name) as ProxyPinUnitWordRepository)
+            .setRepository(get(context,SqlitePinSearchRepository::class.java.name))
+        (get(context,ProxyRusUnitWordRepository::class.java.name) as ProxyRusUnitWordRepository)
+            .setRepository(get(context,SqliteRusSearchRepository::class.java.name))
+        (get(context,ProxyRadicalsRepository::class.java.name) as ProxyRadicalsRepository)
+            .setRepository(get(context,SqliteWordRepository::class.java.name))
+        (get(context,ProxyToneRepository::class.java.name) as ProxyToneRepository)
+            .setRepository(get(context,SqliteWordRepository::class.java.name))
+    }
+
 }

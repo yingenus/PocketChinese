@@ -26,7 +26,7 @@ class RepeatableUserListsActivity : AppCompatActivity() {
         PocketApplication.setupApplication()
 
         super.onCreate(savedInstanceState)
-        PocketApplication.postStartActivity(false)
+        PocketApplication.postStartActivity(this,false)
         setContentView(R.layout.repeatable_list_layout)
         val toolbar : Toolbar = findViewById(R.id.toolbar)
         setSupportActionBar(toolbar)

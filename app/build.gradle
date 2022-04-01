@@ -73,6 +73,9 @@ dependencies {
     implementation "androidx.work:work-multiprocess:2.7.1"
 
     implementation 'androidx.core:core-ktx:1.7.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.0.0-alpha1'
+    implementation 'androidx.lifecycle:lifecycle-livedata:2.4.1'
+    implementation 'androidx.lifecycle:lifecycle-reactivestreams:2.4.1'
     implementation 'androidx.appcompat:appcompat:1.4.1'
     implementation "androidx.core:core-splashscreen:1.0.0-beta01"
     implementation 'com.google.android.material:material:1.6.0-alpha03'
@@ -83,6 +86,8 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'androidx.webkit:webkit:1.4.0'
+
+    implementation 'com.google.guava:guava:31.0.1-android'
 
     //room
     implementation "androidx.room:room-runtime:2.4.2"

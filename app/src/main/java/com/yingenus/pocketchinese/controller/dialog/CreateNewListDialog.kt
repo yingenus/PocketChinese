@@ -89,7 +89,7 @@ class CreateNewListDialog : DialogFragment() {
                 else{
                     val studyList= StudyList(text)
                     listDAO.create(studyList)
-                    val intent=StudyListActivity.getIntent(activity!!.applicationContext,studyList.uuid)
+                    val intent=StudyListActivity.getIntent(requireActivity().applicationContext,studyList.uuid)
                     super.dismiss()
                     startActivity(intent)
                 }

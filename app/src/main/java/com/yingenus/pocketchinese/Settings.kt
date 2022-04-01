@@ -1,9 +1,39 @@
-package com.yingenus.pocketchinese.controller
+package com.yingenus.pocketchinese
 
 import android.content.Context
 import android.os.Build
 //import com.yingenus.pocketchinese.BuildConfig
 import com.yingenus.pocketchinese.model.RepeatType
+
+interface ISettings {
+    fun useAppKeyboard(): Boolean
+    fun setUseAppKeyboard(use: Boolean)
+    fun getRepeatType(): RepeatType
+    fun setRepeatType(repeatType: RepeatType)
+    fun getSearchHistory(): Array<Int>
+    fun addSearchItem(iD : Int)
+    fun getViewedItems(): List<Pair<Int, String>>
+    fun setViewItem(version : Int, name : String)
+    fun isNightModeOn(): Boolean
+    fun nightMode(on : Boolean)
+    fun showNotifications(show : Boolean)
+    fun shouldShowNotifications(): Boolean
+}
+
+class AppSettings(private val context: Context) : ISettings{
+    override fun useAppKeyboard(): Boolean = Settings.useAppKeyboard(context)
+    override fun setUseAppKeyboard(use: Boolean) = Settings.setUseAppKeyboard(context,use)
+    override fun getRepeatType(): RepeatType = Settings.getRepeatType(context)
+    override fun setRepeatType(repeatType: RepeatType) = Settings.setRepeatType(context,repeatType)
+    override fun getSearchHistory(): Array<Int>  = Settings.getSearchHistory(context)
+    override fun addSearchItem(iD: Int) = Settings.addSearchItem(context, iD)
+    override fun getViewedItems(): List<Pair<Int, String>> = Settings.getViewedItems(context)
+    override fun setViewItem(version: Int, name: String) = Settings.setViewItem(context, version, name)
+    override fun isNightModeOn(): Boolean = Settings.isNightModeOn(context)
+    override fun nightMode(on: Boolean) = Settings.nightMode(on,context)
+    override fun showNotifications(show: Boolean) = Settings.showNotifications(show, context)
+    override fun shouldShowNotifications(): Boolean = Settings.shouldShowNotifications(context)
+}
 
 object Settings{
 
@@ -20,12 +50,19 @@ object Settings{
     private const val SHOW_NOTIFICATION = "com.yingenus.pocketchinese.showNotifications"
     private const val NIGHT_THEME = "com.yingenus.pocketchinese.nightTheme"
 
+    private var settings : ISettings? = null
+
+    fun getSettings(context: Context) : ISettings{
+        if (settings == null)
+            settings = AppSettings(context)
+        return settings!!
+    }
 
     fun useAppKeyboard(context: Context):Boolean{
         return context.getSharedPreferences(APP_PREFERENCE,0).getBoolean(USE_APP_KEYBOARD,true)
     }
 
-    fun setUseAppKeyboard(context: Context,use: Boolean){
+    fun setUseAppKeyboard(context: Context, use: Boolean){
         context.getSharedPreferences(APP_PREFERENCE,0).edit().putBoolean(USE_APP_KEYBOARD,use).apply()
     }
 
@@ -38,7 +75,7 @@ object Settings{
 
         return RepeatType(ignoreCHN=ignoreCHN,ignoreTRN = ignoreTRN,ignorePIN = ignorePIN)
     }
-    fun setRepeatType(context: Context,repeatType: RepeatType){
+    fun setRepeatType(context: Context, repeatType: RepeatType){
         val editPreferences=context.getSharedPreferences(APP_PREFERENCE,0).edit()
 
         editPreferences.putBoolean(REPEAT_TYPE_CHN,repeatType.ignoreCHN)
@@ -82,7 +119,7 @@ object Settings{
         return result
     }
 
-    fun setViewItem(context: Context, version : Int , name : String){
+    fun setViewItem(context: Context, version : Int, name : String){
         val preferences = context.getSharedPreferences(APP_PREFERENCE, 0 )
         val viewed = preferences.getStringSet(VIEWED_LISTS, setOf<String>())!!.toMutableList()
 
@@ -99,7 +136,7 @@ object Settings{
         return preferences.getBoolean(NIGHT_THEME,false)
     }
 
-    fun nightMode(on : Boolean,context : Context){
+    fun nightMode(on : Boolean, context : Context){
         context.getSharedPreferences(APP_PREFERENCE,0)
                 .edit()
                 .putBoolean(NIGHT_THEME,on)

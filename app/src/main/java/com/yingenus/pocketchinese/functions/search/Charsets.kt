@@ -12,3 +12,5 @@ fun getCharset( language: Language) : Charset =
             Language.CHINESE -> Charset.forName("US-ASCII")
             else -> throw IllegalArgumentException("not support this language : ${language::name}")
         }
+
+val prefixLanguages : List<Language> = listOf(Language.RUSSIAN, Language.PINYIN)

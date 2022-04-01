@@ -71,17 +71,17 @@ class CreatePrefixSearchIteratorImpl(
 
     private fun createIndex(absolutName : String, lang: Language){
 
-        val iterator = UnitWordIterator(getRepository(lang))
+        //val iterator = UnitWordIterator(getRepository(lang))
 
-        val indexCreator = IndexCreatorImpl.getIndexCreator(iterator, lang)
+        //val indexCreator = IndexManagerImpl.getIndexCreator(iterator, lang)
 
-        val file = File(absolutName)
+        //val file = File(absolutName)
 
-        if (!file.exists()){
-            file.createNewFile()
-        }
+        //if (!file.exists()){
+        //    file.createNewFile()
+        //}
 
-        indexCreator.createIndex(File(absolutName))
+        //indexCreator.createIndex(File(absolutName))
     }
 
     private fun getRepository(lang: Language): UnitWordRepository{
