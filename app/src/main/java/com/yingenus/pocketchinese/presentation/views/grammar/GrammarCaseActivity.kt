@@ -12,11 +12,13 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.webkit.WebViewAssetLoader
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
+import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.data.assets.GrammarAssetsRepository
 import com.yingenus.pocketchinese.data.assets.ImageAssetsRepository
 import com.yingenus.pocketchinese.domain.dto.GrammarCase
 import java.net.URI
+import javax.inject.Inject
 
 class GrammarCaseActivity() : AppCompatActivity(), GrammarCaseInterface {
 
@@ -40,6 +42,8 @@ class GrammarCaseActivity() : AppCompatActivity(), GrammarCaseInterface {
     private var toolbar : Toolbar? = null
     private var webView : WebView? = null
 
+    @Inject
+    lateinit var grammarPresenterFactory: GrammarPresenter.Factory
     private var presenter : GrammarPresenter? = null
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
@@ -63,6 +67,8 @@ class GrammarCaseActivity() : AppCompatActivity(), GrammarCaseInterface {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        PocketApplication.getAppComponent().injectGrammarCaseActivity(this)
+
         val caseName =intent.getStringExtra(GRAMMAR_CASE_NAME)
 
         if (caseName == null) declareError("")
@@ -78,7 +84,8 @@ class GrammarCaseActivity() : AppCompatActivity(), GrammarCaseInterface {
 
         configureWebView()
 
-        presenter = GrammarPresenter(this, caseName!!, GrammarAssetsRepository(baseContext), ImageAssetsRepository(baseContext))
+        //presenter = GrammarPresenter(this, caseName!!, GrammarAssetsRepository(baseContext), ImageAssetsRepository(baseContext))
+        presenter = grammarPresenterFactory.create(this,caseName!!)
     }
 
     override fun onDestroy() {

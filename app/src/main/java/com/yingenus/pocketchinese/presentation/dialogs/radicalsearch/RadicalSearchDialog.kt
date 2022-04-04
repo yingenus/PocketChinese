@@ -1,9 +1,6 @@
 package com.yingenus.pocketchinese.presentation.dialogs.radicalsearch
 
-import android.annotation.SuppressLint
-import android.app.Activity
 import android.content.Context
-import android.content.res.ColorStateList
 import android.graphics.Canvas
 import android.graphics.Color
 import android.graphics.Paint
@@ -18,29 +15,22 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.FrameLayout
 import android.widget.TextView
-import android.widget.Toolbar
 import androidx.annotation.AnyRes
 import androidx.annotation.ColorInt
-import androidx.annotation.ColorRes
 import androidx.annotation.RequiresApi
-import androidx.fragment.app.Fragment
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.daimajia.androidanimations.library.fading_exits.FadeOutRightAnimator
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.controller.dialog.StartTrainingSheetDialog
 import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.controller.getDisplayHeight
-import com.yingenus.pocketchinese.controller.holders.ViewViewHolder
-import com.yingenus.pocketchinese.di.ServiceLocator
-import com.yingenus.pocketchinese.domain.repository.RadicalsRepository
-import com.yingenus.pocketchinese.domain.repositorys.FakeRadicalRepository
-import com.yingenus.pocketchinese.model.imageDir
+import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import com.yingenus.pocketchinese.presentation.views.findViewByClass
 import com.yingenus.pocketchinese.presentation.views.findViewsByClass
 import com.yingenus.pocketchinese.presentation.views.grammar.GrammarCaseActivity
+import javax.inject.Inject
 import kotlin.math.max
 import kotlin.math.min
 
@@ -63,6 +53,8 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
 
     private var radicalSearchCallback : RadicalSearchCallback? = null
 
+    @Inject
+    lateinit var radicalSearchPresenterFactory: RadicalSearchPresenter.Factory
     private lateinit var presenter: RadicalSearchPresenter
 
     private var recyclerView : RecyclerView? = null
@@ -73,9 +65,8 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
 
     override fun onAttach(context: Context) {
         super.onAttach(context)
-
-        presenter = RadicalSearchPresenter(this, ServiceLocator.get(context,RadicalsRepository::class.java.name))
-
+        PocketApplication.getAppComponent().injectRadicalSearchDialog(this)
+        presenter = radicalSearchPresenterFactory.create(this)
     }
 
     @RequiresApi(Build.VERSION_CODES.M)

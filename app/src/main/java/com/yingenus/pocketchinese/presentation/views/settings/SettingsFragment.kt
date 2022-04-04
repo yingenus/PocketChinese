@@ -13,11 +13,11 @@ import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.controller.PocketApplication
-import com.yingenus.pocketchinese.controller.Settings
+import com.yingenus.pocketchinese.PocketApplication
+import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.presentation.views.about.AboutActivity
-import com.yingenus.pocketchinese.controller.activity.ActivateInputActivity
-import com.yingenus.pocketchinese.model.RepeatType
+import com.yingenus.pocketchinese.view.activity.ActivateInputActivity
+import com.yingenus.pocketchinese.domain.entitiys.RepeatType
 import java.lang.IllegalArgumentException
 
 class SettingsFragment: Fragment(){
@@ -100,11 +100,11 @@ class SettingsFragment: Fragment(){
 
     private fun initValues(){
         //Theme switch
-        mThemeSwitch.isChecked=Settings.isNightModeOn(requireContext())
+        mThemeSwitch.isChecked= Settings.isNightModeOn(requireContext())
         //Use App Keyboard
-        mUseKeyboardSwitch.isChecked=Settings.useAppKeyboard(requireContext())
+        mUseKeyboardSwitch.isChecked= Settings.useAppKeyboard(requireContext())
         // Ignore Switches
-        val repeatType=Settings.getRepeatType(requireContext())
+        val repeatType= Settings.getRepeatType(requireContext())
         mIgnoreCHNSwitch.isChecked=!repeatType.ignoreCHN
         mIgnorePINSwitch.isChecked=!repeatType.ignorePIN
         mIgnoreTRNSwitch.isChecked=!repeatType.ignoreTRN

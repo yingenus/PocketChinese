@@ -4,7 +4,6 @@ import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.yingenus.pocketchinese.domain.dto.ChinChar
-import com.yingenus.pocketchinese.model.getBitmapFromAssets
 
 @Entity(tableName = "words")
 class Word(

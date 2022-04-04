@@ -23,18 +23,17 @@ import androidx.fragment.app.FragmentFactory;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.yingenus.pocketchinese.PocketApplication;
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.controller.InPutUtilsKt;
-import com.yingenus.pocketchinese.controller.Settings;
-import com.yingenus.pocketchinese.controller.dialog.CharacterSheetDialog;
-import com.yingenus.pocketchinese.controller.holders.ViewViewHolder;
+import com.yingenus.pocketchinese.Settings;
+import com.yingenus.pocketchinese.presentation.views.character.CharacterSheetDialog;
+import com.yingenus.pocketchinese.view.holders.ViewViewHolder;
 import com.yingenus.pocketchinese.presentation.dialogs.radicalsearch.RadicalSearchDialog;
 import com.yingenus.pocketchinese.domain.dto.ChinChar;
 import com.yingenus.pocketchinese.domain.repository.ChinCharRepository;
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository;
 import com.yingenus.pocketchinese.domain.repository.ToneRepository;
-import com.yingenus.pocketchinese.presenters.DictionaryPresenter;
-import com.yingenus.pocketchinese.presenters.UtilsKt;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButtonToggleGroup;
@@ -44,14 +43,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collections;
 import java.util.List;
 
+import javax.inject.Inject;
+
 import io.reactivex.rxjava3.core.Observable;
 
 
 public class DictionaryFragment extends Fragment implements DictionaryInterface {
     private static final String CHIN_CHAR ="com.example.pocketchinese.dictionaryfragment.showedchin";
 
+    @Inject
+    public DictionaryPresenter.Factory dictionaryPresenterFactory;
 
-    private final DictionaryPresenter presenter;
+    private DictionaryPresenter presenter;
     private EditText searchPanel;
     private RecyclerView dictionaryRecycle;
     private TextView headerText;
@@ -62,29 +65,19 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
 
     private List<com.yingenus.pocketchinese.domain.dto.ChinChar> history;
 
-    private ChinCharRepository chinCharRepository;
-    private ExampleRepository exampleRepository;
-    private ToneRepository toneRepository;
+    @Inject
+    public ChinCharRepository chinCharRepository;
 
-    public DictionaryFragment(ChinCharRepository chinCharRepository, ExampleRepository exampleRepository,ToneRepository toneRepository){
+    public DictionaryFragment(){
         super(R.layout.dictionary_fragment);
-        presenter = new DictionaryPresenter( this, chinCharRepository);
-        this.chinCharRepository = chinCharRepository;
-        this.exampleRepository =  exampleRepository;
-        this.toneRepository = toneRepository;
+
     }
 
     static class CharacterFragmentFactory extends FragmentFactory{
         private com.yingenus.pocketchinese.domain.dto.ChinChar showedChinChar;
-        private ChinCharRepository chinCharRepository;
-        private ExampleRepository exampleRepository;
-        private ToneRepository toneRepository;
 
-        public void setShowedChinChar(ChinChar showedChinChar, ChinCharRepository charRepository, ExampleRepository exampleRepository, ToneRepository toneRepository) {
+        public void setShowedChinChar(ChinChar showedChinChar) {
             this.showedChinChar = showedChinChar;
-            this.chinCharRepository = charRepository;
-            this.exampleRepository = exampleRepository;
-            this.toneRepository = toneRepository;
         }
 
         public com.yingenus.pocketchinese.domain.dto.ChinChar getShowedChinChar() {
@@ -95,7 +88,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         @Override
         public Fragment instantiate(@NonNull ClassLoader classLoader, @NonNull String className) {
             if(className.equals(CharacterSheetDialog.class.getName()))
-                return new CharacterSheetDialog(showedChinChar,chinCharRepository,exampleRepository,toneRepository);
+                return new CharacterSheetDialog(showedChinChar);
             return super.instantiate(classLoader, className);
         }
     }
@@ -104,10 +97,12 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         CharacterFragmentFactory factory = new CharacterFragmentFactory();
+        PocketApplication.Companion.getAppComponent().injectDictionaryFragment(this);
+        presenter = dictionaryPresenterFactory.create(this);
         if (savedInstanceState != null){
             int id = savedInstanceState.getInt(CHIN_CHAR);
             com.yingenus.pocketchinese.domain.dto.ChinChar chinChar = chinCharRepository.findById(id);
-            factory.setShowedChinChar(chinChar, chinCharRepository, exampleRepository,toneRepository);
+            factory.setShowedChinChar(chinChar);
         }
         getChildFragmentManager().setFragmentFactory(factory);
         super.onCreate(savedInstanceState);
@@ -257,7 +252,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     }
 
     private void onChnCharClicked(com.yingenus.pocketchinese.domain.dto.ChinChar chinChar){
-        ((CharacterFragmentFactory)getChildFragmentManager().getFragmentFactory()).setShowedChinChar(chinChar,chinCharRepository,exampleRepository,toneRepository);
+        ((CharacterFragmentFactory)getChildFragmentManager().getFragmentFactory()).setShowedChinChar(chinChar);
         BottomSheetDialogFragment bottomSheetDialog=(BottomSheetDialogFragment)
                 getChildFragmentManager().getFragmentFactory().instantiate(getContext()
                                 .getClassLoader(),CharacterSheetDialog.class.getName());

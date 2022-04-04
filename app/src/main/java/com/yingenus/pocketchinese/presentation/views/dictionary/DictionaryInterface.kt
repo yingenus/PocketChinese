@@ -1,6 +1,5 @@
 package com.yingenus.pocketchinese.presentation.views.dictionary
 
-import com.yingenus.pocketchinese.model.database.dictionaryDB.ChinChar
 import io.reactivex.rxjava3.core.Observable
 
 interface DictionaryInterface {

@@ -3,8 +3,9 @@ package com.yingenus.pocketchinese.data.local
 import com.yingenus.pocketchinese.data.local.room.ExamplesDb
 import com.yingenus.pocketchinese.domain.dto.Example
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository
+import javax.inject.Inject
 
-class RoomExampleRepository( val examplesDb: ExamplesDb) : ExampleRepository {
+class RoomExampleRepository @Inject constructor( val examplesDb: ExamplesDb) : ExampleRepository {
     override fun findById(id: Int): Example? {
         return examplesDb.exampleDao().loadById(id)?.toExample()
     }

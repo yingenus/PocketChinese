@@ -45,3 +45,5 @@ fun <T : View> View.findViewsByClass(clazz: Class<T>): List<T>{
     }
     return emptyList()
 }
+
+fun isRussian( str : String) = Regex("""[А-Яа-я]""").containsMatchIn(str)

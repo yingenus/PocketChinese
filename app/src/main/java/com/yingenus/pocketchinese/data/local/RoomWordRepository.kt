@@ -7,8 +7,9 @@ import com.yingenus.pocketchinese.domain.dto.ZiChar
 import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
 import com.yingenus.pocketchinese.domain.repository.RadicalsRepository
 import com.yingenus.pocketchinese.domain.repository.ToneRepository
+import javax.inject.Inject
 
-class RoomWordRepository(val wordsDb: WordsDb): ChinCharRepository, RadicalsRepository, ToneRepository {
+class RoomWordRepository @Inject constructor(val wordsDb: WordsDb): ChinCharRepository, RadicalsRepository, ToneRepository {
 
     override fun getAllChinChar(): List<ChinChar> {
         return wordsDb.wordDao().getAll().map { it.toChinChar() }
