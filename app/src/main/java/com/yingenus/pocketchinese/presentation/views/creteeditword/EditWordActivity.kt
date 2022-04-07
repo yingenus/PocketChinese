@@ -7,8 +7,8 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.yingenus.pocketchinese.view.activity.SingleFragmentActivityWithKeyboard
 import com.yingenus.pocketchinese.di.ServiceLocator
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import java.lang.RuntimeException
 import java.util.*
 

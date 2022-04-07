@@ -1,7 +1,8 @@
-package com.yingenus.pocketchinese.presentation.views.creteeditword
+package com.yingenus.pocketchinese.presenters
 
 import android.content.Context
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateWordInterface
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger
 import com.yingenus.pocketchinese.domain.entitiys.words.checkTrainStandards
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.ConnectionDAO
@@ -13,7 +14,7 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 
-open class CreateEditWordPresenter(val view: CreateWordInterface, val chinCharRepository: ChinCharRepository) {
+open class CreateEditWordPresenter(val view: CreateWordInterface, val dictionaryItemRepository: DictionaryItemRepository) {
 
     protected lateinit var wordDAO: StudyWordDAO
     protected lateinit var listDAO: StudyListDAO
@@ -64,7 +65,7 @@ open class CreateEditWordPresenter(val view: CreateWordInterface, val chinCharRe
         observable
                 .observeOn(Schedulers.io())
                 .map { text ->
-                    val result= chinCharRepository.findByChinese(text)
+                    val result= dictionaryItemRepository.findByChinese(text)
                     result.first{ it.chinese == text }
                     }
                 .observeOn(AndroidSchedulers.mainThread())
@@ -83,9 +84,9 @@ open class CreateEditWordPresenter(val view: CreateWordInterface, val chinCharRe
         checkStandards()
     }
 
-    protected fun chinCharFounded(chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar){
-        view.setText(CreateWordInterface.FIELD.PIN, chinChar.pinyin)
-        view.setText(CreateWordInterface.FIELD.TRN,chinChar.translation.first())
+    protected fun chinCharFounded(dictionaryItem: com.yingenus.pocketchinese.domain.dto.DictionaryItem){
+        view.setText(CreateWordInterface.FIELD.PIN, dictionaryItem.pinyin)
+        view.setText(CreateWordInterface.FIELD.TRN,dictionaryItem.translation.first())
         checkStandards()
     }
 

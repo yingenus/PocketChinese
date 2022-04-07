@@ -3,7 +3,8 @@ package com.yingenus.pocketchinese.data.local.room.entity
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
-import com.yingenus.pocketchinese.domain.dto.ChinChar
+import com.yingenus.pocketchinese.domain.dto.DictionaryItem
+
 
 @Entity(tableName = "words")
 class Word(
@@ -18,7 +19,7 @@ class Word(
 ) {
 
 
-    fun toChinChar(): ChinChar{
+    fun toChinChar(): DictionaryItem{
 
         val translations = translation.string2Array()
         val tags = tags?.string2Array()
@@ -29,7 +30,7 @@ class Word(
             tags?.getOrNull(index) ?: ""
         }
 
-        return ChinChar(
+        return DictionaryItem(
             id = id,
             chinese = chinese,
             pinyin = pinyin,

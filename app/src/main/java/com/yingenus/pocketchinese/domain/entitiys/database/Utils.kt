@@ -3,7 +3,7 @@ package com.yingenus.pocketchinese.domain.entitiys.database
 import android.content.Context
 import android.database.SQLException
 import android.util.Log
-import com.yingenus.pocketchinese.domain.entitiys.database.dictionaryDB.DictionaryDBHelper
+import com.yingenus.pocketchinese.data.local.sqlite.DictionaryDBHelper
 import java.io.FileOutputStream
 import java.io.IOException
 
@@ -22,6 +22,7 @@ class CopierDBs(val dbName: String){
 
 
     fun isExist(context: Context, newVersion : Int): Boolean{
+        /*
         val dbList = context.databaseList()
 
         if ((dbList == null || !dbList.contains(dbName))){
@@ -29,7 +30,10 @@ class CopierDBs(val dbName: String){
         }else{
 
             try {
-                val dbHelper = DictionaryDBHelper(context)
+                val dbHelper =
+                    DictionaryDBHelper(
+                        context
+                    )
 
                 try {
                     val result = dbHelper.readableDatabase.query("metadata", null, "name = ?", arrayOf("version"), null, null, null)
@@ -51,6 +55,8 @@ class CopierDBs(val dbName: String){
             }
 
         }
+
+         */
         return false
     }
 

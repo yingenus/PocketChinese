@@ -1,17 +1,18 @@
 package com.yingenus.pocketchinese.data.local
 
 import com.yingenus.pocketchinese.data.local.room.WordsDb
-import com.yingenus.pocketchinese.domain.dto.ChinChar
+import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.domain.dto.Tone
 import com.yingenus.pocketchinese.domain.dto.ZiChar
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.domain.repository.RadicalsRepository
 import com.yingenus.pocketchinese.domain.repository.ToneRepository
 import javax.inject.Inject
 
-class RoomWordRepository @Inject constructor(val wordsDb: WordsDb): ChinCharRepository, RadicalsRepository, ToneRepository {
 
-    override fun getAllChinChar(): List<ChinChar> {
+class RoomWordRepository @Inject constructor(val wordsDb: WordsDb): DictionaryItemRepository, RadicalsRepository, ToneRepository {
+
+    override fun getAllDictionaryItems(): List<DictionaryItem> {
         return wordsDb.wordDao().getAll().map { it.toChinChar() }
     }
 
@@ -19,19 +20,19 @@ class RoomWordRepository @Inject constructor(val wordsDb: WordsDb): ChinCharRepo
         return wordsDb.variantsDao().getAll().map { it.toTone() }
     }
 
-    override fun findById(id: Int): ChinChar? {
+    override fun findById(id: Int): DictionaryItem? {
         return wordsDb.wordDao().loadById(id)?.toChinChar()
     }
 
-    override fun findByChinese(chinese: String): List<ChinChar> {
+    override fun findByChinese(chinese: String): List<DictionaryItem> {
         return wordsDb.wordDao().loadByEntryChinese(chinese).map { it.toChinChar() }
     }
 
-    override fun findByPinyin(pinyin: String): List<ChinChar> {
+    override fun findByPinyin(pinyin: String): List<DictionaryItem> {
         return wordsDb.wordDao().loadByEntryPinyin(pinyin).map { it.toChinChar() }
     }
 
-    override fun findByTranslation(translation: String): List<ChinChar> {
+    override fun findByTranslation(translation: String): List<DictionaryItem> {
         return wordsDb.wordDao().loadByEntryTranslation(translation).map { it.toChinChar() }
     }
 

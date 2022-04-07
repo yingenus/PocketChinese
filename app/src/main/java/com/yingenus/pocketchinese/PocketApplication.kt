@@ -1,5 +1,6 @@
 package com.yingenus.pocketchinese
 
+import android.app.Activity
 import android.app.Application
 import android.app.NotificationManager
 import android.content.Context
@@ -13,6 +14,8 @@ import com.yingenus.pocketchinese.background.workers.CheckRepeatableWordsWorker
 import com.yingenus.pocketchinese.background.workers.DbCleanWorker
 import com.yingenus.pocketchinese.di.AppComponent
 import com.yingenus.pocketchinese.di.DaggerAppComponent
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import java.io.IOException
 import java.util.concurrent.TimeUnit
 
@@ -25,8 +28,9 @@ class PocketApplication: Application(), Configuration.Provider {
         private lateinit var appComponent: AppComponent
 
 
-        fun postStartActivity(fromLaunch : Boolean){
+        fun postStartActivity(activity: Activity, fromLaunch : Boolean): Completable{
             pocketApplication?.postStartActivity(fromLaunch)
+            TODO()
         }
 
         fun updateNotificationStatus(){
@@ -35,6 +39,10 @@ class PocketApplication: Application(), Configuration.Provider {
 
         fun getAppComponent(): AppComponent {
             return appComponent
+        }
+
+        fun setupApplication(){
+
         }
 
     }

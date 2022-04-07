@@ -1,4 +1,4 @@
-package com.yingenus.pocketchinese.presentation.dialogs
+package com.yingenus.pocketchinese.controller.dialog
 
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -89,7 +89,7 @@ class CreateNewListDialog : DialogFragment() {
                 else{
                     val studyList= StudyList(text)
                     listDAO.create(studyList)
-                    val intent= StudyListActivity.getIntent(activity!!.applicationContext,studyList.uuid)
+                    val intent=StudyListActivity.getIntent(requireActivity().applicationContext,studyList.uuid)
                     super.dismiss()
                     startActivity(intent)
                 }

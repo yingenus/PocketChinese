@@ -8,7 +8,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.view.activity.SingleFragmentActivityWithKeyboard
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import java.lang.IllegalArgumentException
 import java.lang.RuntimeException
 import java.sql.SQLException
@@ -18,16 +18,17 @@ import javax.inject.Inject
 class CreateWordActivity : SingleFragmentActivityWithKeyboard() {
 
     @Inject
-    lateinit var chinCharRepository: ChinCharRepository
+    lateinit var dictionaryItemRepository: DictionaryItemRepository
 
-    class CreateWordFragmentFactory(val chinChar : com.yingenus.pocketchinese.domain.dto.ChinChar?, val uuid: UUID?): FragmentFactory(){
+
+    class CreateWordFragmentFactory(val dictionaryItem : com.yingenus.pocketchinese.domain.dto.DictionaryItem?, val uuid: UUID?): FragmentFactory(){
         init {
-            if (chinChar == null && uuid == null) throw IllegalArgumentException("two params cant be null")
+            if (dictionaryItem == null && uuid == null) throw IllegalArgumentException("two params cant be null")
         }
 
         override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
             if (className == CreateNewWordFragment::class.java.name)
-                return if (chinChar != null) CreateNewWordFragment(chinChar) else CreateNewWordFragment(uuid!!)
+                return if (dictionaryItem != null) CreateNewWordFragment(dictionaryItem) else CreateNewWordFragment(uuid!!)
             return super.instantiate(classLoader, className)
         }
     }
@@ -42,9 +43,9 @@ class CreateWordActivity : SingleFragmentActivityWithKeyboard() {
             return intent
         }
 
-        fun getIntent(context: Context, chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar): Intent {
-            val intent= Intent(context, CreateWordActivity::class.java)
-            intent.putExtra(INNER_WORD_CREATE_CHIN_CHAR_ID,chinChar.id)
+        fun getIntent(context: Context, dictionaryItem: com.yingenus.pocketchinese.domain.dto.DictionaryItem): Intent {
+            val intent= Intent(context,CreateWordActivity::class.java)
+            intent.putExtra(INNER_WORD_CREATE_CHIN_CHAR_ID,dictionaryItem.id)
             return intent
         }
     }
@@ -62,8 +63,8 @@ class CreateWordActivity : SingleFragmentActivityWithKeyboard() {
         super.onSaveInstanceState(outState, outPersistentState)
         val ff = supportFragmentManager.fragmentFactory
         if(ff is CreateWordFragmentFactory){
-            if (ff.chinChar != null)
-                outState.putInt(INNER_WORD_CREATE_CHIN_CHAR_ID, ff.chinChar.id)
+            if (ff.dictionaryItem != null)
+                outState.putInt(INNER_WORD_CREATE_CHIN_CHAR_ID, ff.dictionaryItem.id)
             if (ff.uuid != null)
                 outState.putString(INNER_WORD_CREATE_STUDY_LIST, ff.uuid.toString())
         }
@@ -90,27 +91,23 @@ class CreateWordActivity : SingleFragmentActivityWithKeyboard() {
 
         if (chinCharId == -1 && uuid == null) throw RuntimeException("cant extract params")
 
-        var chinChar : com.yingenus.pocketchinese.domain.dto.ChinChar?
+        var dictionaryItem : com.yingenus.pocketchinese.domain.dto.DictionaryItem?
 
         if (chinCharId != -1){
             try {
-                //val connection = DictionaryDBOpenManger.getHelper(applicationContext, DictionaryDBHelper::class.java ).connectionSource
-
-                chinChar = chinCharRepository.findById(chinCharId)
-                        //dao.findChinCharInColumn(chinCharId.toString(),ChinChar.ID_FIELD_NAME).first()
+                dictionaryItem = dictionaryItemRepository.findById(chinCharId)
             }catch (e : SQLException){
-                chinChar = null
+                dictionaryItem = null
             }finally {
                 //DictionaryDBOpenManger.releaseHelper()
             }
         }else{
-            chinChar = null
+            dictionaryItem = null
         }
 
         return CreateWordFragmentFactory(
-                chinChar = chinChar,
-                uuid = if (uuid != null) UUID.fromString(uuid) else null
+                dictionaryItem = dictionaryItem,
+                uuid = if (uuid != null) UUID.fromString(uuid) else null)
         )
-
     }
 }

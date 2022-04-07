@@ -1,4 +1,4 @@
-package com.yingenus.pocketchinese.presentation.views.creteeditword
+package com.yingenus.pocketchinese.controller.fragment
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
@@ -24,6 +24,8 @@ import com.yingenus.pocketchinese.controller.hideKeyboard
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
+import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateWordInterface
+import com.yingenus.pocketchinese.presenters.CreateEditWordPresenter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 
@@ -180,8 +182,8 @@ abstract class CreateEditWordFragment protected constructor() : Fragment(R.layou
     }
 
     override fun analogFounded(studyWord: StudyWord) {
-        val dialog= HaveMatchDialog(studyWord)
-        dialog.setTargetFragment(this, ANS.REQUEST_OK_CANSEL)
+        val dialog=HaveMatchDialog(studyWord)
+        dialog.setTargetFragment(this,ANS.REQUEST_OK_CANSEL)
         dialog.show(childFragmentManager,"create")
     }
 

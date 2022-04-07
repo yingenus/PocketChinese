@@ -227,4 +227,19 @@
     <string name="by_key">Поиск по ключам</string>
     <string name="radical">Ключивые знаки</string>
     <string name="characters">Иерогифы</string>
+
+
+    <string name = "CopyDbWorker_info_start_copy">Копирование базы данных</string>
+    <string name = "CopyDbWorker_info_finish_copy">Завершено копироваение базы данных</string>
+
+    <string name = "CreateIndexWorker_info_start_crete_rus_index">Создание индекса русского языка</string>
+    <string name = "CreateIndexWorker_info_finish_crete_rus_index">Завершение создания индекса русского языка</string>
+    <string name = "CreateIndexWorker_info_start_crete_pin_index">Создание индекса раманизации</string>
+    <string name = "CreateIndexWorker_info_finish_crete_pin_index">Завершение создания индекса раманизации</string>
+
+    <string name = "InitNativeSearchers_info_start_extract_rus_index">Извлечение индекса русского языка</string>
+    <string name = "InitNativeSearchers_info_finish_extract_rus_index">Завершение ивлечения индекса русского языка</string>
+    <string name = "InitNativeSearchers_info_start_extract_pin_index">Извлечение индекса раманизации</string>
+    <string name = "InitNativeSearchers_info_finish_extract_pin_index">Завершение ивлечения индекса раманизации</string>
+
 </resources>

@@ -7,6 +7,7 @@ import android.graphics.Rect;
 import android.os.Bundle;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.MotionEvent;
 import android.view.View;
@@ -23,29 +24,36 @@ import androidx.fragment.app.FragmentFactory;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.yingenus.pocketchinese.ISettings;
+
 import com.yingenus.pocketchinese.PocketApplication;
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.controller.InPutUtilsKt;
 import com.yingenus.pocketchinese.Settings;
+
 import com.yingenus.pocketchinese.presentation.views.character.CharacterSheetDialog;
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder;
+
+import com.yingenus.pocketchinese.domain.usecase.WordsSearchUseCase;
+
 import com.yingenus.pocketchinese.presentation.dialogs.radicalsearch.RadicalSearchDialog;
-import com.yingenus.pocketchinese.domain.dto.ChinChar;
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository;
+import com.yingenus.pocketchinese.domain.dto.DictionaryItem;
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository;
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository;
 import com.yingenus.pocketchinese.domain.repository.ToneRepository;
+
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
-
 import javax.inject.Inject;
-
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers;
 import io.reactivex.rxjava3.core.Observable;
+import kotlin.Pair;
 
 
 public class DictionaryFragment extends Fragment implements DictionaryInterface {
@@ -63,32 +71,41 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
 
     private Observable<String> textInputObserver;
 
-    private List<com.yingenus.pocketchinese.domain.dto.ChinChar> history;
+    private List<DictionaryItem> history;
 
-    @Inject
-    public ChinCharRepository chinCharRepository;
+    @Inject private DictionaryItemRepository dictionaryItemRepository;
+    @Inject private ExampleRepository exampleRepository;
+    @Inject private ToneRepository toneRepository;
+    @Inject private WordsSearchUseCase wordsSearchUseCase;
+    @Inject private ISettings settings;
 
     public DictionaryFragment(){
         super(R.layout.dictionary_fragment);
-
     }
 
-    static class CharacterFragmentFactory extends FragmentFactory{
-        private com.yingenus.pocketchinese.domain.dto.ChinChar showedChinChar;
+    private boolean isAnimationAnimation = false;
+    private boolean isSearchEmptyBannerShowing = false;
+    private boolean isSearchNothingBannerShowing = false;
+    private boolean isPresenterInited = false;
 
-        public void setShowedChinChar(ChinChar showedChinChar) {
-            this.showedChinChar = showedChinChar;
+
+    static class CharacterFragmentFactory extends FragmentFactory{
+
+        private DictionaryItem showedDictionaryItem;
+
+        public void setShowedChinChar(DictionaryItem showedDictionaryItem) {
+            this.showedDictionaryItem = showedDictionaryItem;
         }
 
-        public com.yingenus.pocketchinese.domain.dto.ChinChar getShowedChinChar() {
-            return showedChinChar;
+        public com.yingenus.pocketchinese.domain.dto.DictionaryItem getShowedDictionaryItem() {
+            return showedDictionaryItem;
         }
 
         @NonNull
         @Override
         public Fragment instantiate(@NonNull ClassLoader classLoader, @NonNull String className) {
             if(className.equals(CharacterSheetDialog.class.getName()))
-                return new CharacterSheetDialog(showedChinChar);
+                return new CharacterSheetDialog(showedDictionaryItem);
             return super.instantiate(classLoader, className);
         }
     }
@@ -101,10 +118,11 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         presenter = dictionaryPresenterFactory.create(this);
         if (savedInstanceState != null){
             int id = savedInstanceState.getInt(CHIN_CHAR);
-            com.yingenus.pocketchinese.domain.dto.ChinChar chinChar = chinCharRepository.findById(id);
-            factory.setShowedChinChar(chinChar);
+            DictionaryItem dictionaryItem = dictionaryItemRepository.findById(id);
+            factory.setShowedChinChar(dictionaryItem);
         }
         getChildFragmentManager().setFragmentFactory(factory);
+
         super.onCreate(savedInstanceState);
     }
 
@@ -113,7 +131,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         super.onSaveInstanceState(outState);
         FragmentFactory ff = getChildFragmentManager().getFragmentFactory();
         if (ff instanceof CharacterFragmentFactory){
-            com.yingenus.pocketchinese.domain.dto.ChinChar showed = ((CharacterFragmentFactory)ff).getShowedChinChar();
+            DictionaryItem showed = ((CharacterFragmentFactory)ff).getShowedDictionaryItem();
             if (showed != null){
                 outState.putInt(CHIN_CHAR,showed.getId());
             }
@@ -151,17 +169,27 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         dictionaryRecycle.addOnScrollListener( new HistoryInvisibleObserver());
         //dictionaryRecycle.setAdapter(new UnFilledAdapter());
 
-        setResults(Results.NoQuery.INSTANCE);
+        showSearchEmptyQuery(true);
 
         setSearchTypeChangedListener();
 
         UnFilledAdapter unFilledAdapter = new UnFilledAdapter();
         unFilledAdapter.setMessageView(R.layout.dictionary_start_msg);
-        unFilledAdapter.setHistory(presenter.getHistory(getContext()));
+        //unFilledAdapter.setHistory(presenter.getHistory(getContext()));
 
-        presenter.onCreate(getContext());
+        //presenter.onCreate();
 
         registerHideTouchListener(view);
+
+        PocketApplication.Companion.postStartActivity(getActivity(),false)
+                .observeOn(AndroidSchedulers.mainThread())
+                .subscribe(
+                        () -> {
+                            presenter.onCreate();
+                            isPresenterInited = true;
+                        }
+                ,onError ->{/*To do nothing yet*/}
+                );
 
         return view;
     }
@@ -169,8 +197,9 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     @Override
     public void onDestroy() {
         super.onDestroy();
-        presenter.onDestroy();
-
+        if (isPresenterInited){
+            presenter.onDestroy();
+        }
     }
 
     private void initObserver(){
@@ -216,7 +245,10 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     @Override
     public void onResume() {
         super.onResume();
-        tryUpdateHistory();
+        if (isPresenterInited){
+            presenter.onResume();
+        }
+        //tryUpdateHistory();
     }
 
     @Override
@@ -238,8 +270,6 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     }
 
     private void tryUpdateHistory(){
-        history = presenter.getHistory(getContext());
-
         if(dictionaryRecycle.getAdapter() instanceof UnFilledAdapter){
             UnFilledAdapter adapter = (UnFilledAdapter) dictionaryRecycle.getAdapter();
 
@@ -251,19 +281,8 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         }
     }
 
-    private void onChnCharClicked(com.yingenus.pocketchinese.domain.dto.ChinChar chinChar){
-        ((CharacterFragmentFactory)getChildFragmentManager().getFragmentFactory()).setShowedChinChar(chinChar);
-        BottomSheetDialogFragment bottomSheetDialog=(BottomSheetDialogFragment)
-                getChildFragmentManager().getFragmentFactory().instantiate(getContext()
-                                .getClassLoader(),CharacterSheetDialog.class.getName());
-
-        bottomSheetDialog.show(getChildFragmentManager(),"testtestestestes");
-        addToSetting(chinChar);
-        tryUpdateHistory();
-    }
-
-    private void addToSetting( com.yingenus.pocketchinese.domain.dto.ChinChar chinChar){
-        Settings.INSTANCE.addSearchItem(getContext(),chinChar.getId());
+    private void onChnCharClicked(com.yingenus.pocketchinese.domain.dto.DictionaryItem dictionaryItem){
+        presenter.chinCharClicked(dictionaryItem);
     }
 
     private void registerHideTouchListener(View view){
@@ -345,18 +364,104 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     }
 
     @Override
-    public void setHistory(@NotNull List<ChinChar> history) {
+    public void setHistory(@NotNull List<DictionaryItem> history) {
+        this.history = history;
+        if(dictionaryRecycle.getAdapter() instanceof UnFilledAdapter){
+            UnFilledAdapter adapter = (UnFilledAdapter) dictionaryRecycle.getAdapter();
 
+            if (searchPanel.getText().length() ==0){
+                adapter.setMessageView(R.layout.dictionary_start_msg);
+            }
+            adapter.setHistory(history);
+            adapter.notifyDataSetChanged();
+        }
     }
 
     @Override
-    public void setResults(@NotNull Results results) {
-
+    public void setSearchResult(@NotNull Pair<Integer, DictionaryItem> item) {
+        Log.d("dictionary fragment", "try add word: "+item.toString());
         if (dictionaryRecycle == null) return;
 
         RecyclerView.Adapter adapter = dictionaryRecycle.getAdapter();
 
-        if (results instanceof Results.NoQuery || results instanceof  Results.NoMatches){
+
+        DictionaryItemAdapter diAdapter;
+        if (!(adapter instanceof DictionaryItemAdapter)) {
+            diAdapter = new DictionaryItemAdapter();
+            diAdapter.setChinCharListener(this::onChnCharClicked);
+            dictionaryRecycle.setAdapter(diAdapter);
+        }else {
+            diAdapter = (DictionaryItemAdapter) adapter;
+        }
+        diAdapter.setDictionaryItem(item.getSecond(),item.getFirst());
+        diAdapter.notifyDataSetChanged();
+        showDefaultHeader();
+    }
+
+    @Override
+    public void clearSearchResult() {
+        if (dictionaryRecycle == null) return;
+
+        RecyclerView.Adapter adapter = dictionaryRecycle.getAdapter();
+
+
+        DictionaryItemAdapter diAdapter;
+        if (!(adapter instanceof DictionaryItemAdapter)) {
+            diAdapter = new DictionaryItemAdapter();
+            diAdapter.setChinCharListener(this::onChnCharClicked);
+            dictionaryRecycle.setAdapter(diAdapter);
+        }else {
+            diAdapter = (DictionaryItemAdapter) adapter;
+        }
+        diAdapter.clearDictionaryItems();
+        diAdapter.notifyDataSetChanged();
+        showDefaultHeader();
+    }
+
+    @Override
+    public void showSearchError(@NotNull String msg) {
+        // Позже
+    }
+
+    @Override
+    public void showSearchNothing(boolean show) {
+        if (dictionaryRecycle == null) return;
+        if (isSearchNothingBannerShowing == show) return;
+
+
+        RecyclerView.Adapter adapter = dictionaryRecycle.getAdapter();
+
+        UnFilledAdapter unAdapter;
+
+        if (!(adapter instanceof UnFilledAdapter)) {
+            unAdapter = new UnFilledAdapter();
+            unAdapter.setChinCharListener(this::onChnCharClicked);
+            dictionaryRecycle.setAdapter(unAdapter);
+            unAdapter.setHistory(history);
+        } else {
+            unAdapter = (UnFilledAdapter) adapter;
+        }
+        if (show){
+            unAdapter.setMessageView(R.layout.holder_empty_dictionary_item);
+        }
+        else {
+            unAdapter.setMessageView(R.layout.dictionary_start_msg);
+        }
+        unAdapter.notifyDataSetChanged();
+
+        isSearchNothingBannerShowing = show;
+    }
+
+    @Override
+    public void showSearchEmptyQuery(boolean show) {
+        Log.d("Dictionary fragment", "showSearchEmptyQuery :"+show);
+
+        if (dictionaryRecycle == null) return;
+        if (isSearchEmptyBannerShowing == show) return;
+        if (show){
+            RecyclerView.Adapter adapter = dictionaryRecycle.getAdapter();
+
+
             UnFilledAdapter unAdapter;
 
             if (!(adapter instanceof UnFilledAdapter)){
@@ -367,25 +472,17 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
             }else {
                 unAdapter = (UnFilledAdapter) adapter;
             }
-            if ( results instanceof Results.NoQuery){
-                unAdapter.setMessageView(R.layout.dictionary_start_msg);
-            }else {
-                unAdapter.setMessageView(R.layout.holder_empty_dictionary_item);
-            }
+
+            unAdapter.setMessageView(R.layout.dictionary_start_msg);
+
             unAdapter.notifyDataSetChanged();
-        }else if (results instanceof Results.Matches){
-            DictionaryItemAdapter diAdapter;
-            if (!(adapter instanceof DictionaryItemAdapter)) {
-                diAdapter = new DictionaryItemAdapter();
-                diAdapter.setChinCharListener(this::onChnCharClicked);
-                dictionaryRecycle.setAdapter(diAdapter);
-            }else {
-                diAdapter = (DictionaryItemAdapter) adapter;
-            }
-            diAdapter.setChinCharacters(((Results.Matches) results).getChars());
-            diAdapter.notifyDataSetChanged();
-            showDefaultHeader();
         }
+        isSearchEmptyBannerShowing = show;
+    }
+
+    @Override
+    public void showSearchingAnimation(boolean show) {
+
     }
 
     @NotNull
@@ -413,12 +510,20 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     }
 
     @Override
-    public void showChinChar(@NotNull com.yingenus.pocketchinese.domain.dto.ChinChar chinChar) {
-        onChnCharClicked(chinChar);
+    public void showChinChar(@NotNull DictionaryItem dictionaryItem) {
+        //onChnCharClicked(dictionaryItem);
+        ((CharacterFragmentFactory)getChildFragmentManager().getFragmentFactory()).setShowedChinChar(dictionaryItem);
+        BottomSheetDialogFragment bottomSheetDialog=(BottomSheetDialogFragment)
+                getChildFragmentManager().getFragmentFactory().instantiate(getContext()
+                        .getClassLoader(),CharacterSheetDialog.class.getName());
+
+        bottomSheetDialog.show(getChildFragmentManager(),"testtestestestes");
+        //addToSetting(dictionaryItem);
+        //tryUpdateHistory();
     }
 
     private static class DictionaryItemHolder extends RecyclerView.ViewHolder {
-        private com.yingenus.pocketchinese.domain.dto.ChinChar chinChar;
+        private com.yingenus.pocketchinese.domain.dto.DictionaryItem dictionaryItem;
 
         private final TextView mChnText;
         private final TextView mPinyinText;
@@ -433,11 +538,11 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
             mTrnText = super.itemView.findViewById(R.id.dictionary_item_second_language);
         }
 
-        public void bind(com.yingenus.pocketchinese.domain.dto.ChinChar chinChar){
-            this.chinChar=chinChar;
-            mChnText.setText(chinChar.getChinese());
-            mPinyinText.setText(chinChar.getPinyin());
-            mTrnText.setText(compose(chinChar.getTranslation()));
+        public void bind(com.yingenus.pocketchinese.domain.dto.DictionaryItem dictionaryItem){
+            this.dictionaryItem = dictionaryItem;
+            mChnText.setText(dictionaryItem.getChinese());
+            mPinyinText.setText(dictionaryItem.getPinyin());
+            mTrnText.setText(compose(dictionaryItem.getTranslation()));
 
         }
 
@@ -460,22 +565,35 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
             return result;
         }
 
-        public com.yingenus.pocketchinese.domain.dto.ChinChar getChinChar() {
-            return chinChar;
+        public com.yingenus.pocketchinese.domain.dto.DictionaryItem getDictionaryItem() {
+            return dictionaryItem;
         }
     }
 
     private class DictionaryItemAdapter extends AdapterWithChinCharItems<DictionaryItemHolder>{
 
 
-        private List<com.yingenus.pocketchinese.domain.dto.ChinChar> mChinChars = Collections.EMPTY_LIST;
+        private List<DictionaryItem> mDictionaryItems = new ArrayList<DictionaryItem>();
 
 
         DictionaryItemAdapter(){
         }
 
-        public void setChinCharacters(List<com.yingenus.pocketchinese.domain.dto.ChinChar> chinChars) {
-            mChinChars = chinChars;
+        public void setDictionaryItems(List<DictionaryItem> dictionaryItems) {
+            mDictionaryItems = dictionaryItems;
+        }
+
+        public void setDictionaryItem( DictionaryItem item, int position){
+            if (mDictionaryItems.size() > position){
+                mDictionaryItems.remove(position);
+                mDictionaryItems.add(position,item);
+            }else {
+                mDictionaryItems.add(item);
+            }
+        }
+
+        public void clearDictionaryItems( ){
+            mDictionaryItems = new ArrayList<DictionaryItem>();
         }
 
         @NonNull
@@ -487,9 +605,9 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
                 @Override
                 public void onClick(View v) {
                     int position = holder.getAdapterPosition();
-                    if (position != RecyclerView.NO_POSITION && mChinChars.size() > position){
+                    if (position != RecyclerView.NO_POSITION && mDictionaryItems.size() > position){
                         if (mListener != null){
-                            mListener.onChinCharClick( mChinChars.get(position));
+                            mListener.onChinCharClick( mDictionaryItems.get(position));
                         }
                     }
                 }
@@ -499,13 +617,13 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
 
         @Override
         public void onBindViewHolder(@NonNull DictionaryItemHolder holder, int position) {
-            com.yingenus.pocketchinese.domain.dto.ChinChar chinChar=mChinChars.get(position);
-            holder.bind(chinChar);
+            DictionaryItem dictionaryItem = mDictionaryItems.get(position);
+            holder.bind(dictionaryItem);
         }
 
         @Override
         public int getItemCount() {
-            return mChinChars.size();
+            return mDictionaryItems.size();
         }
     }
 
@@ -514,7 +632,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
         private static final int HISTORY_HEADER = 1;
         private static final int HISTORY = 2;
 
-        private List<com.yingenus.pocketchinese.domain.dto.ChinChar> mHistory;
+        private List<DictionaryItem> mHistory;
         private int massageContainerId = View.NO_ID;
         private View mMassage;
         private int mViewRes = -1;
@@ -628,11 +746,11 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
             }
         }
 
-        public void setHistory( List<com.yingenus.pocketchinese.domain.dto.ChinChar> history){
+        public void setHistory( List<DictionaryItem> history){
             mHistory = history;
         }
 
-        public List<com.yingenus.pocketchinese.domain.dto.ChinChar> getHistory(){
+        public List<DictionaryItem> getHistory(){
             return mHistory;
         }
 
@@ -647,7 +765,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
     }
 
     private interface OnChinCharClickListener{
-        void onChinCharClick(com.yingenus.pocketchinese.domain.dto.ChinChar chinChar);
+        void onChinCharClick(DictionaryItem dictionaryItem);
     }
 
     private static class BoundsDecorator extends RecyclerView.ItemDecoration{

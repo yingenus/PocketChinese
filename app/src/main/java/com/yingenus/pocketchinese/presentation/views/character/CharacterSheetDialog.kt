@@ -14,6 +14,7 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
+import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateWordActivity
@@ -23,16 +24,17 @@ import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.google.android.material.button.MaterialButtonToggleGroup
 import com.yingenus.pocketchinese.PocketApplication
+import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.domain.dto.Example
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository
 import com.yingenus.pocketchinese.domain.repository.ToneRepository
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 class CharacterSheetDialog(
-    private val chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar?)
-    :BottomSheetDialogFragment(), CharacterInterface {
+    private val dictionaryItem: DictionaryItem?,
+    ) :BottomSheetDialogFragment(), CharacterInterface {
 
     private object Helper{
         const val occupiHeight = 0.7f
@@ -58,14 +60,14 @@ class CharacterSheetDialog(
 
     private lateinit var mTranslations: List<String>
     private lateinit var mExamles: List<Example>
-    private lateinit var mCharacters: List<com.yingenus.pocketchinese.domain.dto.ChinChar>
+    private lateinit var mCharacters: List<DictionaryItem>
 
     private var isFirstCall = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         PocketApplication.getAppComponent().injectCharacterSheetDialog(this)
-        presenter = characterPresenterFactory.create(this,chinChar?.id?:1)
+        presenter = characterPresenterFactory.create(this,dictionaryItem?.id?:1)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?
@@ -144,7 +146,7 @@ class CharacterSheetDialog(
         charTags.visibility = View.VISIBLE
     }
 
-    override fun startAddNewStudy(word: com.yingenus.pocketchinese.domain.dto.ChinChar) {
+    override fun startAddNewStudy(word: com.yingenus.pocketchinese.domain.dto.DictionaryItem) {
         val intent= CreateWordActivity.getIntent(requireContext(),word)
         requireContext().startActivity(intent)
     }
@@ -159,7 +161,7 @@ class CharacterSheetDialog(
         reInitPages()
     }
 
-    override fun setCharacters(entrysChars: List<com.yingenus.pocketchinese.domain.dto.ChinChar>) {
+    override fun setCharacters(entrysChars: List<com.yingenus.pocketchinese.domain.dto.DictionaryItem>) {
         mCharacters = entrysChars
         reInitPages()
     }
@@ -494,8 +496,8 @@ class CharacterSheetDialog(
         }
     }
 
-    private class CharactersHolder: ViewViewHolder {
-        constructor( parent: ViewGroup, chars : List<com.yingenus.pocketchinese.domain.dto.ChinChar>):
+    private class CharactersHolder: ViewViewHolder{
+        constructor(parent: ViewGroup, dictionaryItems : List<com.yingenus.pocketchinese.domain.dto.DictionaryItem>):
                 super(LinearLayout(parent.context).apply {
                     orientation = LinearLayout.VERTICAL
                     layoutParams = ViewGroup.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.MATCH_PARENT)
@@ -511,13 +513,13 @@ class CharacterSheetDialog(
 
             val inflater = parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
 
-            for (char in chars){
+            for (char in dictionaryItems){
                 view.addView(createItemView(inflater,char),itemLayoutParams)
             }
 
         }
         @SuppressLint("ResourceAsColor")
-        private fun createItemView(inflater: LayoutInflater, char : com.yingenus.pocketchinese.domain.dto.ChinChar): View{
+        private fun createItemView(inflater: LayoutInflater, dictionaryItem : com.yingenus.pocketchinese.domain.dto.DictionaryItem): View{
             val view = inflater.inflate(R.layout.inner_char_item, null)
 
             val chn = view.findViewById<TextView>(R.id.character)
@@ -525,17 +527,17 @@ class CharacterSheetDialog(
             val tgs = view.findViewById<TextView>(R.id.tags)
             val linerLayout = view.findViewById<LinearLayout>(R.id.translation_layout)
 
-            chn.text = char.chinese
-            pin.text = char.pinyin
-            if (char.generalTag.isNotEmpty()){
-                tgs.text = char.generalTag
+            chn.text = dictionaryItem.chinese
+            pin.text = dictionaryItem.pinyin
+            if (dictionaryItem.generalTag.isNotEmpty()){
+                tgs.text = dictionaryItem.generalTag
                 tgs.visibility = View.VISIBLE
             }
 
             val translationLayoutParam = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT)
 
             var counter = 1
-            for (translation in char.translation){
+            for (translation in dictionaryItem.translation){
                 if (translation.contains("\$link"))
                     continue
 
@@ -563,7 +565,7 @@ class CharacterSheetDialog(
         }
     }
 
-    private class ExamplesHolder: ViewViewHolder {
+    private class ExamplesHolder: ViewViewHolder{
         constructor( parent: ViewGroup, examples: List<Example>):
                 super(LinearLayout(parent.context).apply {
                     orientation = LinearLayout.VERTICAL

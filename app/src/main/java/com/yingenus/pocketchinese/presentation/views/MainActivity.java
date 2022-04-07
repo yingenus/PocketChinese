@@ -6,12 +6,20 @@ import android.util.Log;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.splashscreen.SplashScreen;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.yingenus.pocketchinese.ISettings;
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.PocketApplication;
+import com.yingenus.pocketchinese.Settings;
+import com.yingenus.pocketchinese.di.ServiceLocator;
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository;
+import com.yingenus.pocketchinese.domain.repository.ExampleRepository;
+import com.yingenus.pocketchinese.domain.repository.ToneRepository;
+import com.yingenus.pocketchinese.domain.usecase.WordsSearchUseCase;
 import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryFragment;
 import com.yingenus.pocketchinese.view.EmptyFragment;
 import com.yingenus.pocketchinese.presentation.views.settings.SettingsFragment;
@@ -61,10 +69,16 @@ public class MainActivity  extends AppCompatActivity {
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
+        SplashScreen splashScreen= SplashScreen.installSplashScreen(this);
+
+        PocketApplication.Companion.setupApplication();
+
         getSupportFragmentManager().setFragmentFactory(
                 new MainFragmentFactory());
+
         super.onCreate(savedInstanceState);
-        PocketApplication.Companion.postStartActivity(true);
+
+        PocketApplication.Companion.postStartActivity(this,true);
         setContentView(R.layout.main_activity);
 
         buttonNavigationMenu=findViewById(R.id.main_bubble_tab_bar);

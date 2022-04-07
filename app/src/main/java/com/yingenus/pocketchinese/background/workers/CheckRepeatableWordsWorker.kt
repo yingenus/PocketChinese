@@ -1,4 +1,4 @@
-package com.yingenus.pocketchinese.background.workers
+package com.yingenus.pocketchinese.workers
 
 import android.app.PendingIntent
 import android.content.Context
@@ -9,6 +9,7 @@ import androidx.core.app.NotificationManagerCompat
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.yingenus.pocketchinese.R
+import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.presentation.views.userlist.RepeatableUserListsActivity
 import com.yingenus.pocketchinese.logErrorMes
@@ -18,6 +19,7 @@ import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.*
 import com.yingenus.pocketchinese.domain.entitiys.words.statistic.FibRepeatHelper
 import com.yingenus.pocketchinese.domain.entitiys.words.statistic.RepeatHelper
 import com.yingenus.pocketchinese.background.notifications.Channels
+
 import java.sql.SQLException
 
 class CheckRepeatableWordsWorker( context: Context, workerParameters: WorkerParameters) : Worker(context , workerParameters){
@@ -52,6 +54,9 @@ class CheckRepeatableWordsWorker( context: Context, workerParameters: WorkerPara
 
     override fun doWork(): Result{
         Log.d("CheckRepeatable","Worker start")
+
+        PocketApplication.setupApplication()
+
         try {
             val checker = RepeatableChecker(applicationContext, Settings.getRepeatType(applicationContext))
             val expired = checker.haveExpired()

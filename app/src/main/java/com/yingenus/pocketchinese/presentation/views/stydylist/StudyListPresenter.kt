@@ -136,7 +136,7 @@ class StudyListPresenter(val view : StudyListInterface) {
 
     fun moveClicked(words : List<StudyWord>?){
         if(!words.isNullOrEmpty())
-            view.suggestMoveWord(words,studyWords?.keys?.max()?:1)
+            view.suggestMoveWord(words,studyWords?.keys?.maxOrNull()?:1)
     }
 
     fun editClicked(word : StudyWord?){

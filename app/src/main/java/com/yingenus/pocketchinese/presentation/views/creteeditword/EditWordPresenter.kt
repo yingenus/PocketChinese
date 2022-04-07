@@ -1,10 +1,12 @@
 package com.yingenus.pocketchinese.presentation.views.creteeditword
 
 import android.content.Context
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.Connection
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyList
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord
+import com.yingenus.pocketchinese.presenters.CreateEditWordPresenter
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -19,8 +21,8 @@ class EditWordPresenter @AssistedInject constructor(
     @Assisted("studyWordUUID") private val studyWordUUID: UUID,
     @Assisted("studyListUUID") private val studyListUUID: UUID,
     @Assisted view: CreateWordInterface,
-    chinCharRepository: ChinCharRepository)
-    : CreateEditWordPresenter(view,chinCharRepository) {
+    dictionaryItemRepository: DictionaryItemRepository)
+    : CreateEditWordPresenter(view,dictionaryItemRepository) {
 
     @AssistedFactory
     interface Factory{
@@ -77,7 +79,7 @@ class EditWordPresenter @AssistedInject constructor(
                 }
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { onSuccess ->
-                    view.setBlocks(onSuccess?.keys?.max() ?: 0)
+                    view.setBlocks(onSuccess?.keys?.maxOrNull() ?: 0)
                     for (key in onSuccess?.keys!!){
 
                         val st=onSuccess[key]?.find { it.uuid.equals(studyWordUUID) }

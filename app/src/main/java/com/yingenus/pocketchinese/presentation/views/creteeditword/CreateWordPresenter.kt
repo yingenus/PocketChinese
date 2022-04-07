@@ -2,39 +2,40 @@ package com.yingenus.pocketchinese.presentation.views.creteeditword
 
 import android.content.Context
 import android.util.Log
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
+
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.Connection
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyList
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord
-import dagger.assisted.Assisted
-import dagger.assisted.AssistedFactory
+import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
+import com.yingenus.pocketchinese.presenters.CreateEditWordPresenter
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 
+
 open class CreateWordPresenter(
     view: CreateWordInterface,
-    chinCharRepository: ChinCharRepository): CreateEditWordPresenter(view,chinCharRepository) {
+    dictionaryItemRepository: DictionaryItemRepository): CreateEditWordPresenter(view,dictionaryItemRepository) {
 
-    class Factory @Inject constructor(private val chinCharRepository: ChinCharRepository){
-        fun create(chinChar : com.yingenus.pocketchinese.domain.dto.ChinChar, view: CreateWordInterface): CreateWordPresenter{
-            return Builder.getPresenter(chinChar,view, chinCharRepository)
+    class Factory @Inject constructor(private val  dictionaryItemRepository: DictionaryItemRepository){
+        fun create(dictionaryItem : com.yingenus.pocketchinese.domain.dto.DictionaryItem, view: CreateWordInterface): CreateWordPresenter{
+            return Builder.getPresenter(dictionaryItem,view, dictionaryItemRepository)
         }
         fun create(studyListUUID: UUID, view: CreateWordInterface): CreateWordPresenter{
-            return Builder.getPresenter(studyListUUID,view, chinCharRepository)
+            return Builder.getPresenter(studyListUUID,view, dictionaryItemRepository)
         }
     }
 
     object Builder{
 
-        fun getPresenter(chinChar : com.yingenus.pocketchinese.domain.dto.ChinChar, view: CreateWordInterface, chinCharRepository: ChinCharRepository): CreateWordPresenter {
-            return CreateWordChar(chinChar,view,chinCharRepository)
+        fun getPresenter(dictionaryItem : com.yingenus.pocketchinese.domain.dto.DictionaryItem, view: CreateWordInterface, dictionaryItemRepository: DictionaryItemRepository): CreateWordPresenter {
+            return CreateWordChar(dictionaryItem,view,dictionaryItemRepository)
         }
 
-        fun getPresenter(studyListUUID: UUID, view: CreateWordInterface, chinCharRepository: ChinCharRepository): CreateWordPresenter {
-            return CreateWordStudyList(studyListUUID,view,chinCharRepository)
+        fun getPresenter(studyListUUID: UUID, view: CreateWordInterface, dictionaryItemRepository: DictionaryItemRepository): CreateWordPresenter {
+            return CreateWordStudyList(studyListUUID,view,dictionaryItemRepository)
         }
 
     }
@@ -53,10 +54,12 @@ open class CreateWordPresenter(
         }
     }
 
+
     class CreateWordChar (
-        val chinChar: com.yingenus.pocketchinese.domain.dto.ChinChar,
+        val dictionaryItem: com.yingenus.pocketchinese.domain.dto.DictionaryItem,
         view: CreateWordInterface,
-        chinCharRepository: ChinCharRepository) : CreateWordPresenter(view,chinCharRepository) {
+        dictionaryItemRepository: DictionaryItemRepository) : CreateWordPresenter(view,dictionaryItemRepository) {
+
 
         override fun onCreate(context: Context) {
             super.onCreate(context)
@@ -70,9 +73,9 @@ open class CreateWordPresenter(
 
             view.setBlocks(0)
 
-            view.setText(CreateWordInterface.FIELD.CHN, chinChar.chinese)
-            view.setText(CreateWordInterface.FIELD.PIN,chinChar.pinyin)
-            view.setText(CreateWordInterface.FIELD.TRN,chinChar.translation.first())
+            view.setText(CreateWordInterface.FIELD.CHN, dictionaryItem.chinese)
+            view.setText(CreateWordInterface.FIELD.PIN,dictionaryItem.pinyin)
+            view.setText(CreateWordInterface.FIELD.TRN,dictionaryItem.translation.first())
         }
 
         private fun loadLists(){
@@ -98,7 +101,7 @@ open class CreateWordPresenter(
 
             observable
                     .map {
-                    wordDAO.getAllIn(it!!)!!.groupBy({it.first},{it.second})?.keys?.max()?:0 }
+                    wordDAO.getAllIn(it!!)!!.groupBy({it.first},{it.second})?.keys?.maxOrNull()?:0 }
                     .doOnError { Log.i("Create word error", it.message?:" un known")  }
                     .retry()
                     .observeOn(AndroidSchedulers.mainThread())
@@ -113,10 +116,11 @@ open class CreateWordPresenter(
 
     }
 
+
     class CreateWordStudyList(
         val studyListUUID: UUID,
         view: CreateWordInterface,
-        chinCharRepository : ChinCharRepository): CreateWordPresenter(view,chinCharRepository){
+        dictionaryItemRepository : DictionaryItemRepository): CreateWordPresenter(view,dictionaryItemRepository){
 
         override fun onCreate(context: Context) {
             super.onCreate(context)
@@ -140,7 +144,7 @@ open class CreateWordPresenter(
             singleObservable
                     .map { list -> list.find { it.uuid.equals(studyListUUID) } }
                     .map { studyList ->
-                        wordDAO.getAllIn(studyList!!)?.groupBy({it.first},{it.second})?.keys?.max()
+                        wordDAO.getAllIn(studyList!!)?.groupBy({it.first},{it.second})?.keys?.maxOrNull()
                                 ?: 0
                     }
                     .observeOn(AndroidSchedulers.mainThread())

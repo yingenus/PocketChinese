@@ -4,14 +4,12 @@ import android.os.Bundle
 import android.view.View
 import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.domain.repository.ChinCharRepository
-import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateEditWordFragment
-import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateEditWordPresenter
-import com.yingenus.pocketchinese.presentation.views.creteeditword.EditWordPresenter
+import com.yingenus.pocketchinese.controller.fragment.CreateEditWordFragment
+import com.yingenus.pocketchinese.presenters.CreateEditWordPresenter
 import java.util.*
 import javax.inject.Inject
 
-class EditWordFragment (private val studyWordUUID: UUID,private val studyListUUID: UUID) : CreateEditWordFragment() {
+class EditWordFragment (private val studyWordUUID: UUID, private val studyListUUID: UUID) : CreateEditWordFragment() {
 
     @Inject
     lateinit var editWordPresenterFactory : EditWordPresenter.Factory
