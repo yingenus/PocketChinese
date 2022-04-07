@@ -7,6 +7,7 @@ import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.fragment.app.FragmentActivity
+import androidx.lifecycle.Observer
 import androidx.work.*
 import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.data.local.*
@@ -128,28 +129,30 @@ class PocketApplication: Application(), Configuration.Provider {
             }
         }
 
-        val publishers: List<PublishSubject<Data>> = initWorkersId.map { PublishSubject.create() }
+        val publishers: List<PublishSubject<Data>> = initWorkersId.map { PublishSubject.create<Data>() }
 
 
         val uniqueLive = WorkManager.getInstance(this).getWorkInfosForUniqueWorkLiveData(INIT_APP_UNIQUE_WORK)
 
-        uniqueLive.observe(activity){ infos : List<WorkInfo> ->
-            infos.forEach {  info ->
-                val index = initWorkersId.indexOf(info.id)
-                val publisher = publishers.getOrNull(index) ?: return@observe
+        uniqueLive.observe(activity, object : Observer<List<WorkInfo>>{
+            override fun onChanged(infos: List<WorkInfo>) {
+                infos.forEach {  info ->
+                    val index = initWorkersId.indexOf(info.id)
+                    val publisher = publishers.getOrNull(index) ?: return
 
-                when(info.state){
-                    WorkInfo.State.SUCCEEDED -> publisher.onComplete()
-                    WorkInfo.State.FAILED -> publisher.onError(Throwable("smh happened"))
-                    WorkInfo.State.RUNNING -> {
-                        publisher.onNext(info.progress)
-                    }
-                    else -> {
-                        //To do nothing yet
+                    when(info.state){
+                        WorkInfo.State.SUCCEEDED -> publisher.onComplete()
+                        WorkInfo.State.FAILED -> publisher.onError(Throwable("smh happened"))
+                        WorkInfo.State.RUNNING -> {
+                            publisher.onNext(info.progress)
+                        }
+                        else -> {
+                            //To do nothing yet
+                        }
                     }
                 }
             }
-        }
+        })
 
         val progressObservables = publishers.mapIndexed { index, publishSubject ->
 

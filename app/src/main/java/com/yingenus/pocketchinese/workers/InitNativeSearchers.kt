@@ -31,38 +31,41 @@ class InitNativeSearchers (
             val pinNative : PrefixSearcher
             val rusNative : PrefixSearcher
 
-            super.setProgressAsync(Data(
-                mapOf(
-                    progressStageName to applicationContext.getString(R.string.InitNativeSearchers_info_start_extract_rus_index),
-                    progressPercents to 0
-                )))
+            super.setProgressAsync(
+                Data.Builder()
+                    .putAll(mapOf(
+                        progressStageName to applicationContext.getString(R.string.InitNativeSearchers_info_start_extract_rus_index),
+                        progressPercents to 0
+                    )).build())
 
             rusNative = PrefixSearcher()
             rusNative.setLanguage(Language.RUSSIAN)
             rusNative.init(rusPath)
 
+            super.setProgressAsync(
+                Data.Builder()
+                    .putAll(mapOf(
+                        progressStageName to applicationContext.getString(R.string.InitNativeSearchers_info_finish_extract_rus_index),
+                        progressPercents to 50
+                    )).build())
 
-            super.setProgressAsync(Data(
-                mapOf(
-                    progressStageName to applicationContext.getString(R.string.InitNativeSearchers_info_finish_extract_rus_index),
-                    progressPercents to 50
-                )))
-            super.setProgressAsync(Data(
-                mapOf(
-                    progressStageName to applicationContext.getString(R.string.InitNativeSearchers_info_start_extract_pin_index),
-                    progressPercents to 50
-                )))
+            super.setProgressAsync(
+                Data.Builder()
+                    .putAll(mapOf(
+                        progressStageName to applicationContext.getString(R.string.InitNativeSearchers_info_start_extract_pin_index),
+                        progressPercents to 50
+                    )).build())
 
             pinNative = PrefixSearcher()
             pinNative.setLanguage(Language.PINYIN)
             pinNative.init( pinPath)
 
-
-            super.setProgressAsync(Data(
-                mapOf(
-                    progressStageName to applicationContext.getString(R.string.InitNativeSearchers_info_finish_extract_pin_index),
-                    progressPercents to 100
-                )))
+            super.setProgressAsync(
+                Data.Builder()
+                    .putAll(mapOf(
+                        progressStageName to applicationContext.getString(R.string.InitNativeSearchers_info_finish_extract_pin_index),
+                        progressPercents to 100
+                    )).build())
 
             PocketApplication.setPinSearcher(NativeSearcher.build(pinNative,Language.PINYIN))
             PocketApplication.setRusSearcher(NativeSearcher.build(rusNative,Language.RUSSIAN))
