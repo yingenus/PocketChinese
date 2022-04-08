@@ -20,7 +20,8 @@
             app:layout_constraintStart_toStartOf="parent"
 
             android:textColor="?android:textColorSecondary"
-            android:textSize="18sp"
+            android:textSize="16sp"
+            android:fontFamily="@font/mulish_semibold"
             android:text="@string/dictionary_history_header"
             />
 

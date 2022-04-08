@@ -17,6 +17,7 @@
         android:layout_marginEnd="100dp"
 
         android:textAlignment="textStart"
+        android:fontFamily="@font/mulish_medium"
         android:textStyle="italic"
         android:maxLines="4"
         android:lines="4"

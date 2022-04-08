@@ -3,10 +3,21 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/font/mulish.xml" value="0.25" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/create_dialog.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/edit_dialog_layout.xml" value="0.24270833333333333" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/load_dialog.xml" value="0.33" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/rename_dialog.xml" value="0.20697463768115942" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/dictionary_fragment.xml" value="0.19923044035912782" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/dictionary_start_msg.xml" value="0.17999144933732364" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/example_holder_dictionary.xml" value="0.17999144933732364" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/hidden_item_search.xml" value="0.25" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/history_header.xml" value="0.17999144933732364" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/holder_dictionary_item.xml" value="0.33" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/holder_empty_dictionary_item.xml" value="0.17999144933732364" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/inner_char_item.xml" value="0.17999144933732364" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/radical_select_dialog.xml" value="0.17999144933732364" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/top_search_bar.xml" value="0.19923044035912782" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/suggestwords/layout/add_word_dialog.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/suggestwords/layout/add_words_layout.xml" value="0.10663627152988855" />
       </map>

@@ -18,7 +18,7 @@
         android:textAllCaps="false"
         android:textColor="?android:textColorPrimary"
         android:textSize="24sp"
-
+        android:fontFamily="@font/mulish_medium"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
 
@@ -34,6 +34,7 @@
         android:textSize="18sp"
         android:textColor="?android:textColorPrimary"
         tools:text="TextTest"
+        android:fontFamily="@font/mulish_regular"
 
         app:layout_constraintStart_toEndOf="@id/dictionary_item_chin_text"
         app:layout_constraintBottom_toBottomOf="@id/dictionary_item_chin_text"
@@ -51,7 +52,7 @@
         android:textColor="?android:textColorSecondary"
         android:visibility="invisible"
         android:layout_marginEnd="10dp"
-
+        android:fontFamily="@font/mulish_medium"
         tools:visibility="visible"
         tools:text="TextTest"
         app:layout_constraintEnd_toEndOf="parent"
@@ -69,7 +70,7 @@
         android:layout_below="@id/dictionary_item_chin_text"
         android:textColor="?android:textColorSecondary"
         android:layout_marginTop="5dp"
-
+        android:fontFamily="@font/mulish_regular"
         app:layout_constraintTop_toBottomOf="@id/dictionary_item_chin_text"
         app:layout_constraintStart_toStartOf="parent"
 
@@ -85,7 +86,7 @@
         app:layout_constraintBottom_toBottomOf="@+id/dictionary_item_second_language"
         app:layout_constraintEnd_toEndOf="@id/dictionary_item_line_view"
         android:visibility="invisible"
-
+        android:fontFamily="@font/mulish_medium"
         tools:visibility="visible"
 
         tools:text="TextTest"

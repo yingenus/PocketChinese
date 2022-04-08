@@ -26,5 +26,6 @@
         android:paddingStart="21dp"
         android:paddingEnd="6dp"
         android:textColor="?android:textColorSecondary"
-        android:textSize="22sp" />
+        android:fontFamily="@font/mulish_mediumitalic"
+        android:textSize="20sp" />
 </FrameLayout>
