@@ -4,21 +4,25 @@ import com.yingenus.pocketchinese.data.assets.GrammarAssetsRepository
 import com.yingenus.pocketchinese.data.assets.ImageAssetsRepository
 import com.yingenus.pocketchinese.data.local.RoomExampleRepository
 import com.yingenus.pocketchinese.data.local.RoomWordRepository
+import com.yingenus.pocketchinese.data.proxy.ProxyDictionaryItemRepository
+import com.yingenus.pocketchinese.data.proxy.ProxyExampleRepository
+import com.yingenus.pocketchinese.data.proxy.ProxyRadicalsRepository
+import com.yingenus.pocketchinese.data.proxy.ProxyToneRepository
 import com.yingenus.pocketchinese.domain.repository.*
 import dagger.Module
 import dagger.Binds
 
-@Module(includes = [RoomModule::class, AssetsModule::class])
+@Module(includes = [ProxyRepositoryModule::class, AssetsModule::class])
 abstract class RepositoryModule() {
 
     @Binds
-    abstract fun provideChinCharRepository( roomWordRepository: RoomWordRepository): ChinCharRepository
+    abstract fun provideDictionaryItemRepository( rep : ProxyDictionaryItemRepository): DictionaryItemRepository
     @Binds
-    abstract fun provideExampleRepository( roomExampleRepository: RoomExampleRepository): ExampleRepository
+    abstract fun provideExampleRepository( rep : ProxyExampleRepository): ExampleRepository
     @Binds
-    abstract fun provideRadicalsRepository( roomWordRepository: RoomWordRepository) : RadicalsRepository
+    abstract fun provideRadicalsRepository( rep : ProxyRadicalsRepository) : RadicalsRepository
     @Binds
-    abstract fun provideToneRepository( roomWordRepository: RoomWordRepository): ToneRepository
+    abstract fun provideToneRepository( rep : ProxyToneRepository): ToneRepository
     @Binds
     abstract fun provideGrammarRep( grammarAssetsRepository: GrammarAssetsRepository): GrammarRep
     @Binds

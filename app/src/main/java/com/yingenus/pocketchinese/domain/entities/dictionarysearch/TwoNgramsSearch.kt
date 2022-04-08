@@ -3,9 +3,13 @@ package com.yingenus.pocketchinese.domain.entities.dictionarysearch
 import com.yingenus.pocketchinese.common.Result
 import com.yingenus.pocketchinese.domain.entities.dictionarysearch.ngram.NgramSearch
 import com.yingenus.pocketchinese.domain.dto.VariantWord
+import javax.inject.Inject
+import javax.inject.Named
 
 
-class TwoNgramsSearch(val n1gramSearch : NgramSearch<VariantWord>, val n2gramSearch : NgramSearch<VariantWord>): Searcher {
+class TwoNgramsSearch @Inject constructor(
+    @Named("chinese_1_gram") val n1gramSearch : NgramSearch<VariantWord>,
+    @Named("chinese_2_gram") val n2gramSearch : NgramSearch<VariantWord>): Searcher {
 
 
     override fun find(query: String): Result<List<Int>>{

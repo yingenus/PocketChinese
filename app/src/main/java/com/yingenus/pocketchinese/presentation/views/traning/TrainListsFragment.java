@@ -18,8 +18,8 @@ import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
 import com.yingenus.pocketchinese.R;
-import com.yingenus.pocketchinese.presentation.dialogs.CreateNewListDialog;
 import com.google.android.material.tabs.TabLayout;
+import com.yingenus.pocketchinese.controller.dialog.CreateNewListDialog;
 import com.yingenus.pocketchinese.presentation.views.suggestist.SuggestListsFragment;
 import com.yingenus.pocketchinese.presentation.views.userlist.UserListsFragment;
 

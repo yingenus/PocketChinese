@@ -7,8 +7,9 @@ import com.yingenus.pocketchinese.data.local.sqlite.dao.ExampleLinkDao
 import com.yingenus.pocketchinese.data.local.sqlite.dao.ExampleLinkDaoImpl
 import com.yingenus.pocketchinese.domain.dto.Example
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository
+import javax.inject.Inject
 
-class SqliteExampleRepository(examplesHelper: ExamplesDBHelper) : ExampleRepository {
+class SqliteExampleRepository @Inject constructor(examplesHelper: ExamplesDBHelper) : ExampleRepository {
 
     private val exampleDao : ExampleDao = ExampleDaoImpl(examplesHelper.connectionSource)
     private val exampleLinkDao : ExampleLinkDao = ExampleLinkDaoImpl(examplesHelper.connectionSource)

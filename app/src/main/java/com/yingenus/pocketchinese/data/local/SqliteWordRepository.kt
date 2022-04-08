@@ -12,8 +12,9 @@ import com.yingenus.pocketchinese.domain.dto.ZiChar
 import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.domain.repository.RadicalsRepository
 import com.yingenus.pocketchinese.domain.repository.ToneRepository
+import javax.inject.Inject
 
-class SqliteWordRepository(dictionaryHelper: DictionaryDBHelper): DictionaryItemRepository, RadicalsRepository, ToneRepository {
+class SqliteWordRepository @Inject constructor(dictionaryHelper: DictionaryDBHelper): DictionaryItemRepository, RadicalsRepository, ToneRepository {
 
     private val wordDaoImpl : WordDaoImpl
     private val variantsDao : VariantsDaoImpl

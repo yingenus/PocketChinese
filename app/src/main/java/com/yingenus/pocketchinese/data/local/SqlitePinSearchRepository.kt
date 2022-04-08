@@ -8,9 +8,14 @@ import com.yingenus.pocketchinese.data.local.sqlite.dao.PinWordDao
 import com.yingenus.pocketchinese.data.local.sqlite.dao.PinWordDaoImpl
 import com.yingenus.pocketchinese.domain.repository.search.UnitWordRepository
 import com.yingenus.pocketchinese.domain.dto.UnitWord
+import java.lang.annotation.Inherited
 import java.sql.SQLException
+import javax.inject.Inject
 
-class SqlitePinSearchRepository(dictionaryHelper: DictionaryDBHelper) : UnitWordRepository, NgramM3AllAccessRep<Int>, com.yingenus.pocketchinese.functions.search.UnitWordRepository{
+class SqlitePinSearchRepository @Inject constructor(dictionaryHelper: DictionaryDBHelper) :
+    UnitWordRepository,
+    NgramM3AllAccessRep<Int>,
+    com.yingenus.pocketchinese.functions.search.UnitWordRepository{
 
     private val pinWordDao : PinWordDao = PinWordDaoImpl(dictionaryHelper.connectionSource)
     private val pin3gramDao : Pin3gramDao = Pin3gramDaoImpl(dictionaryHelper.connectionSource)

@@ -11,15 +11,8 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentTransaction;
 
-import com.yingenus.pocketchinese.ISettings;
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.PocketApplication;
-import com.yingenus.pocketchinese.Settings;
-import com.yingenus.pocketchinese.di.ServiceLocator;
-import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository;
-import com.yingenus.pocketchinese.domain.repository.ExampleRepository;
-import com.yingenus.pocketchinese.domain.repository.ToneRepository;
-import com.yingenus.pocketchinese.domain.usecase.WordsSearchUseCase;
 import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryFragment;
 import com.yingenus.pocketchinese.view.EmptyFragment;
 import com.yingenus.pocketchinese.presentation.views.settings.SettingsFragment;

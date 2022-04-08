@@ -11,8 +11,6 @@ import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.functions.search.IndexManagerImpl
 import com.yingenus.pocketchinese.functions.search.NativeSearcher
 import com.yingenus.pocketchinese.functions.search.PrefixSearcher
-import com.yingenus.pocketchinese.workers.progressPercents
-import com.yingenus.pocketchinese.workers.progressStageName
 
 class InitNativeSearchers (
     context: Context,
@@ -24,13 +22,7 @@ class InitNativeSearchers (
     override fun doWork(): Result {
         try {
 
-            val indexManager = IndexManagerImpl()
-
-            val rusPath = indexManager.getIndexAbsolutePathLast(Language.RUSSIAN, applicationContext)
-            val pinPath = indexManager.getIndexAbsolutePathLast(Language.PINYIN, applicationContext)
-
-            val pinNative : PrefixSearcher
-            val rusNative : PrefixSearcher
+            val initializer = PocketApplication.getSearcherInitialize()
 
             super.setProgressAsync(
                 Data.Builder()
@@ -39,9 +31,7 @@ class InitNativeSearchers (
                         progressPercents to 0
                     )).build())
 
-            rusNative = PrefixSearcher()
-            rusNative.setLanguage(Language.RUSSIAN)
-            rusNative.init(rusPath)
+            initializer.initializeRussian()
 
             super.setProgressAsync(
                 Data.Builder()
@@ -57,9 +47,7 @@ class InitNativeSearchers (
                         progressPercents to 50
                     )).build())
 
-            pinNative = PrefixSearcher()
-            pinNative.setLanguage(Language.PINYIN)
-            pinNative.init( pinPath)
+            initializer.initializePinyin()
 
             super.setProgressAsync(
                 Data.Builder()
@@ -67,9 +55,6 @@ class InitNativeSearchers (
                         progressStageName to applicationContext.getString(R.string.InitNativeSearchers_info_finish_extract_pin_index),
                         progressPercents to 100
                     )).build())
-
-            PocketApplication.setPinSearcher(NativeSearcher.build(pinNative,Language.PINYIN))
-            PocketApplication.setRusSearcher(NativeSearcher.build(rusNative,Language.RUSSIAN))
 
             return Result.success()
         }catch (e : Exception){

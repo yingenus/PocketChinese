@@ -7,6 +7,7 @@ import android.os.PersistableBundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.yingenus.pocketchinese.PocketApplication
+import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.view.activity.SingleFragmentActivityWithKeyboard
 import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import java.lang.IllegalArgumentException
@@ -21,7 +22,7 @@ class CreateWordActivity : SingleFragmentActivityWithKeyboard() {
     lateinit var dictionaryItemRepository: DictionaryItemRepository
 
 
-    class CreateWordFragmentFactory(val dictionaryItem : com.yingenus.pocketchinese.domain.dto.DictionaryItem?, val uuid: UUID?): FragmentFactory(){
+    class CreateWordFragmentFactory(val dictionaryItem : DictionaryItem?, val uuid: UUID?): FragmentFactory(){
         init {
             if (dictionaryItem == null && uuid == null) throw IllegalArgumentException("two params cant be null")
         }
@@ -108,6 +109,6 @@ class CreateWordActivity : SingleFragmentActivityWithKeyboard() {
         return CreateWordFragmentFactory(
                 dictionaryItem = dictionaryItem,
                 uuid = if (uuid != null) UUID.fromString(uuid) else null)
-        )
+
     }
 }

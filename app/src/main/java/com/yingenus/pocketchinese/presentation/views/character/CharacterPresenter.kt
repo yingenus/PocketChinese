@@ -7,8 +7,8 @@ import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import com.yingenus.pocketchinese.domain.repository.ExampleRepository
 import com.yingenus.pocketchinese.domain.repository.ToneRepository
 import com.yingenus.pocketchinese.logErrorMes
-import com.yingenus.pocketchinese.domain.entitiys.pinplayer.PinPlayer
-import com.yingenus.pocketchinese.domain.entitiys.pinplayer.ToneSplitter
+import com.yingenus.pocketchinese.functions.pinplayer.PinPlayer
+import com.yingenus.pocketchinese.functions.pinplayer.ToneSplitter
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
@@ -16,7 +16,6 @@ import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import io.reactivex.rxjava3.subjects.PublishSubject
-import java.util.*
 
 class CharacterPresenter @AssistedInject constructor(
         @Assisted val view : CharacterInterface,

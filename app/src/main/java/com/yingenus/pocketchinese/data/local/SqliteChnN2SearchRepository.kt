@@ -7,8 +7,9 @@ import com.yingenus.pocketchinese.data.local.sqlite.dao.ChnNgramDaoImpl
 import com.yingenus.pocketchinese.domain.repository.search.NgramRepository
 import com.yingenus.pocketchinese.domain.dto.VariantWord
 import java.sql.SQLException
+import javax.inject.Inject
 
-class SqliteChnN2SearchRepository(dictionaryHelper: DictionaryDBHelper): NgramRepository<VariantWord>{
+class SqliteChnN2SearchRepository @Inject constructor(dictionaryHelper: DictionaryDBHelper): NgramRepository<VariantWord>{
 
     private val chnNgramDao : ChnNgramDao = ChnNgramDaoImpl(dictionaryHelper.connectionSource)
 

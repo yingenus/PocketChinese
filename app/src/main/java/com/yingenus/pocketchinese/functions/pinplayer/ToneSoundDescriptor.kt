@@ -1,4 +1,4 @@
-package com.yingenus.pocketchinese.domain.entitiys.pinplayer
+package com.yingenus.pocketchinese.functions.pinplayer
 
 import android.content.res.AssetFileDescriptor
 

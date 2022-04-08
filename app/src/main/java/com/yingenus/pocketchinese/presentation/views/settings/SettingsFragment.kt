@@ -12,13 +12,14 @@ import android.widget.*
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
+import com.yingenus.pocketchinese.ISettings
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.PocketApplication
-import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.presentation.views.about.AboutActivity
 import com.yingenus.pocketchinese.view.activity.ActivateInputActivity
 import com.yingenus.pocketchinese.domain.entitiys.RepeatType
 import java.lang.IllegalArgumentException
+import javax.inject.Inject
 
 class SettingsFragment: Fragment(){
 
@@ -26,6 +27,8 @@ class SettingsFragment: Fragment(){
         private const val enableDark = true
     }
 
+    @Inject
+    lateinit var settings: ISettings
 
     private lateinit var mThemeSwitch: Switch
     private lateinit var mUseKeyboardSwitch: Switch
@@ -37,6 +40,11 @@ class SettingsFragment: Fragment(){
     private lateinit var toolbar: Toolbar
     private lateinit var mScrollView: ScrollView
 
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        PocketApplication.getAppComponent().injectSettingsFragment(this)
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -100,16 +108,16 @@ class SettingsFragment: Fragment(){
 
     private fun initValues(){
         //Theme switch
-        mThemeSwitch.isChecked= Settings.isNightModeOn(requireContext())
+        mThemeSwitch.isChecked= settings.isNightModeOn()
         //Use App Keyboard
-        mUseKeyboardSwitch.isChecked= Settings.useAppKeyboard(requireContext())
+        mUseKeyboardSwitch.isChecked= settings.useAppKeyboard()
         // Ignore Switches
-        val repeatType= Settings.getRepeatType(requireContext())
+        val repeatType= settings.getRepeatType()
         mIgnoreCHNSwitch.isChecked=!repeatType.ignoreCHN
         mIgnorePINSwitch.isChecked=!repeatType.ignorePIN
         mIgnoreTRNSwitch.isChecked=!repeatType.ignoreTRN
         // notify Switch
-        mShowNotifySwitch.isChecked = Settings.shouldShowNotifications(requireContext())
+        mShowNotifySwitch.isChecked = settings.shouldShowNotifications()
     }
 
     private fun setupInputButton(){
@@ -164,12 +172,12 @@ class SettingsFragment: Fragment(){
                 ignoreTRN = !mIgnoreTRNSwitch.isChecked
         )
 
-        Settings.setRepeatType(requireActivity(),repeatType)
+        settings.setRepeatType(repeatType)
 
     }
 
     private fun onUseAppKeyboardClicked(v:View){
-        Settings.setUseAppKeyboard(requireActivity(),mUseKeyboardSwitch.isChecked)
+        settings.setUseAppKeyboard(mUseKeyboardSwitch.isChecked)
     }
 
     private fun onDarkThemeSwitchClicked(v:View){
@@ -177,10 +185,10 @@ class SettingsFragment: Fragment(){
             val isChecked = (v as Switch).isChecked
             if (isChecked){
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
-                Settings.nightMode(true,requireContext())
+                settings.nightMode(true)
             }else{
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
-                Settings.nightMode(false,requireContext())
+                settings.nightMode(false)
             }
         }else {
             mThemeSwitch.isChecked = false
@@ -189,7 +197,7 @@ class SettingsFragment: Fragment(){
 
     private fun onShowNotifyClicked(v : View){
         val isChecked = (v as Switch).isChecked
-        Settings.showNotifications(isChecked,requireContext())
+        settings.showNotifications(isChecked)
         PocketApplication.updateNotificationStatus()
     }
 

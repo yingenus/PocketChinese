@@ -5,8 +5,9 @@ import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
-class MatchSearchEngine(
+class MatchSearchEngine @Inject constructor(
         private val dictionaryRepository: DictionaryItemRepository
 ) : SearchEngine{
     override fun find(query: String): Observable<DictionaryItem> {

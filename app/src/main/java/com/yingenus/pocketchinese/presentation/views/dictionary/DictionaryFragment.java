@@ -73,11 +73,7 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
 
     private List<DictionaryItem> history;
 
-    @Inject private DictionaryItemRepository dictionaryItemRepository;
-    @Inject private ExampleRepository exampleRepository;
-    @Inject private ToneRepository toneRepository;
-    @Inject private WordsSearchUseCase wordsSearchUseCase;
-    @Inject private ISettings settings;
+    @Inject public DictionaryItemRepository dictionaryItemRepository;
 
     public DictionaryFragment(){
         super(R.layout.dictionary_fragment);

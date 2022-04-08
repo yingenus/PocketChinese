@@ -9,8 +9,9 @@ import com.yingenus.pocketchinese.data.local.sqlite.dao.RusWordDaoImpl
 import com.yingenus.pocketchinese.domain.repository.search.UnitWordRepository
 import com.yingenus.pocketchinese.domain.dto.UnitWord
 import java.sql.SQLException
+import javax.inject.Inject
 
-class SqliteRusSearchRepository(dictionaryDBHelper: DictionaryDBHelper) : UnitWordRepository, NgramM3AllAccessRep<Int>, com.yingenus.pocketchinese.functions.search.UnitWordRepository{
+class SqliteRusSearchRepository @Inject constructor(dictionaryDBHelper: DictionaryDBHelper) : UnitWordRepository, NgramM3AllAccessRep<Int>, com.yingenus.pocketchinese.functions.search.UnitWordRepository{
 
     private val rusWordDao : RusWordDao = RusWordDaoImpl(dictionaryDBHelper.connectionSource)
     private val rus3gramDao : Rus3gramDao = Rus3gramDaoImpl(dictionaryDBHelper.connectionSource)

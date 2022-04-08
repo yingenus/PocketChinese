@@ -1,4 +1,4 @@
-package com.yingenus.pocketchinese.domain.entitiys.pinplayer
+package com.yingenus.pocketchinese.functions.pinplayer
 
 import com.yingenus.pocketchinese.domain.repository.ToneRepository
 import io.reactivex.rxjava3.core.Observable

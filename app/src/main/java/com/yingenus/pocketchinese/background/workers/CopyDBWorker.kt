@@ -10,8 +10,6 @@ import com.yingenus.pocketchinese.data.local.db.sqlite.InAssetsSqliteDatabaseMan
 import com.yingenus.pocketchinese.data.local.db.sqlite.SqliteDatabaseManager
 import com.yingenus.pocketchinese.data.local.sqlite.DictionaryDBHelper
 import com.yingenus.pocketchinese.data.local.sqlite.ExamplesDBHelper
-import com.yingenus.pocketchinese.workers.progressPercents
-import com.yingenus.pocketchinese.workers.progressStageName
 
 class CopyDBWorker(
     context: Context,

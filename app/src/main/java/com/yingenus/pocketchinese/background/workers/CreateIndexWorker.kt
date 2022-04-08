@@ -14,8 +14,6 @@ import com.yingenus.pocketchinese.data.local.db.sqlite.SqliteDatabaseManager
 import com.yingenus.pocketchinese.data.local.sqlite.DictionaryDBHelper
 import com.yingenus.pocketchinese.functions.search.IndexManager
 import com.yingenus.pocketchinese.functions.search.IndexManagerImpl
-import com.yingenus.pocketchinese.workers.progressPercents
-import com.yingenus.pocketchinese.workers.progressStageName
 import java.lang.Exception
 
 class CreateIndexWorker(

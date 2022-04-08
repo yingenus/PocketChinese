@@ -12,20 +12,26 @@ import com.yingenus.pocketchinese.domain.repository.search.UnitWordRepository
 import io.reactivex.rxjava3.core.Observable
 import main.newsearch.NGramSearch.NgramM1Search
 import com.yingenus.pocketchinese.domain.dto.VariantWord
+import javax.inject.Inject
+import javax.inject.Named
 
-class FuzzySearchEngine(
-        private val dictionaryItemRepository: DictionaryItemRepository,
+class FuzzySearchEngine @Inject constructor(
+    @Named("chinese_searcher") val chnSearcher : Searcher,
+    @Named("pinyin_searcher") val pinSearcher : Searcher,
+    @Named("russian_searcher") val rusSearcher : Searcher,
+    val dictionaryItemRepository: DictionaryItemRepository
+        //private val dictionaryItemRepository: DictionaryItemRepository,
        // rusNgramRepository: NgramM3Repository<Int>,
         //pinNgramRepository: NgramM3Repository<Int>,
-        chnN1gramRepository: NgramRepository<VariantWord>,
-        chnN2gramRepository: NgramRepository<VariantWord>
+        //chnN1gramRepository: NgramRepository<VariantWord>,
+        //chnN2gramRepository: NgramRepository<VariantWord>
         //rusUnitWordRepository: UnitWordRepository,
         //pinUnitWordRepository: UnitWordRepository
         ) : SearchEngine {
 
     //private val rusSearcher : Searcher
     //private val pinSearcher : Searcher
-    private val chnSearcher : Searcher
+    //private val chnSearcher : Searcher
 
     private companion object{
         //val lengthPinThreshold = listOf( 0 to 0 , 3 to 1, 4 to 2, 6 to 3 , 8 to 4 )
@@ -66,7 +72,7 @@ class FuzzySearchEngine(
 
         //pinSearcher = NComSearch(pinUnitWordRepository,pinNgramM3Search, LevenshteinComparator(lengthPinThreshold.toSet()))
 
-        chnSearcher = TwoNgramsSearch(NgramM1Search(chnN1gramRepository,1),NgramM1Search(chnN2gramRepository,2))
+        //chnSearcher = TwoNgramsSearch(NgramM1Search(chnN1gramRepository,1),NgramM1Search(chnN2gramRepository,2))
 
     }
 
@@ -98,7 +104,7 @@ class FuzzySearchEngine(
 
     private fun getSearcher(language: Language) = when(language){
         Language.CHINESE -> chnSearcher
-        Language.PINYIN -> PocketApplication.pinSearcher
-        Language.RUSSIAN -> PocketApplication.rusSearcher
+        Language.PINYIN -> pinSearcher
+        Language.RUSSIAN -> rusSearcher
     }
 }

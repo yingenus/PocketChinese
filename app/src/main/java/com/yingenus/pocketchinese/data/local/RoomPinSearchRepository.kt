@@ -5,8 +5,13 @@ import com.yingenus.pocketchinese.data.local.room.WordsDb
 import com.yingenus.pocketchinese.domain.repository.search.UnitWordRepository
 import com.yingenus.pocketchinese.domain.dto.UnitWord
 import java.sql.SQLException
+import javax.inject.Inject
 
-class RoomPinSearchRepository(val wordsDb: WordsDb) : UnitWordRepository, NgramM3AllAccessRep<Int>, com.yingenus.pocketchinese.functions.search.UnitWordRepository{
+class RoomPinSearchRepository @Inject constructor(val wordsDb: WordsDb) :
+    UnitWordRepository,
+    NgramM3AllAccessRep<Int>,
+    com.yingenus.pocketchinese.functions.search.UnitWordRepository{
+
     override fun getUnitWord(unitWordId: Int): Result<UnitWord> {
         try {
             var result = wordsDb.pinWordDao().getWord(unitWordId)

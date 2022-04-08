@@ -1,4 +1,4 @@
-package com.yingenus.pocketchinese.workers
+package com.yingenus.pocketchinese.background.workers
 
 import android.app.PendingIntent
 import android.content.Context
