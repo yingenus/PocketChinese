@@ -27,6 +27,13 @@
     <string name="suggest_lists_title">Доступные списки</string>
     <string name="suggest_lists_new">Пополнения</string>
     <string name="suggest_lists_other">Остальные списки</string>
+    <string name="user_lists_statistic">Моя статистика</string>
+    <string name="user_lists_repeated">Повторено слов</string>
+    <string name="user_lists_added">Добавлено слов</string>
+    <string name="user_lists_by_leng">Усваемость</string>
+    <string name="user_lists_need_repeat">Необходимо повторить</string>
+    <string name="user_lists_other">Остальные списки</string>
+    <string name="user_lists_last_30">За последние 30 дней*</string>
     <string name="count_words">Слов: </string>
     <string name="success">Успешность: </string>
     <string name="last_repeat">Последнее повторение: </string>

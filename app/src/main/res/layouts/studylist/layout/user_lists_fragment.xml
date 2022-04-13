@@ -13,25 +13,22 @@
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        app:menu="@menu/user_list_menu"
         app:title="@string/suggest_lists_title"
         />
 
     <TextView
         android:fontFamily="@font/mulish_semibold"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
+        android:layout_height="30dp"
         android:layout_gravity="center_vertical"
         android:textSize="16sp"
         android:textColor="?android:textColorPrimary"
         android:layout_marginStart="8dp"
-        tools:text = "Заголовок текста"
+        android:text="@string/user_lists_statistic"
         />
 
     <com.google.android.material.card.MaterialCardView
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:tools="http://schemas.android.com/tools"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-
         android:elevation="0dp"
         app:cardCornerRadius="10dp"
 
@@ -57,24 +54,17 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+
                 android:orientation="vertical">
 
-                <TextView
-                    android:fontFamily="@font/mulish_semibold"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center_vertical"
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnPrimary"
-                    android:layout_marginStart="8dp"
-                    tools:text = "За последние 30 дней"
-                    />
+
 
                 <GridLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:rowCount="3"
-                    android:columnCount="3">
+                    android:columnCount="3"
+                    android:layout_weight="1">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="0dp"
@@ -97,7 +87,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             android:layout_marginStart="12dp"
-                            tools:text = "Повторено слов"
+                            tools:text = "@string/user_lists_repeated"
                             />
 
                         <TextView
@@ -157,7 +147,7 @@
                             android:textSize="16sp"
                             android:textColor="?attr/colorOnPrimary"
                             android:layout_marginStart="12dp"
-                            tools:text = "Успешность"
+                            tools:text = "@string/user_lists_by_leng"
                             />
 
                         <GridLayout
@@ -165,13 +155,15 @@
                             android:layout_height="match_parent"
                             android:columnCount="1"
                             android:rowCount="3"
-                            android:layout_marginHorizontal="12dp">
+                            android:layout_marginHorizontal="12dp"
+                            android:paddingVertical="8dp">
 
                             <LinearLayout
                                 android:layout_width="match_parent"
-                                android:layout_height="match_parent"
+                                android:layout_height="wrap_content"
                                 android:layout_column="0"
                                 android:layout_row="0"
+                                android:layout_rowWeight="1"
                                 android:orientation="vertical"
                                 >
 
@@ -186,7 +178,7 @@
                                         android:layout_gravity="start"
                                         android:textSize="16sp"
                                         android:textColor="?attr/colorOnPrimary"
-                                        tools:text = "Русский"
+                                        tools:text = "@string/my_language"
                                         />
                                     <TextView
                                         android:id="@+id/percent_trn"
@@ -201,13 +193,116 @@
                                 </FrameLayout>
 
                                 <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
+                                    android:id="@+id/linear_progress_indicator_trn"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
-                                    android:progress="20"
+
+                                    android:progress="73"
+                                    app:trackCornerRadius="@dimen/mtrl_progress_indicator_full_rounded_corner_radius"
+
+                                    app:layout_constraintEnd_toEndOf="parent"
+                                    app:layout_constraintStart_toStartOf="parent"
+                                    app:layout_constraintBottom_toBottomOf="parent"
+
                                     />
+
 
                             </LinearLayout>
 
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_column="0"
+                                android:layout_row="1"
+                                android:layout_rowWeight="1"
+                                android:orientation="vertical"
+                                >
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:fontFamily="@font/mulish_bold"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="start"
+                                        android:textSize="16sp"
+                                        android:textColor="?attr/colorOnPrimary"
+                                        tools:text = "@string/pinyin"
+                                        />
+                                    <TextView
+                                        android:id="@+id/percent_pin"
+                                        android:fontFamily="@font/mulish_mediumitalic"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="end"
+                                        android:textSize="16sp"
+                                        android:textColor="?attr/colorOnPrimary"
+                                        tools:text = "100%"
+                                        />
+                                </FrameLayout>
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
+                                    android:id="@+id/linear_progress_indicator_pin"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+
+                                    android:progress="73"
+                                    app:trackCornerRadius="@dimen/mtrl_progress_indicator_full_rounded_corner_radius"
+                                    />
+
+
+                            </LinearLayout>
+
+                            <LinearLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="wrap_content"
+                                android:layout_column="0"
+                                android:layout_row="2"
+                                android:layout_rowWeight="1"
+                                android:orientation="vertical"
+                                >
+
+                                <FrameLayout
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content">
+
+                                    <TextView
+                                        android:fontFamily="@font/mulish_bold"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="start"
+                                        android:textSize="16sp"
+                                        android:textColor="?attr/colorOnPrimary"
+                                        tools:text = "@string/chinese"
+                                        />
+                                    <TextView
+                                        android:id="@+id/percent_chn"
+                                        android:fontFamily="@font/mulish_mediumitalic"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="end"
+                                        android:textSize="16sp"
+                                        android:textColor="?attr/colorOnPrimary"
+                                        tools:text = "100%"
+                                        />
+                                </FrameLayout>
+
+                                <com.google.android.material.progressindicator.LinearProgressIndicator
+                                    style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
+                                    android:id="@+id/linear_progress_indicator_chn"
+                                    android:layout_width="match_parent"
+                                    android:layout_height="wrap_content"
+
+                                    android:progress="73"
+                                    app:trackCornerRadius="@dimen/mtrl_progress_indicator_full_rounded_corner_radius"
+                                    />
+
+
+                            </LinearLayout>
 
 
                         </GridLayout>
@@ -254,7 +349,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             android:layout_marginStart="12dp"
-                            tools:text = "Добавлено слов"
+                            tools:text = "@string/user_lists_added"
                             />
 
                         <TextView
@@ -298,21 +393,27 @@
 
                 </GridLayout>
 
+                <TextView
+                    android:fontFamily="@font/mulish_semibold"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_gravity="center_vertical"
+                    android:textSize="12sp"
+                    android:textColor="?attr/colorOnPrimary"
+                    android:layout_marginStart="8dp"
+                    android:layout_weight="0"
+                    tools:text = "@string/user_lists_last_30"
+                    />
+
             </LinearLayout>
-
-
-
         </FrameLayout>
-
-
-
-
     </com.google.android.material.card.MaterialCardView>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginHorizontal="8dp"/>
+        android:layout_marginHorizontal="8dp"
+        android:layout_marginTop="12dp"/>
 
 </LinearLayout>

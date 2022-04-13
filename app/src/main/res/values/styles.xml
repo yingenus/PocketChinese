@@ -60,6 +60,10 @@
         <item name="fontFamily">@font/mulish_bold</item>
     </style>
 
+    <style name="Style.PocketChinese.LinearProgressIndicator.OnPrimary" parent="Widget.MaterialComponents.LinearProgressIndicator">
+        <item name="indicatorColor">?attr/colorOnPrimary</item>
+    </style>
+
     <style name="Style.PocketChinese.Chip.Surface" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="checkedIconVisible">false</item>
         <item name="android:textColor">@color/chip_text</item>
