@@ -39,7 +39,7 @@ import com.yingenus.pocketchinese.presentation.dialogs.DeleteDialog;
 import com.yingenus.pocketchinese.presentation.dialogs.NumbPickerDialog;
 import com.yingenus.pocketchinese.presentation.dialogs.StartTrainingSheetDialog;
 import com.yingenus.pocketchinese.presentation.views.suggestist.StudyListAdapter;
-import com.yingenus.pocketchinese.domain.entitiys.RepeatType;
+import com.yingenus.pocketchinese.domain.dto.RepeatType;
 import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams;
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord;
 import com.yingenus.multipleprogressbar.MultipleProgressBar;

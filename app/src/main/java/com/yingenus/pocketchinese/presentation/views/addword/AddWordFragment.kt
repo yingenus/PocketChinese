@@ -13,17 +13,18 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.controller.expandAnimation
-import com.yingenus.pocketchinese.domain.entitiys.words.suggestwords.JSONObjects
+import com.yingenus.pocketchinese.data.json.suggest.JSONObjects
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.textfield.TextInputLayout
 import com.yingenus.pocketchinese.controller.hideKeyboard
+import com.yingenus.pocketchinese.domain.dto.SuggestWord
 
 class AddWordFragment() : Fragment(R.layout.add_words_layout), AddWordInterface {
 
 
-    class AddWordFragmentFactory(val words : List<JSONObjects.Word>, var callback: AddWordsCallbacks?): FragmentFactory(){
+    class AddWordFragmentFactory(val words : List<SuggestWord>, var callback: AddWordsCallbacks?): FragmentFactory(){
         override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
             return when(className){
                 AddWordFragment::class.java.name -> {
@@ -37,13 +38,13 @@ class AddWordFragment() : Fragment(R.layout.add_words_layout), AddWordInterface 
         }
     }
 
-    constructor(words : List<JSONObjects.Word>): this(){
+    constructor(words : List<SuggestWord>): this(){
         this.words = words
     }
 
 
     object InsertingList{
-        var word: List<JSONObjects.Word>? = null
+        var word: List<SuggestWord>? = null
     }
 
     interface AddWordsCallbacks{
@@ -55,7 +56,7 @@ class AddWordFragment() : Fragment(R.layout.add_words_layout), AddWordInterface 
 
     private var presenter : AddWordsPresenter? = AddWordsPresenter(this)
 
-    private lateinit var words : List<JSONObjects.Word>
+    private lateinit var words : List<SuggestWord>
 
     private lateinit var listTypeTab : TabLayout
     private lateinit var selectListLayout : TextInputLayout
@@ -334,7 +335,7 @@ class AddWordFragment() : Fragment(R.layout.add_words_layout), AddWordInterface 
     }
 
 
-    private fun getInsertedWords(): List<JSONObjects.Word>{
+    private fun getInsertedWords(): List<SuggestWord>{
         if (::words.isInitialized){
             return words
         }

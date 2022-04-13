@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        style="@style/Style.PocketChinese.Toolbar"
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:title="@string/suggest_lists_title"
+        />
+
+    <com.google.android.material.chip.ChipGroup
+        style="@style/Style.PocketChinese.Chip.Surface"
+        android:id="@+id/tags_group"
+        android:layout_width="match_parent"
+        android:layout_height="51dp"
+        android:layout_marginHorizontal="16dp"
+        app:selectionRequired="true"
+        app:singleSelection="false"
+        app:chipSpacing = "0dp"
+        app:chipSpacingVertical="0dp"
+        >
+        <com.google.android.material.chip.Chip
+            style="@style/Style.PocketChinese.Chip.Surface"
+            android:layout_width="wrap_content"
+            android:checked="true"
+            android:checkable="true"
+            android:text="TEST"
+            android:layout_height="wrap_content"/>
+        <com.google.android.material.chip.Chip
+            style="@style/Style.PocketChinese.Chip.Surface"
+            android:layout_width="wrap_content"
+            android:checked="false"
+            android:checkable="true"
+            android:text="TEST"
+            android:layout_height="wrap_content"/>
+
+    </com.google.android.material.chip.ChipGroup>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_marginHorizontal="8dp"/>
+
+</LinearLayout>

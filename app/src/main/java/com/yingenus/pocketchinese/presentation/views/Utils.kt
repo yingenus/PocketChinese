@@ -1,7 +1,9 @@
 package com.yingenus.pocketchinese.presentation.views
 
+import android.net.Uri
 import android.view.View
 import android.view.ViewGroup
+import java.net.URI
 
 @Suppress("UNCHECKED_CAST")
 fun <T : View> View.findViewByClass(clazz: Class<T>): T?{
@@ -45,5 +47,7 @@ fun <T : View> View.findViewsByClass(clazz: Class<T>): List<T>{
     }
     return emptyList()
 }
+
+fun URI.toUri(): Uri = Uri.parse(this.toString())
 
 fun isRussian( str : String) = Regex("""[А-Яа-я]""").containsMatchIn(str)

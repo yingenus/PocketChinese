@@ -1,6 +1,6 @@
 package com.yingenus.pocketchinese.presentation.views.suggestist
 
-import com.yingenus.pocketchinese.domain.entitiys.words.suggestwords.JSONObjects
+import com.yingenus.pocketchinese.data.json.suggest.JSONObjects
 
 interface SuggestListsInterface {
 

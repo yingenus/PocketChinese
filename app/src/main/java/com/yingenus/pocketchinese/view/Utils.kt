@@ -2,6 +2,7 @@ package com.yingenus.pocketchinese.controller
 
 import android.content.Context
 import android.util.DisplayMetrics
+import android.view.View
 
 internal  fun dp2px(dp : Int, context: Context): Int{
     val dm = context.resources.displayMetrics

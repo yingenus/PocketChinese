@@ -1,6 +1,7 @@
 package com.yingenus.pocketchinese.data.assets
 
 import android.content.Context
+import android.net.Uri
 import java.net.URI
 
 abstract class AssetsRepository(context: Context) {
@@ -17,4 +18,5 @@ abstract class AssetsRepository(context: Context) {
         }
         return null
     }
+
 }

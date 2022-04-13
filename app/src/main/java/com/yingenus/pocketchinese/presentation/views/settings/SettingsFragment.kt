@@ -17,7 +17,7 @@ import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.presentation.views.about.AboutActivity
 import com.yingenus.pocketchinese.view.activity.ActivateInputActivity
-import com.yingenus.pocketchinese.domain.entitiys.RepeatType
+import com.yingenus.pocketchinese.domain.dto.RepeatType
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
@@ -166,7 +166,7 @@ class SettingsFragment: Fragment(){
             }
         }
 
-        val repeatType=RepeatType(
+        val repeatType= RepeatType(
                 ignoreCHN = !mIgnoreCHNSwitch.isChecked,
                 ignorePIN = !mIgnorePINSwitch.isChecked,
                 ignoreTRN = !mIgnoreTRNSwitch.isChecked

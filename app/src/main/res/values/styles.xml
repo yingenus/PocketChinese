@@ -46,6 +46,32 @@
         <item name="android:textColor">?android:textColorSecondary</item>
     </style>
 
+    <style name="Style.PocketChinese.Toolbar" parent="Widget.AppCompat.Toolbar">
+        <item name="titleTextAppearance">@style/Style.PocketChinese.Toolbar.Title</item>
+        <item name="subtitleTextAppearance">@style/Style.PocketChinese.Toolbar.Subtitle</item>
+    </style>
+
+    <style name="Style.PocketChinese.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
+        <item name="fontFamily">@font/mulish_bold</item>
+        <item name="android:textSize">24sp</item>
+    </style>
+
+    <style name="Style.PocketChinese.Toolbar.Subtitle" parent="TextAppearance.Widget.AppCompat.Toolbar.Subtitle">
+        <item name="fontFamily">@font/mulish_bold</item>
+    </style>
+
+    <style name="Style.PocketChinese.Chip.Surface" parent="Widget.MaterialComponents.Chip.Choice">
+        <item name="checkedIconVisible">false</item>
+        <item name="android:textColor">@color/chip_text</item>
+        <item name="chipBackgroundColor">@color/chip_background</item>
+        <item name="chipStrokeWidth">2dp</item>
+        <item name="chipStrokeColor">@color/chip_stroke</item>
+        <item name="backgroundColor">@color/chip_background</item>
+        <item name="fontFamily">@font/mulish_bold</item>
+        <item name="android:textSize">12dp</item>
+        <item name ="shapeAppearanceOverlay">@style/Style.PocketChinese.Rounded.Light</item>
+    </style>
+
     <style name="Chip.Select" parent="Widget.MaterialComponents.Chip.Choice">
         <item name="checkedIconVisible">true</item>
         <item name="checkedIconTint">?attr/colorOnPrimary</item>

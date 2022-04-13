@@ -12,6 +12,7 @@ import com.yingenus.pocketchinese.presentation.views.creteeditword.EditWordFragm
 import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryFragment
 import com.yingenus.pocketchinese.presentation.views.grammar.GrammarCaseActivity
 import com.yingenus.pocketchinese.presentation.views.settings.SettingsFragment
+import com.yingenus.pocketchinese.presentation.views.suggestist.SuggestWordsActivity
 import dagger.Component
 import dagger.BindsInstance
 import javax.inject.Singleton
@@ -47,6 +48,7 @@ interface AppComponent {
     fun injectCreateWordActivity(createWordActivity : CreateWordActivity)
     fun injectEditWordFragment(editWordFragment: EditWordFragment)
     fun injectSettingsFragment( settingsFragment: SettingsFragment)
+    fun injectSuggestWordsActivity( suggestWordsActivity : SuggestWordsActivity)
 
 
 }

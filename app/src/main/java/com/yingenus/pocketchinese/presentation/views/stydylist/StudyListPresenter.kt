@@ -4,13 +4,13 @@ import android.content.Context
 import android.util.Log
 import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.controller.logErrorMes
-import com.yingenus.pocketchinese.domain.entitiys.RepeatType
+import com.yingenus.pocketchinese.domain.dto.RepeatType
 import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.Connection
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.ConnectionDAO
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyListDAO
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWordDAO
-import com.yingenus.pocketchinese.domain.entitiys.words.statistic.FibRepeatHelper
+import com.yingenus.pocketchinese.domain.entities.repeat.FibRepeatHelper
 import com.yingenus.pocketchinese.domain.entitiys.words.statistic.StudyListAnalyzer
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyList
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord

@@ -34,7 +34,7 @@ import com.yingenus.pocketchinese.controller.fragment.train.TrnTrainView;
 import com.yingenus.pocketchinese.domain.entitiys.LanguageCase;
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.PocketBaseHelper;
 import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger;
-import com.yingenus.pocketchinese.domain.entitiys.words.statistic.FibRepeatHelper;
+import com.yingenus.pocketchinese.domain.entities.repeat.FibRepeatHelper;
 import com.yingenus.pocketchinese.domain.entitiys.words.RepeatManager;
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord;
 import com.yingenus.pocketchinese.view.MultiColorProgressBar;

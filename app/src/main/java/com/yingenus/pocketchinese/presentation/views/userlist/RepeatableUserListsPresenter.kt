@@ -8,8 +8,8 @@ import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.ConnectionDAO
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyListDAO
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWordDAO
-import com.yingenus.pocketchinese.domain.entitiys.words.statistic.FibRepeatHelper
-import com.yingenus.pocketchinese.domain.entitiys.words.statistic.RepeatHelper
+import com.yingenus.pocketchinese.domain.entities.repeat.FibRepeatHelper
+import com.yingenus.pocketchinese.domain.entities.repeat.RepeatHelperOld
 import com.yingenus.pocketchinese.domain.entitiys.words.statistic.StudyListAnalyzer
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyList
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord
@@ -117,9 +117,9 @@ class RepeatableUserListsPresenter(val view : UserListsInterface){
 
     private fun howExpired(expired : Int)=
             when(expired){
-            RepeatHelper.Expired.GOOD -> UserListsInterface.Expired.GOOD
-            RepeatHelper.Expired.MEDIUM-> UserListsInterface.Expired.MEDIUM
-            RepeatHelper.Expired.BED -> UserListsInterface.Expired.BED
+            RepeatHelperOld.Expired.GOOD -> UserListsInterface.Expired.GOOD
+            RepeatHelperOld.Expired.MEDIUM-> UserListsInterface.Expired.MEDIUM
+            RepeatHelperOld.Expired.BED -> UserListsInterface.Expired.BED
             else -> UserListsInterface.Expired.NON
         }
 

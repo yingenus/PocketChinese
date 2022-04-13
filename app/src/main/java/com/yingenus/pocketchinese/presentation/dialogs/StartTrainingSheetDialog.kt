@@ -23,10 +23,10 @@ import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.controller.getDisplayHeight
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import com.yingenus.pocketchinese.domain.entitiys.LanguageCase
-import com.yingenus.pocketchinese.domain.entitiys.RepeatType
+import com.yingenus.pocketchinese.domain.dto.RepeatType
 import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWordDAO
-import com.yingenus.pocketchinese.domain.entitiys.words.statistic.FibRepeatHelper
+import com.yingenus.pocketchinese.domain.entities.repeat.FibRepeatHelper
 import com.yingenus.pocketchinese.domain.entitiys.words.statistic.StudyAnalyzer
 import com.yingenus.pocketchinese.domain.entitiys.words.statistic.StudyListRepeatStatistic
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord
@@ -293,7 +293,8 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
     }
     private class ChooseTypeAdapter(
             val typeStat : List<StudyListRepeatStatistic.State>,
-            val repeatType: RepeatType)
+            val repeatType: RepeatType
+    )
         : HeaderItemClickedAdapter() {
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {

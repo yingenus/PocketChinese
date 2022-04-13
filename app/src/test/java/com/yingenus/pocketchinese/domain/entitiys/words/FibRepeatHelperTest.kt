@@ -1,6 +1,6 @@
 package com.yingenus.pocketchinese.domain.entitiys.words
 
-import com.yingenus.pocketchinese.domain.entitiys.words.statistic.FibRepeatHelper
+import com.yingenus.pocketchinese.domain.entities.repeat.FibRepeatHelper
 import junit.framework.TestCase
 import java.util.*
 

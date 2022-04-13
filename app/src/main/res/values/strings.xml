@@ -24,6 +24,9 @@
     <string name="learn_words_sorting_za">Я-А</string>
     <string name="learn_words_new_first">Показать сначала новые</string>
     <string name="tags">Теги</string>
+    <string name="suggest_lists_title">Доступные списки</string>
+    <string name="suggest_lists_new">Пополнения</string>
+    <string name="suggest_lists_other">Остальные списки</string>
     <string name="count_words">Слов: </string>
     <string name="success">Успешность: </string>
     <string name="last_repeat">Последнее повторение: </string>

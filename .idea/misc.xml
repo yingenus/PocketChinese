@@ -3,7 +3,9 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/chart.xml" value="0.2155" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/font/mulish.xml" value="0.25" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layout/list_header.xml" value="0.5" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/create_dialog.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/edit_dialog_layout.xml" value="0.24270833333333333" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/load_dialog.xml" value="0.33" />
@@ -17,9 +19,22 @@
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/holder_empty_dictionary_item.xml" value="0.17999144933732364" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/inner_char_item.xml" value="0.17999144933732364" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/radical_select_dialog.xml" value="0.17999144933732364" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/suggest_list_holder.xml" value="0.2736212056434374" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/top_search_bar.xml" value="0.19923044035912782" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/study_list_fragment.xml" value="0.2736212056434374" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/user_lists_fragment.xml" value="0.5" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/suggestwords/layout/add_word_dialog.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/suggestwords/layout/add_words_layout.xml" value="0.10663627152988855" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/suggestwords/layout/example_holder.xml" value="0.2736212056434374" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/suggestwords/layout/holder_words_header.xml" value="0.2736212056434374" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/suggestwords/layout/suggest_list_holder.xml" value="0.33" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/suggestwords/layout/suggest_list_layout.xml" value="0.2736212056434374" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/suggestwords/layout/suggest_lists_layout.xml" value="0.25" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/suggestwords/layout/suggest_tag_chip.xml" value="0.2736212056434374" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/cat_chip_group_item_choice.xml" value="0.2736212056434374" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/given_study_list_fragment.xml" value="0.2736212056434374" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/hidden_item_study_suggest.xml" value="0.2736212056434374" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/my_study_list_fragment.xml" value="0.2736212056434374" />
       </map>
     </option>
   </component>

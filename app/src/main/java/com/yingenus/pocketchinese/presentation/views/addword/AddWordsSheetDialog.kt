@@ -6,12 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.appcompat.widget.Toolbar
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.domain.entitiys.words.suggestwords.JSONObjects
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
+import com.yingenus.pocketchinese.domain.dto.SuggestWord
 
 class AddWordsSheetDialog : BottomSheetDialogFragment(){
 
-    private lateinit var words: List<JSONObjects.Word>
+    private lateinit var words: List<SuggestWord>
 
     var callback : AddWordFragment.AddWordsCallbacks? = null
         set(value) {
@@ -25,7 +25,7 @@ class AddWordsSheetDialog : BottomSheetDialogFragment(){
         }
 
 
-    fun setWords(words : List<JSONObjects.Word>){
+    fun setWords(words : List<SuggestWord>){
       this.words = words
     }
 

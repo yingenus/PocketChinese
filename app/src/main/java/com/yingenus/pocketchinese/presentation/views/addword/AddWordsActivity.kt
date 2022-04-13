@@ -3,7 +3,7 @@ package com.yingenus.pocketchinese.presentation.views.addword
 import android.content.Context
 import android.content.Intent
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.domain.entitiys.words.suggestwords.JSONObjects
+import com.yingenus.pocketchinese.data.json.suggest.JSONObjects
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yingenus.pocketchinese.view.activity.ScrollingContainerActivity
 

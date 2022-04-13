@@ -1,7 +1,8 @@
 package com.yingenus.pocketchinese.domain.repository
 
+import android.net.Uri
 import java.net.URI
 
 interface ImageRep {
-    fun getImageUri(name : String) : URI?
+    fun getImageURI(name : String) : URI?
 }

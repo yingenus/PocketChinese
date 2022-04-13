@@ -25,7 +25,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.controller.activity.SuggestWordsActivityKt;
 import com.yingenus.pocketchinese.domain.entitiys.UtilsKt;
-import com.yingenus.pocketchinese.domain.entitiys.words.suggestwords.JSONObjects;
+import com.yingenus.pocketchinese.data.json.suggest.JSONObjects;
 import com.google.android.material.button.MaterialButtonToggleGroup;
 import com.google.android.material.chip.Chip;
 import com.google.android.material.chip.ChipGroup;

@@ -1,6 +1,6 @@
 package com.yingenus.pocketchinese.presentation.views.stydylist
 
-import com.yingenus.pocketchinese.domain.entitiys.RepeatType
+import com.yingenus.pocketchinese.domain.dto.RepeatType
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord
 import java.util.*
 

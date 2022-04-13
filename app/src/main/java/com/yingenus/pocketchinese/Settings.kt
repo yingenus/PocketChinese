@@ -1,7 +1,7 @@
 package com.yingenus.pocketchinese
 
 import android.content.Context
-import com.yingenus.pocketchinese.domain.entitiys.RepeatType
+import com.yingenus.pocketchinese.domain.dto.RepeatType
 
 interface ISettings {
     fun useAppKeyboard(): Boolean
@@ -64,7 +64,7 @@ object Settings{
         context.getSharedPreferences(APP_PREFERENCE,0).edit().putBoolean(USE_APP_KEYBOARD,use).apply()
     }
 
-    fun getRepeatType(context: Context): RepeatType{
+    fun getRepeatType(context: Context): RepeatType {
         val preference=context.getSharedPreferences(APP_PREFERENCE,0)
 
         val ignoreCHN=preference.getBoolean(REPEAT_TYPE_CHN,false)

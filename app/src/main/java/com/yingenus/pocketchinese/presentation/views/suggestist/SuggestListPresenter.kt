@@ -2,8 +2,8 @@ package com.yingenus.pocketchinese.presentation.views.suggestist
 
 import android.content.Context
 import com.yingenus.pocketchinese.Settings
-import com.yingenus.pocketchinese.domain.entitiys.words.suggestwords.JSONHelper
-import com.yingenus.pocketchinese.domain.entitiys.words.suggestwords.JSONObjects
+import com.yingenus.pocketchinese.data.json.suggest.JSONHelper
+import com.yingenus.pocketchinese.data.json.suggest.JSONObjects
 import java.lang.IllegalArgumentException
 
 class SuggestListPresenter(val view: SuggestListsInterface) {

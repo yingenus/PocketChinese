@@ -13,11 +13,11 @@ import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.presentation.views.userlist.RepeatableUserListsActivity
 import com.yingenus.pocketchinese.logErrorMes
-import com.yingenus.pocketchinese.domain.entitiys.RepeatType
+import com.yingenus.pocketchinese.domain.dto.RepeatType
 import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.*
-import com.yingenus.pocketchinese.domain.entitiys.words.statistic.FibRepeatHelper
-import com.yingenus.pocketchinese.domain.entitiys.words.statistic.RepeatHelper
+import com.yingenus.pocketchinese.domain.entities.repeat.FibRepeatHelper
+import com.yingenus.pocketchinese.domain.entities.repeat.RepeatHelperOld
 import com.yingenus.pocketchinese.background.notifications.Channels
 
 import java.sql.SQLException
@@ -129,15 +129,15 @@ class CheckRepeatableWordsWorker( context: Context, workerParameters: WorkerPara
         }
 
         private fun getExpiredWords(words : List<StudyWord>): List<StudyWord>{
-            return words.filter {word ->  howExpired(word) != RepeatHelper.Expired.GOOD }
+            return words.filter {word ->  howExpired(word) != RepeatHelperOld.Expired.GOOD }
         }
 
         private fun howExpired(word: StudyWord): Int{
-            val pinE = if (repeatType.ignorePIN) RepeatHelper.Expired.GOOD else
+            val pinE = if (repeatType.ignorePIN) RepeatHelperOld.Expired.GOOD else
                 repeatHelper.howExpired(word.pinLastRepeat, word.pinLevel)
-            val trnE = if (repeatType.ignoreTRN) RepeatHelper.Expired.GOOD else
+            val trnE = if (repeatType.ignoreTRN) RepeatHelperOld.Expired.GOOD else
                 repeatHelper.howExpired(word.trnLastRepeat, word.trnLevel)
-            val chnE = if (repeatType.ignoreCHN) RepeatHelper.Expired.MEDIUM else
+            val chnE = if (repeatType.ignoreCHN) RepeatHelperOld.Expired.MEDIUM else
                 repeatHelper.howExpired(word.chnLastRepeat, word.chnLevel)
 
             return Math.max(pinE,Math.max(trnE,chnE))

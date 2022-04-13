@@ -4,8 +4,8 @@ import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
 import android.graphics.Color;
+import android.net.Uri;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -26,6 +26,9 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 import androidx.coordinatorlayout.widget.CoordinatorLayout;
 import androidx.fragment.app.DialogFragment;
+import androidx.lifecycle.Observer;
+import androidx.lifecycle.ViewModel;
+import androidx.lifecycle.ViewModelProvider;
 import androidx.recyclerview.selection.SelectionPredicates;
 import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.selection.StorageStrategy;
@@ -33,30 +36,26 @@ import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.transition.TransitionManager;
 
+import com.yingenus.pocketchinese.PocketApplication;
 import com.yingenus.pocketchinese.R;
-
-import com.yingenus.pocketchinese.Settings;
 import com.yingenus.pocketchinese.controller.activity.SuggestWordsActivityKt;
+import com.yingenus.pocketchinese.domain.dto.Example;
+import com.yingenus.pocketchinese.domain.dto.SuggestWord;
+import com.yingenus.pocketchinese.domain.dto.SuggestWordGroup;
 import com.yingenus.pocketchinese.presentation.views.addword.AddWordsSheetDialog;
 import com.yingenus.pocketchinese.presentation.views.addword.AddWordFragment;
-import com.yingenus.pocketchinese.domain.entitiys.UtilsKt;
 
-
-import com.yingenus.pocketchinese.domain.entitiys.words.suggestwords.JSONHelper;
-import com.yingenus.pocketchinese.domain.entitiys.words.suggestwords.JSONObjects;
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.transition.MaterialArcMotion;
 import com.google.android.material.transition.MaterialContainerTransform;
 
-import java.io.IOException;
-import java.io.InputStream;
 import java.util.Arrays;
 import java.util.List;
 
+import javax.inject.Inject;
+
 public class SuggestWordsActivity extends AppCompatActivity implements android.view.ActionMode.Callback {
 
-    private JSONObjects.FileInfo fInfo;
-    private JSONObjects.WordList suggestWords;
     private boolean[] blocksState;
 
     private RecyclerView recycler;
@@ -73,6 +72,10 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
 
     private SelectionTracker selectionTracker;
     private android.view.ActionMode actionMode;
+
+    @Inject
+    public SuggestListViewModel.Factory suggestListViewModelFactory;
+    private SuggestListViewModel viewModel;
 
     @Override
     public boolean onCreateActionMode(android.view.ActionMode mode, Menu menu) {
@@ -123,7 +126,20 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
         super.onCreate(savedInstanceState);
         setContentView(R.layout.suggest_list_layout);
 
-        getDataFromIntent();
+        String name  =(String) getIntent().getSerializableExtra(SuggestWordsActivityKt.INNER_INTENT_GIVEN_LIST);
+
+        PocketApplication.Companion.getAppComponent().injectSuggestWordsActivity(this);
+        ViewModelProvider provider = new ViewModelProvider(getViewModelStore(), new ViewModelProvider.Factory() {
+            @NonNull
+            @Override
+            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
+                if (modelClass == SuggestListViewModel.class){
+                    return (T) suggestListViewModelFactory.create(name);
+                }
+                return null;
+            }
+        });
+        viewModel = provider.get(SuggestListViewModel.class);
 
         recycler = findViewById(R.id.expanded_recyclerview);
         toolbar = findViewById(R.id.toolbar);
@@ -158,9 +174,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
 
         selectionTracker.addObserver( getSelectionObserver());
 
-        loadWords();
-        fillToolbar();
-        setViewed();
+        subscribeToAll();
     }
 
     @Override
@@ -175,6 +189,38 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
 
     }
 
+    private void subscribeToAll(){
+        viewModel.getName().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                getSupportActionBar().setTitle(s);
+            }
+        });
+        viewModel.getImage().observe(this, new Observer<Uri>() {
+            @Override
+            public void onChanged(Uri uri) {
+                imageView.setImageURI(uri);
+                //imageView.setImageBitmap(UtilsKt.getBitmapFromAssets(getApplicationContext(),"image/"+suggestWords.getImage()));
+            }
+        });
+        viewModel.getDescription().observe(this, new Observer<String>() {
+            @Override
+            public void onChanged(String s) {
+                mDescription.setText(s);
+            }
+        });
+        viewModel.getSuggestGroups().observe(this, new Observer<List<SuggestWordGroup>>() {
+            @Override
+            public void onChanged(List<SuggestWordGroup> suggestWordGroups) {
+                RecyclerView.Adapter adapter= recycler.getAdapter();
+                if (adapter instanceof SuggestWordsAdapter){
+                    ((SuggestWordsAdapter)adapter).setGroups( suggestWordGroups);
+                    adapter.notifyDataSetChanged();
+                }
+            }
+        });
+    }
+
     private void onNavigationButtonClicked(View view){
         finish();
     }
@@ -187,23 +233,6 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
                 SuggestWordsActivity.this.onSelectionChanged();
             }
         };
-    }
-
-    private void setViewed(){
-        String intValue = fInfo.getVersion().replace(".","");
-        Settings.INSTANCE.setViewItem(getApplicationContext(),Integer.parseInt(intValue),fInfo.getName());
-    }
-
-    private void getDataFromIntent(){
-        fInfo =(JSONObjects.FileInfo) getIntent().getSerializableExtra(SuggestWordsActivityKt.INNER_INTENT_GIVEN_LIST);
-    }
-
-    private void fillToolbar(){
-        if (suggestWords!=null){
-            getSupportActionBar().setTitle(suggestWords.getName());
-            mDescription.setText(suggestWords.getDescription());
-            imageView.setImageBitmap(UtilsKt.getBitmapFromAssets(getApplicationContext(),"image/"+suggestWords.getImage()));
-        }
     }
 
     private void onSelectionChanged() {
@@ -252,7 +281,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
     }
 
     private void showAddDialog(){
-        List<JSONObjects.Word> words = Arrays.asList(((SuggestWordsAdapter) recycler.getAdapter()).getSelectedWords());
+        List<SuggestWord> words = Arrays.asList(((SuggestWordsAdapter) recycler.getAdapter()).getSelectedWords());
         selectionTracker.clearSelection();
         AddWordsSheetDialog dialog = new AddWordsSheetDialog();
         dialog.setWords(words);
@@ -293,7 +322,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
 
         if (actionMode==null && viewHolder instanceof SuggestWordsAdapter.SuggestItemHolder){
 
-            JSONObjects.Word word=((SuggestWordsAdapter.SuggestItemHolder)viewHolder).getWord();
+            SuggestWord word=((SuggestWordsAdapter.SuggestItemHolder)viewHolder).getWord();
 
             if(word.getExamples()!=null&& !word.getExamples().isEmpty()) {
 
@@ -369,27 +398,6 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
         return transform;
     }
 
-    private void loadWords(){
-
-        try {
-            InputStream ips = getApplicationContext().getAssets().open("suggest/"+fInfo.getFileName().toLowerCase());
-            suggestWords =  JSONHelper.INSTANCE.loadWordList(ips);;
-            blocksState = new boolean[suggestWords.getWords().size()];
-            Arrays.fill(blocksState, true);
-
-            fillToolbar();
-            RecyclerView.Adapter adapter= recycler.getAdapter();
-            if (adapter instanceof SuggestWordsAdapter){
-                ((SuggestWordsAdapter)adapter).setGroups( suggestWords.getWords());
-                adapter.notifyDataSetChanged();
-            }
-
-        }catch (IOException e){
-            Log.e("SuggestWordsActivity",e.toString(),e);
-            finish();
-        }
-    }
-
     private static ExpandedViewHelper getExpandedViewHelper(View view){
         ExpandedViewHelper helper=(ExpandedViewHelper) view.getTag(R.id.expanded_view_helper);
         if (helper==null){
@@ -429,7 +437,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
             examplesList.setClickable(false);
         }
 
-        public void bind(JSONObjects.Word word){
+        public void bind(SuggestWord word){
             chnText.setText(word.getWord());
             pinText.setText(word.getPinyin());
             trnText.setText(word.getTranslation());
@@ -440,19 +448,19 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
                 descriptionText.setText("");
             }
 
-            if (word.getExamples()!=null&&!word.getExamples().isEmpty()){
+            if (!word.getExamples().isEmpty()){
                 exampleContainer.setVisibility(View.VISIBLE);
-                JSONObjects.Example[] examples=new JSONObjects.Example[ word.getExamples().size()];
+                Example[] examples=new Example[ word.getExamples().size()];
                 word.getExamples().toArray(examples);
                 examplesList.setAdapter(new ExampleAdapter(view.getContext(),examples));
             }
 
         }
 
-        private static class ExampleAdapter extends ArrayAdapter<JSONObjects.Example>{
-            private final JSONObjects.Example[] examples;
+        private static class ExampleAdapter extends ArrayAdapter<Example>{
+            private final Example[] examples;
 
-            public ExampleAdapter(@NonNull Context context, @NonNull JSONObjects.Example[] objects) {
+            public ExampleAdapter(@NonNull Context context, @NonNull Example[] objects) {
                 super(context, -1, objects);
 
                 this.examples=objects.clone();

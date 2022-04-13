@@ -17,7 +17,10 @@ import androidx.recyclerview.selection.SelectionTracker;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.yingenus.pocketchinese.R;
-import com.yingenus.pocketchinese.domain.entitiys.words.suggestwords.JSONObjects;
+import com.yingenus.pocketchinese.data.json.suggest.JSONObjects;
+import com.yingenus.pocketchinese.domain.dto.Example;
+import com.yingenus.pocketchinese.domain.dto.SuggestWord;
+import com.yingenus.pocketchinese.domain.dto.SuggestWordGroup;
 import com.yingenus.pocketchinese.view.holders.BlockAdapter;
 
 import java.lang.ref.WeakReference;
@@ -28,7 +31,7 @@ import java.util.List;
 
 public class SuggestWordsAdapter extends BlockAdapter<SuggestWordsAdapter.BlockHeaderHolder, SuggestWordsAdapter.SuggestItemHolder> {
 
-    private List<JSONObjects.WordsGroup> mGroups;
+    private List<SuggestWordGroup> mGroups;
     private boolean[] expandBlocks;
 
     private SelectionTracker<Long> selectionTracker;
@@ -55,7 +58,7 @@ public class SuggestWordsAdapter extends BlockAdapter<SuggestWordsAdapter.BlockH
         };
     }
 
-    public void setGroups(List<JSONObjects.WordsGroup> groups){
+    public void setGroups(List<SuggestWordGroup> groups){
         mGroups = groups;
 
         expandBlocks = new boolean[mGroups.size()];
@@ -63,7 +66,7 @@ public class SuggestWordsAdapter extends BlockAdapter<SuggestWordsAdapter.BlockH
 
         List<List<?>> items = new ArrayList<>();
 
-        for (JSONObjects.WordsGroup group : groups){
+        for (SuggestWordGroup group : groups){
             items.add(group.getWords());
         }
 
@@ -149,9 +152,9 @@ public class SuggestWordsAdapter extends BlockAdapter<SuggestWordsAdapter.BlockH
         mBlockListener = null;
     }
 
-    public JSONObjects.Word[] getSelectedWords(){
+    public SuggestWord[] getSelectedWords(){
         if (selectionTracker != null && selectionTracker.getSelection().size() != 0){
-            ArrayList<JSONObjects.Word> words = new ArrayList<>();
+            ArrayList<SuggestWord> words = new ArrayList<>();
 
             int itemCount = getItemCount();
             for(int position = 0; position <itemCount; position++){
@@ -168,9 +171,9 @@ public class SuggestWordsAdapter extends BlockAdapter<SuggestWordsAdapter.BlockH
                     }
                 }
             }
-            return words.toArray(new JSONObjects.Word[0]);
+            return words.toArray(new SuggestWord[0]);
         }
-        return new JSONObjects.Word[0];
+        return new SuggestWord[0];
     }
 
 
@@ -195,7 +198,7 @@ public class SuggestWordsAdapter extends BlockAdapter<SuggestWordsAdapter.BlockH
     }
 
     public static class SuggestItemHolder extends SuggestWordsAdapterHolder implements View.OnClickListener{
-        private JSONObjects.Word mWord;
+        private SuggestWord mWord;
         private final SuggestDetails details;
 
         private final TextView chnText;
@@ -224,7 +227,7 @@ public class SuggestWordsAdapter extends BlockAdapter<SuggestWordsAdapter.BlockH
             details=new SuggestDetails();
         }
 
-        public void bind(JSONObjects.Word word, int position, SelectionTracker<Long> tracker,SuggestWordsAdapter adapter){
+        public void bind(SuggestWord word, int position, SelectionTracker<Long> tracker,SuggestWordsAdapter adapter){
 
             mWord= word;
             chnText.setText(mWord.getWord());
@@ -238,7 +241,7 @@ public class SuggestWordsAdapter extends BlockAdapter<SuggestWordsAdapter.BlockH
                 bindSelection(tracker,adapter.isSelectable);
             }
 
-            List<JSONObjects.Example> examples = word.getExamples();
+            List<Example> examples = word.getExamples();
 
             if (examples != null && !examples.isEmpty()){
                 examplesIndicator.setVisibility(View.VISIBLE);
@@ -266,7 +269,7 @@ public class SuggestWordsAdapter extends BlockAdapter<SuggestWordsAdapter.BlockH
             return details;
         }
 
-        public JSONObjects.Word getWord() {
+        public SuggestWord getWord() {
             return mWord;
         }
     }

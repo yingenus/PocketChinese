@@ -10,7 +10,7 @@ import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyListDAO
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWordDAO
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyList
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord
-import com.yingenus.pocketchinese.domain.entitiys.words.suggestwords.JSONObjects
+import com.yingenus.pocketchinese.data.json.suggest.JSONObjects
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers

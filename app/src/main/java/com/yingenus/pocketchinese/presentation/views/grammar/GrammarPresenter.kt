@@ -29,7 +29,7 @@ class GrammarPresenter @AssistedInject constructor(
         view?.setTitle(grammarCase?.title?:"")
 
         if (grammarCase != null){
-            val imageUri = imageRep.getImageUri(grammarCase.image)
+            val imageUri = imageRep.getImageURI(grammarCase.image)
             if(imageUri != null) view?.setTitleIconURI(imageUri)
 
             val uri = URI.create("https://appassets.androidplatform.net/"+grammarCase.link)

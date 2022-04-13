@@ -1,6 +1,7 @@
 package com.yingenus.pocketchinese.data.assets
 
 import android.content.Context
+import android.net.Uri
 import com.yingenus.pocketchinese.domain.repository.ImageRep
 import java.net.URI
 
@@ -12,5 +13,5 @@ class ImageAssetsRepository(context: Context) : AssetsRepository(context), Image
 
     override fun getFolder() = folder
 
-    override fun getImageUri(name: String) = getFileURI(name)
+    override fun getImageURI(name: String) = getFileURI(name)
 }
