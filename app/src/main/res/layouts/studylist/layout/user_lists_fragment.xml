@@ -194,7 +194,7 @@
 
                                 <com.google.android.material.progressindicator.LinearProgressIndicator
                                     style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
-                                    android:id="@+id/linear_progress_indicator_trn"
+                                    android:id="@+id/progress_trn"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
 
@@ -246,7 +246,7 @@
 
                                 <com.google.android.material.progressindicator.LinearProgressIndicator
                                     style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
-                                    android:id="@+id/linear_progress_indicator_pin"
+                                    android:id="@+id/progress_pin"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
 
@@ -293,7 +293,7 @@
 
                                 <com.google.android.material.progressindicator.LinearProgressIndicator
                                     style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
-                                    android:id="@+id/linear_progress_indicator_chn"
+                                    android:id="@+id/progress_chn"
                                     android:layout_width="match_parent"
                                     android:layout_height="wrap_content"
 

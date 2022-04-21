@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/colorSurface"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="?attr/colorSurface"
+        app:navigationIcon="@drawable/ic_close"
+        app:layout_collapseMode="pin"
+        />
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+        <View
+            android:layout_width="450dp"
+            android:layout_height="450dp"
+            android:layout_marginBottom="-160dp"
+            android:layout_gravity="bottom|center_horizontal"
+            android:background="@drawable/button_gradient"/>
+
+        <androidx.viewpager2.widget.ViewPager2
+            android:id="@+id/view_pager"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"/>
+
+        <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+            style="@style/Style.PocketChinese.Rounded.Button.Medium"
+            android:id="@+id/fab_start"
+            android:layout_width="210dp"
+            android:layout_height="60dp"
+            app:icon="@drawable/ic_next"
+            app:iconGravity="textEnd"
+
+            android:layout_gravity="bottom|center_horizontal"
+            android:layout_marginBottom="50dp"
+            android:text="@string/continues"
+            />
+
+
+
+    </FrameLayout>
+
+</LinearLayout>

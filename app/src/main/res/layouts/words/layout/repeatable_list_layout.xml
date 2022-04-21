@@ -8,20 +8,17 @@
     android:orientation="vertical">
 
     <androidx.appcompat.widget.Toolbar
+        style="@style/Style.PocketChinese.Toolbar"
         android:id="@+id/toolbar"
         android:layout_width="match_parent"
-        android:layout_height="56dp"
-        android:background="?attr/colorPrimary"
-        android:elevation="0.1dp"
+        android:layout_height="wrap_content"
         app:navigationIcon="@drawable/ic_next_pr_2"
         app:title="@string/repeatable_lists_title"
-        app:titleTextColor="?attr/colorOnPrimary"
-        app:layout_collapseMode="pin"
         />
 
-    <FrameLayout
-        android:id="@+id/container"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="match_parent"/>
 
 </LinearLayout>

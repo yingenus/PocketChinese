@@ -3,6 +3,7 @@ package com.yingenus.pocketchinese.presentation.views.creteeditword
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
@@ -14,6 +15,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
 
 class CreateWordForStudyListViewModel @AssistedInject constructor(
     @Assisted private val studyListId: Long,
@@ -24,7 +26,7 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory{
-        fun create( dictionaryItem: DictionaryItem?) : CreateWordForStudyListViewModel
+        fun create( studyListId: Long) : CreateWordForStudyListViewModel
     }
 
     enum class WordsError{
@@ -183,4 +185,24 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
             }
     }
 
+}
+
+class CreateWordForStudyListViewModelFragment @AssistedInject constructor(
+    @Assisted private val studyListId: Long
+) : ViewModelProvider.Factory{
+
+    @AssistedFactory
+    interface Builder{
+        fun create(studyListId: Long): CreateWordForStudyListViewModelFragment
+    }
+
+    @Inject
+    lateinit var createWordForStudyListViewModel : CreateWordForStudyListViewModel.Factory
+
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return when(modelClass){
+            CreateWordForStudyListViewModel::class -> createWordForStudyListViewModel.create(studyListId)
+            else -> throw IllegalArgumentException()
+        } as T
+    }
 }

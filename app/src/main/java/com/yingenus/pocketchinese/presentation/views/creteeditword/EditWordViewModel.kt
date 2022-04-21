@@ -3,6 +3,7 @@ package com.yingenus.pocketchinese.presentation.views.creteeditword
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
@@ -15,6 +16,28 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
+import javax.inject.Inject
+
+class EditWordViewModelFactory @AssistedInject constructor(
+    @Assisted private val studyListId: Long,
+    @Assisted private val studyWordId: Long
+) : ViewModelProvider.Factory{
+
+    @AssistedFactory
+    interface Factory{
+        fun create( studyListId: Long, studyWordId: Long) : EditWordViewModelFactory
+    }
+
+    @Inject
+    lateinit var editWordViewModel: EditWordViewModel.Factory
+
+    override fun <T : ViewModel?> create(modelClass: Class<T>): T {
+        return when(modelClass){
+            EditWordViewModel::class -> editWordViewModel.create(studyListId,studyWordId)
+            else -> throw IllegalArgumentException()
+        } as T
+    }
+}
 
 class EditWordViewModel @AssistedInject constructor(
     @Assisted private val studyListId: Long,
@@ -27,7 +50,7 @@ class EditWordViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory{
-        fun create( dictionaryItem: DictionaryItem?) : EditWordViewModel
+        fun create( studyListId: Long, studyWordId: Long) : EditWordViewModel
     }
 
     enum class WordsError{
@@ -126,7 +149,7 @@ class EditWordViewModel @AssistedInject constructor(
             }
     }
 
-    fun add( chinese : String, pinyin : String, translation : String) : LiveData<Boolean> {
+    fun update( chinese : String, pinyin : String, translation : String) : LiveData<Boolean> {
         val isSuccess: MutableLiveData<Boolean> = MutableLiveData()
 
         Single
@@ -142,7 +165,7 @@ class EditWordViewModel @AssistedInject constructor(
                 if (it.first != WordsError.NOTHING || it.second != WordsError.NOTHING || it.third != WordsError.NOTHING)
                     Single.just<Boolean>(false)
                 else
-                    modifyStudyWordUseCase.createStudyWord(
+                    modifyStudyWordUseCase.changeAll(
                         studyListId,
                         chinese,
                         pinyin,

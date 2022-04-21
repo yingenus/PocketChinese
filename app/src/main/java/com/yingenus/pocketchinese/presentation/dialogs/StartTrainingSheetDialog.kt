@@ -12,33 +12,27 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.core.widget.NestedScrollView
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.recyclerview.widget.RecyclerView.ItemDecoration
 import androidx.viewpager2.widget.ViewPager2
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.presentation.views.train.TrainActivity
 import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.controller.getDisplayHeight
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import com.yingenus.pocketchinese.domain.entitiys.LanguageCase
-import com.yingenus.pocketchinese.domain.dto.RepeatType
-import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger
-import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWordDAO
-import com.yingenus.pocketchinese.domain.entities.repeat.FibRepeatHelper
-import com.yingenus.pocketchinese.domain.entitiys.words.statistic.StudyAnalyzer
-import com.yingenus.pocketchinese.domain.entitiys.words.statistic.StudyListRepeatStatistic
-import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyWord
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Single
-import io.reactivex.rxjava3.core.SingleEmitter
-import io.reactivex.rxjava3.schedulers.Schedulers
+import com.yingenus.pocketchinese.PocketApplication
+import com.yingenus.pocketchinese.common.Language
+import com.yingenus.pocketchinese.domain.dto.TrainedWords
+import com.yingenus.pocketchinese.domain.dto.TrainingConf
 import java.util.*
+import javax.inject.Inject
 
-class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragment() {
+class StartTrainingSheetDialog(val studyListId: Long) : BottomSheetDialogFragment() {
     private object Helper{
         const val OccupiHeight = 0.9f
     }
@@ -49,24 +43,33 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
         }
     }
 
+    @Inject
+    lateinit var startTrainingViewModelFactory : StartTrainingViewModelFactory.Builder
+    private lateinit var viewModel: StartTrainingViewModel
+
     private lateinit var toolbar: Toolbar
     private lateinit var viewPager : ViewPager2
 
-    private lateinit var statistic: StudyListRepeatStatistic
-    private lateinit var repeatType: RepeatType
+    //private lateinit var statistic: StudyListRepeatStatistic
+    //private lateinit var repeatType: RepeatType
 
-    private lateinit var wordDAO: StudyWordDAO
+    //private lateinit var wordDAO: StudyWordDAO
 
-    private var blockAdapter: ChooseBlockAdapter? = null
+    private var wordsAdapter: ChooseWordsAdapter? = null
     private var typeAdapter: ChooseTypeAdapter? = null
 
-    private var mLang : LanguageCase = LanguageCase.Chin
+    private var language : Language = Language.CHINESE
+    private var mTrainedWords : TrainingConf.TrainingWords = TrainingConf.TrainingWords.ALL
     private var mBlock : Int = 0
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        val sqlDb = PocketDBOpenManger.getHelper(context!!).writableDatabase
-        wordDAO = StudyWordDAO(sqlDb)
+
+        PocketApplication.getAppComponent().injectStartTrainingDialog(this)
+        viewModel = ViewModelProvider(viewModelStore, startTrainingViewModelFactory.create(studyListId)).get(StartTrainingViewModel::class.java)
+
+        //val sqlDb = PocketDBOpenManger.getHelper(requireContext()).writableDatabase
+        //wordDAO = StudyWordDAO(sqlDb)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -74,7 +77,7 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
         toolbar = Toolbar(inflater.context)
         toolbar.setNavigationIcon(R.drawable.ic_chevrone_left)
         toolbar.setNavigationOnClickListener { v -> onNavigationClicked(v) }
-        toolbar.elevation = dp2px(1,context!!).toFloat()
+        toolbar.elevation = dp2px(1,requireContext()).toFloat()
 
         viewPager = ViewPager2(inflater.context)
         viewPager.orientation = ViewPager2.ORIENTATION_VERTICAL
@@ -100,24 +103,66 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
         nestedScrollView.addView(containerLayout,containerLayoutParams)
         nestedScrollView.layoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT, LinearLayout.LayoutParams.MATCH_PARENT)
 
-        loadStatistic()
+        //loadStatistic()
+
+        initViewPagerAdapter()
 
         val  behavior = (dialog as BottomSheetDialog).behavior
         behavior.peekHeight = getPagerOccupiHeight(dp2px(0,inflater.context))
         behavior.isDraggable = false
 
+        subscribeViewModel()
+
         return nestedScrollView
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateStatistic()
+    }
+
+    fun subscribeViewModel(){
+        viewModel.showChinese.observe(viewLifecycleOwner){
+            val adapter = (viewPager.adapter as ViewPagerAdapter).chooseTypeAdapter
+            adapter!!.showChinese = it
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.showPinyin.observe(viewLifecycleOwner){
+            val adapter = (viewPager.adapter as ViewPagerAdapter).chooseTypeAdapter
+            adapter!!.showPinyin = it
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.showTranslation.observe(viewLifecycleOwner){
+            val adapter = (viewPager.adapter as ViewPagerAdapter).chooseTypeAdapter
+            adapter!!.showTranslation = it
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.statisticChinese.observe(viewLifecycleOwner){
+            val adapter = (viewPager.adapter as ViewPagerAdapter).chooseTypeAdapter
+            adapter!!.trainedChinese = it
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.statisticPinyin.observe(viewLifecycleOwner){
+            val adapter = (viewPager.adapter as ViewPagerAdapter).chooseTypeAdapter
+            adapter!!.trainedPinyin = it
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.statisticTranslation.observe(viewLifecycleOwner){
+            val adapter = (viewPager.adapter as ViewPagerAdapter).chooseTypeAdapter
+            adapter!!.trainedTranslation = it
+            adapter.notifyDataSetChanged()
+        }
     }
 
     override fun onDestroy() {
         super.onDestroy()
         typeAdapter?.onClickListener = null
-        blockAdapter?.onClickListener = null
+        //blockAdapter?.onClickListener = null
         typeAdapter = null
-        blockAdapter = null
+        //blockAdapter = null
         viewPager.unregisterOnPageChangeCallback(pagerCallback)
-        wordDAO.finish()
-        PocketDBOpenManger.releaseHelper()
+        //wordDAO.finish()
+        //PocketDBOpenManger.releaseHelper()
     }
 
     fun onPageSelected(position: Int){
@@ -125,12 +170,12 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
             toolbar.title = getString(R.string.chose_type)
         if (position ==1) {
             toolbar.title = getString(R.string.chose_block)
-            updateBlocks()
+            //updateBlocks()
         }
     }
 
     private fun getPagerOccupiHeight(marginTopPix : Int): Int{
-        val displayHeight = getDisplayHeight(context!!)
+        val displayHeight = getDisplayHeight(requireContext())
         val statusBarHeight = getStatusBarHeight()
         val availableSpace = displayHeight - statusBarHeight
         val dialogHeight = (availableSpace* Helper.OccupiHeight).toInt()
@@ -147,26 +192,50 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
         return result
     }
 
-    private fun onBlockClicked( v: View){
-        val position = v.getTag(R.id.holder_position)
+    private fun onWordClicked( v: View){
+       val position = v.getTag(R.id.holder_position)
         if (position != null){
-            mBlock = position as Int
+            if (position == 0) mTrainedWords = TrainingConf.TrainingWords.ALL
+            if (position == 1) mTrainedWords = TrainingConf.TrainingWords.ONLY_NEED
+            //mBlock = position as Int
             startTraining()
         }
     }
+
+
+    //private fun onBlockClicked( v: View){
+     //   val position = v.getTag(R.id.holder_position)
+    //    if (position != null){
+    //        mBlock = position as Int
+    //        startTraining()
+    //    }
+    //}
     private fun onTypeClicked(v: View){
         val position = v.getTag(R.id.holder_position)
 
         if(position != null){
             when(position as Int){
-                0 -> mLang = LanguageCase.Chin
-                1 -> mLang = LanguageCase.Pin
-                2 -> mLang = LanguageCase.Trn
+                0 -> language = Language.CHINESE
+                1 -> language = Language.PINYIN
+                2 -> language = Language.RUSSIAN
             }
-            updateBlocks()
-            viewPager.currentItem = 1
-        }
+            val adapter = (viewPager.adapter as ViewPagerAdapter).chooseTypeAdapter!!
 
+            val trainedWords =
+                when(position){
+                    0 -> adapter.trainedChinese
+                    1 -> adapter.trainedPinyin
+                    2 -> adapter.trainedTranslation
+                    else -> throw java.lang.RuntimeException()
+                }
+            if (trainedWords.filed + trainedWords.repeatable == 0){
+                startTraining()
+            }
+            else{
+                (viewPager.adapter as ViewPagerAdapter).chooseWordsAdapter!!.trainedWords = trainedWords
+                viewPager.currentItem = 1
+            }
+        }
     }
 
     private fun onNavigationClicked(v: View){
@@ -177,72 +246,74 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
     }
 
     private fun startTraining(){
-        val intent = TrainActivity.getIntent(context!!,mLang,studyListUUID,mBlock)
-        activity!!.startActivity(intent)
+
+        val config : TrainingConf = TrainingConf(language,mTrainedWords,studyListId)
+
+        val intent = TrainActivity.getIntent(config,requireContext())
+        requireActivity().startActivity(intent)
         dialog!!.dismiss()
     }
 
-    private fun loadStatistic(){
-        repeatType = Settings.getRepeatType(context!!)
+    //private fun loadStatistic(){
+     //   repeatType = Settings.getRepeatType(requireContext())
 
-        val observer =
-                Single.create { emitter: SingleEmitter<Map<Int, List<StudyWord>>> ->
-            emitter.onSuccess(wordDAO.getAllInSorted(studyListUUID)) }
-        observer.observeOn(Schedulers.io())
-        val statisticObserver = observer
-                .map { integerListMap -> createStatistic(integerListMap) }
-            statisticObserver
-                .subscribeOn(AndroidSchedulers.mainThread())
-                .subscribe{ onSuccess ->
-                    statistic = onSuccess
-                    initViewPagerAdapter()
+    //    val observer =
+    //            Single.create { emitter: SingleEmitter<Map<Int, List<StudyWord>>> ->
+    //        emitter.onSuccess(wordDAO.getAllInSorted(studyListUUID)) }
+     //   observer.observeOn(Schedulers.io())
+     //   val statisticObserver = observer
+     //           .map { integerListMap -> createStatistic(integerListMap) }
+    //        statisticObserver
+     //           .subscribeOn(AndroidSchedulers.mainThread())
+    //            .subscribe{ onSuccess ->
+     //               statistic = onSuccess
+    //                initViewPagerAdapter()
+    //            }
+   //}
 
-                }
-    }
-
-    private fun updateBlocks(){
-        blockAdapter?.blocksStat = getBlockStat()
-        blockAdapter?.notifyDataSetChanged()
-    }
+    //private fun updateBlocks(){
+    //    blockAdapter?.blocksStat = getBlockStat()
+    //    blockAdapter?.notifyDataSetChanged()
+    //}
 
     private fun initViewPagerAdapter(){
-        val typeStat = listOf(statistic.chnState, statistic.pinState, statistic.trnState)
-        val blocksStat =getBlockStat()
-        val repeatType = repeatType
+        //val typeStat = listOf(statistic.chnState, statistic.pinState, statistic.trnState)
+        //val blocksStat =getBlockStat()
+        //val repeatType = repeatType
 
-        typeAdapter = ChooseTypeAdapter(typeStat,repeatType)
+        typeAdapter = ChooseTypeAdapter()
         typeAdapter?.onClickListener = View.OnClickListener { v -> onTypeClicked(v) }
-        blockAdapter = ChooseBlockAdapter(blocksStat)
-        blockAdapter?.onClickListener = View.OnClickListener { v -> onBlockClicked(v) }
+        wordsAdapter = ChooseWordsAdapter(TrainedWords(0,0,0))
+        wordsAdapter?.onClickListener = View.OnClickListener { v -> onWordClicked(v) }
 
-        viewPager.adapter = ViewPagerAdapter(typeAdapter,blockAdapter)
+        viewPager.adapter = ViewPagerAdapter(typeAdapter,wordsAdapter)
     }
 
-    private fun getBlockStat():ArrayList<StudyListRepeatStatistic.State>{
-        val blocksStat = ArrayList<StudyListRepeatStatistic.State>()
-        when (mLang) {
-            LanguageCase.Chin -> {
-                blocksStat.add(statistic.chnState)
-                blocksStat.addAll(statistic.chnBlockState)
-            }
-            LanguageCase.Pin -> {
-                blocksStat.add(statistic.pinState)
-                blocksStat.addAll(statistic.pinBlockState)
-            }
-            LanguageCase.Trn -> {
-                blocksStat.add(statistic.trnState)
-                blocksStat.addAll(statistic.trnBlockState)
-            }
-        }
-        return blocksStat
-    }
+    //private fun getBlockStat():ArrayList<StudyListRepeatStatistic.State>{
+    //   val blocksStat = ArrayList<StudyListRepeatStatistic.State>()
+    //    when (mLang) {
+    //        LanguageCase.Chin -> {
+    //            blocksStat.add(statistic.chnState)
+    //            blocksStat.addAll(statistic.chnBlockState)
+    //        }
+    //        LanguageCase.Pin -> {
+    //            blocksStat.add(statistic.pinState)
+    //            blocksStat.addAll(statistic.pinBlockState)
+    //        }
+    //        LanguageCase.Trn -> {
+    //            blocksStat.add(statistic.trnState)
+    //            blocksStat.addAll(statistic.trnBlockState)
+    //        }
+    //    }
+    //    return blocksStat
+    //}
 
-    private fun createStatistic(map: Map<Int, List<StudyWord>>): StudyListRepeatStatistic {
-        return StudyListRepeatStatistic(map,
-                StudyAnalyzer(FibRepeatHelper()))
-    }
+    //private fun createStatistic(map: Map<Int, List<StudyWord>>): StudyListRepeatStatistic {
+    //    return StudyListRepeatStatistic(map,
+    //            StudyAnalyzer(FibRepeatHelper()))
+    //}
 
-    private class ViewPagerAdapter(var chooseTypeAdapter: ChooseTypeAdapter?, var chooseBlockAdapter: ChooseBlockAdapter?)
+    private class ViewPagerAdapter(var chooseTypeAdapter: ChooseTypeAdapter?, var chooseWordsAdapter: ChooseWordsAdapter?)
         : RecyclerView.Adapter<ViewViewHolder>(){
         val TYPE = 0
         val BLOCK = 1
@@ -263,7 +334,7 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
                 recyclerView.addItemDecoration(BoundsTypeDecorator())
             }
             else if (viewType == BLOCK) {
-                recyclerView.adapter = chooseBlockAdapter
+                recyclerView.adapter = chooseWordsAdapter
                 recyclerView.addItemDecoration(BoundsBlockDecorator())
             }
             else
@@ -291,11 +362,15 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
         override fun onBindViewHolder(holder: ViewViewHolder, position: Int) {}
 
     }
-    private class ChooseTypeAdapter(
-            val typeStat : List<StudyListRepeatStatistic.State>,
-            val repeatType: RepeatType
-    )
+    private class ChooseTypeAdapter()
         : HeaderItemClickedAdapter() {
+
+        var trainedChinese : TrainedWords = TrainedWords(0,0,0)
+        var showChinese : Boolean = false
+        var trainedPinyin : TrainedWords = TrainedWords(0,0,0)
+        var showPinyin : Boolean = false
+        var trainedTranslation : TrainedWords = TrainedWords(0,0,0)
+        var showTranslation : Boolean = false
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
             return TypeHolder(120,parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,parent)
@@ -305,14 +380,21 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
 
             val isActive =
                 when (position) {
-                    0 -> !repeatType.ignoreCHN
-                    1 -> !repeatType.ignorePIN
-                    2 -> !repeatType.ignoreTRN
+                    0 -> showChinese
+                    1 -> showPinyin
+                    2 -> showTranslation
                     else -> throw RuntimeException("illegal argument position:$position")
                 }
 
-            val (bed, good, common) = typeStat[position]
-            (holder as TypeHolder).bind(good, bed, common, getItemText(position,holder.itemView.context), position, isActive)
+            val trained =
+                when (position) {
+                    0 -> trainedChinese
+                    1 -> trainedPinyin
+                    2 -> trainedTranslation
+                    else -> throw RuntimeException("illegal argument position:$position")
+                }
+
+            (holder as TypeHolder).bind(trained.all - trained.filed - trained.repeatable, trained.filed, trained.all, getItemText(position,holder.itemView.context), position, isActive)
 
             if (isActive)
                 holder.itemView.setOnClickListener(onClickListener)
@@ -330,6 +412,39 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
         }
 
     }
+
+    private class ChooseWordsAdapter(var trainedWords : TrainedWords) : HeaderItemClickedAdapter(){
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
+            return TypeHolder(120,parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,parent)
+        }
+
+        override fun onBindViewHolder(holder: RecyclerView.ViewHolder, position: Int) {
+            if (position == 0) (holder as TypeHolder)
+                .bind(
+                    trainedWords.all - trainedWords.filed - trainedWords.repeatable,
+                    trainedWords.filed,
+                    trainedWords.all,
+                    getItemText(position,holder.itemView.context),
+                    position, true)
+            if (position ==1) (holder as TypeHolder)
+                .bind(
+                    0,
+                    trainedWords.filed,
+                    trainedWords.repeatable+ trainedWords.filed,
+                    getItemText(position,holder.itemView.context),
+                    position, trainedWords.repeatable+ trainedWords.filed > 0)
+        }
+
+        override fun getItemCount(): Int {
+            return 2
+        }
+
+        fun getItemText( position: Int, context: Context) =
+            if (position == 0) context.getString(R.string.all)
+            else context.getString(R.string.only_needed)
+    }
+
+    /*
     private class ChooseBlockAdapter(var blocksStat : List<StudyListRepeatStatistic.State>)
         : HeaderItemClickedAdapter() {
 
@@ -352,6 +467,9 @@ class StartTrainingSheetDialog(val studyListUUID: UUID) : BottomSheetDialogFragm
                 else context.getString(R.string.block, position)
 
     }
+
+     */
+
     private abstract class HeaderItemClickedAdapter: RecyclerView.Adapter<RecyclerView.ViewHolder>(){
         var onClickListener: View.OnClickListener? = null
     }

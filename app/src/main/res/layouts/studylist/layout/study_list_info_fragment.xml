@@ -1,0 +1,288 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:background="?attr/colorSurface"
+    android:paddingHorizontal="16dp">
+
+    <TextView
+        android:fontFamily="@font/mulish_semibold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:textSize="16sp"
+        android:textColor="?android:textColorPrimary"
+        android:text="@string/successed"
+        />
+
+    <GridLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:background="?attr/colorSurface"
+        android:layout_marginTop="8dp"
+        android:rowCount="2">
+
+        <FrameLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content">
+
+            <com.yingenus.multipleprogressbar.MultipleProgressBar
+                android:id="@+id/progress_bar"
+
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+
+                app:mpb_animate="false"
+                app:mpb_dividerSize="10dp"
+                app:mpb_progressSize="20dp"
+
+                >
+                <com.yingenus.multipleprogressbar.ProgressItem
+                    android:id="@+id/progress_chn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    app:mpb_progressColor = "@color/indicator_1"
+                    app:mpb_progressTextColor = "@color/indicator_1"
+                    app:mpb_secondaryProgressColor = "@color/indicator1_back"
+                    app:mpb_min="0"
+                    app:mpb_max="100"
+                    tools:mpb_secondaryProgress = "100"
+                    tools:mpb_progress = "35"
+                    />
+                <com.yingenus.multipleprogressbar.ProgressItem
+                    android:id="@+id/progress_pin"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    app:mpb_progressColor = "@color/indicator_2"
+                    app:mpb_progressTextColor = "@color/indicator_2"
+                    app:mpb_secondaryProgressColor = "@color/indicator2_back"
+                    app:mpb_min="0"
+                    app:mpb_max="100"
+                    tools:mpb_secondaryProgress = "100"
+                    tools:mpb_progress = "50"
+                    />
+                <com.yingenus.multipleprogressbar.ProgressItem
+                    android:id="@+id/progress_trn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+
+                    app:mpb_progressColor = "@color/indicator_3"
+                    app:mpb_progressTextColor = "@color/indicator_3"
+                    app:mpb_secondaryProgressColor = "@color/indicator3_back"
+                    app:mpb_min="0"
+                    app:mpb_max="100"
+                    tools:mpb_secondaryProgress = "100"
+                    tools:mpb_progress = "40"
+                    />
+            </com.yingenus.multipleprogressbar.MultipleProgressBar>
+        </FrameLayout>
+
+
+
+        <GridLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+
+            android:layout_row="0"
+            android:layout_column="1"
+
+            android:rowCount="3"
+            android:columnCount="2"
+
+            android:layout_gravity="end"
+            >
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:src="@drawable/circle"
+                android:tint="@color/indicator_1"
+
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+
+                android:layout_row="0"
+                android:layout_column="0"
+
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_row="0"
+                android:layout_column="1"
+                android:layout_gravity="center"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/chinese"
+                    android:fontFamily="@font/mulish_bold"
+                    android:textSize="16sp"
+                    android:textColor="?android:textColorPrimary"
+
+                    android:layout_gravity="end"
+                    />
+
+                <TextView
+                    android:id="@+id/chn_success"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:textColorPrimary"
+                    android:fontFamily="@font/mulish_italic"
+                    android:textSize="18sp"
+
+                    android:layout_gravity="center"
+
+                    tools:text="35%"
+                    />
+
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:src="@drawable/circle"
+                android:tint="@color/indicator_2"
+
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:layout_row="1"
+                android:layout_column="0"
+
+                />
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_row="1"
+                android:layout_column="1"
+                android:layout_gravity="center"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/pinyin"
+                    android:fontFamily="@font/mulish_bold"
+                    android:textSize="16sp"
+                    android:textColor="?android:textColorPrimary"
+
+                    android:layout_gravity="end"
+
+                    />
+
+                <TextView
+                    android:id="@+id/pin_success"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:textColorPrimary"
+                    android:fontFamily="@font/mulish_italic"
+                    android:textSize="18sp"
+
+                    android:layout_gravity="center"
+
+                    tools:text="50%"/>
+            </LinearLayout>
+
+            <androidx.appcompat.widget.AppCompatImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:src="@drawable/circle"
+                android:tint="@color/indicator_3"
+
+                android:layout_gravity="center_vertical"
+                android:layout_marginEnd="8dp"
+                android:layout_row="2"
+                android:layout_column="0"
+
+                />
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:layout_row="2"
+                android:layout_column="1"
+                android:layout_gravity="center"
+                >
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/my_language"
+                    android:fontFamily="@font/mulish_bold"
+                    android:textSize="16sp"
+                    android:textColor="?android:textColorPrimary"
+
+                    android:layout_gravity="end"
+                    />
+
+                <TextView
+                    android:id="@+id/trn_success"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textColor="?android:textColorPrimary"
+                    android:fontFamily="@font/mulish_italic"
+                    android:textSize="18sp"
+
+                    android:layout_gravity="center"
+
+                    tools:text="40%"/>
+            </LinearLayout>
+
+
+        </GridLayout>
+
+    </GridLayout>
+
+    <TextView
+        android:fontFamily="@font/mulish_semibold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        android:textColor="?android:textColorPrimary"
+        android:text="@string/statistics"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_info"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+    <TextView
+        android:fontFamily="@font/mulish_semibold"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center_vertical"
+        android:layout_marginTop="8dp"
+        android:textSize="16sp"
+        android:textColor="?android:textColorPrimary"
+        android:text="@string/actions"
+        />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/recycler_action"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+
+    </androidx.recyclerview.widget.RecyclerView>
+
+
+</LinearLayout>

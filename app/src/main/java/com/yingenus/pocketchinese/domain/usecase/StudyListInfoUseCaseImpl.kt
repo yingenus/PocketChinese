@@ -10,6 +10,7 @@ import com.yingenus.pocketchinese.domain.repository.StudyRepository
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
+import java.util.*
 import javax.inject.Inject
 
 class StudyListInfoUseCaseImpl @Inject constructor(
@@ -71,7 +72,8 @@ class StudyListInfoUseCaseImpl @Inject constructor(
             notifyUser = studyList.notifyUser,
             repeat = shortStatistic.repeat,
             percentComplete = shortStatistic.percentComplete,
-            words = shortStatistic.words
+            words = shortStatistic.words,
+            repeatDate = shortStatistic.nextRepeat?: Date(System.currentTimeMillis())
         )
     }
 }

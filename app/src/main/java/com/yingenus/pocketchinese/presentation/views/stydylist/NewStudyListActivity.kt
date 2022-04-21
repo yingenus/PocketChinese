@@ -1,0 +1,542 @@
+package com.yingenus.pocketchinese.presentation.views.stydylist
+
+import android.content.Context
+import android.content.Intent
+import android.graphics.drawable.StateListDrawable
+import android.os.Bundle
+import android.os.PersistableBundle
+import android.view.LayoutInflater
+import android.view.MenuItem
+import android.view.View
+import android.view.ViewGroup
+import android.widget.CheckBox
+import android.widget.TextView
+import android.widget.Toolbar
+import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AppCompatActivity
+import androidx.fragment.app.DialogFragment
+import androidx.fragment.app.Fragment
+import androidx.fragment.app.FragmentFactory
+import androidx.lifecycle.ViewModelProvider
+import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+import com.yingenus.multipleprogressbar.MultipleProgressBar
+import com.yingenus.pocketchinese.PocketApplication
+import com.yingenus.pocketchinese.R
+import com.yingenus.pocketchinese.domain.dto.RepeatRecomend
+import com.yingenus.pocketchinese.domain.dto.ShowedStudyWord
+import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams
+import com.yingenus.pocketchinese.presentation.dialogs.StartTrainingSheetDialog
+import com.yingenus.pocketchinese.presentation.dialogs.UserListRenameDialog
+import com.yingenus.pocketchinese.view.HeadersRecyclerViewAdapter
+import com.yingenus.pocketchinese.view.holders.ViewViewHolder
+import java.util.*
+import javax.inject.Inject
+
+class NewStudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,WordAdapter.OnWordClicked,WordAdapter.OnWordLongClicked {
+
+    companion object{
+        private const val INNER_STUDY_LIST="com.pocketchinese.com.studylist.studyword"
+
+        fun getIntent(context: Context, studyListId: Long): Intent {
+            val intent= Intent(context, StudyListActivity::class.java)
+            intent.putExtra(INNER_STUDY_LIST, studyListId)
+            return intent
+        }
+
+        private fun getStudyListIdFromIntent(intent : Intent) : Long{
+            val id =  intent.getLongExtra(INNER_STUDY_LIST, -1)
+            return id
+        }
+    }
+
+    class StartTrainFF( var studyListId : Long) : FragmentFactory() {
+        override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
+            return if (className == StartTrainingSheetDialog::class.java.name) StartTrainingSheetDialog(
+                studyListId
+            ) else super.instantiate(classLoader, className)
+        }
+    }
+
+    @Inject
+    lateinit var userStudyListViewModelFactoryBuilder: UserStudyListViewModelFactory.Builder
+    private lateinit var viewModel: UserStudyListViewModel
+
+    @DrawableRes
+    private val notifyIcon = R.drawable.on_off_notify
+
+    private var toolbar : Toolbar? = null
+    private var progressBar: MultipleProgressBar? = null
+    private var percentChn : TextView? = null
+    private var percentTrn : TextView? = null
+    private var percentPin : TextView? = null
+    private var extendedButton : ExtendedFloatingActionButton? = null
+    private var statisticRecyclerView : RecyclerView? = null
+    private var actionsRecyclerView : RecyclerView? = null
+    private var wordsRecyclerView : RecyclerView? = null
+
+    private var studyListId: Long = -1L
+
+    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
+
+        val id = getStudyListIdFromIntent(intent)
+        studyListId = if (id == -1L &&savedInstanceState != null) {
+            savedInstanceState.getLong(INNER_STUDY_LIST)
+        }else{
+            id
+        }
+
+        supportFragmentManager.setFragmentFactory(StartTrainFF(studyListId))
+
+        super.onCreate(savedInstanceState, persistentState)
+
+        setContentView(R.layout.study_list_fragment)
+
+        PocketApplication.getAppComponent().injectStudyListActivity(this)
+        viewModel = ViewModelProvider(viewModelStore, userStudyListViewModelFactoryBuilder.create(id)).get(UserStudyListViewModel::class.java)
+
+        toolbar = findViewById(R.id.toolbar)
+        progressBar = findViewById(R.id.progressBar)
+        percentChn = findViewById(R.id.chn_success)
+        percentPin = findViewById(R.id.pin_success)
+        percentTrn = findViewById(R.id.trn_success)
+        statisticRecyclerView = findViewById(R.id.recycler_info)
+        actionsRecyclerView = findViewById(R.id.recycler_action)
+        wordsRecyclerView = findViewById(R.id.expanded_recyclerview)
+        extendedButton = findViewById(R.id.fab_start)
+
+        toolbar!!.setNavigationOnClickListener{ view: View? ->
+            onNavigationClicked(view)
+        }
+        toolbar!!.setOnMenuItemClickListener { item : MenuItem ->
+            onMenuItemClick(item)
+        }
+
+        statisticRecyclerView!!.layoutManager = LinearLayoutManager(this)
+            .also { it.orientation = RecyclerView.HORIZONTAL }
+        statisticRecyclerView!!.adapter = StatisticAdapter()
+
+        actionsRecyclerView!!.layoutManager = LinearLayoutManager(this)
+            .also { it.orientation = RecyclerView.HORIZONTAL }
+        actionsRecyclerView!!.adapter = ActionsAdapter()
+
+        wordsRecyclerView!!.layoutManager = LinearLayoutManager(this)
+            .also { it.orientation = RecyclerView.VERTICAL }
+        wordsRecyclerView!!.adapter = WordAdapter().also {
+            it.setOnClickListener(this)
+            it.setOnLongClickListener(this)
+        }
+
+        extendedButton!!.setOnClickListener { onStartTrainCkicked(it) }
+
+
+        subscribeViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateStudyListInfo()
+        viewModel.updateStudyWords()
+    }
+
+    override fun onSaveInstanceState(outState: Bundle) {
+        super.onSaveInstanceState(outState)
+        val ff: FragmentFactory = supportFragmentManager.fragmentFactory
+        if (ff is StartTrainFF) {
+            val id = ff.studyListId
+            outState.putLong(INNER_STUDY_LIST, id)
+        }
+    }
+
+    private fun subscribeViewModel(){
+        viewModel.studyListName.observe(this){
+            toolbar!!.title = it
+        }
+        viewModel.progressChinese.observe(this){
+            if (it == -1) {
+                progressBar!!.getProgressItemById(R.id.progress_chn)!!.setProgress(1)
+                percentChn!!.text = "NoN"
+            }
+            else {
+                progressBar!!.getProgressItemById(R.id.progress_chn)!!.setProgress(it)
+                percentChn!!.text = it.toString() + "%"
+            }
+        }
+        viewModel.progressPinyin.observe(this){
+            if (it == -1) {
+                progressBar!!.getProgressItemById(R.id.progress_pin)!!.setProgress(1)
+                percentPin!!.text = "NoN"
+            }
+            else {
+                progressBar!!.getProgressItemById(R.id.progress_pin)!!.setProgress(it)
+                percentPin!!.text = it.toString() + "%"
+            }
+        }
+        viewModel.progressTranslation.observe(this){
+            if (it == -1) {
+                progressBar!!.getProgressItemById(R.id.progress_trn)!!.setProgress(1)
+                percentTrn!!.text = "NoN"
+            }
+            else {
+                progressBar!!.getProgressItemById(R.id.progress_trn)!!.setProgress(it)
+                percentTrn!!.text = it.toString() + "%"
+            }
+        }
+        viewModel.showProgressChinese.observe(this){
+            percentChn!!.text = "--%"
+        }
+        viewModel.showProgressPinyin.observe(this){
+            percentPin!!.text = "--%"
+        }
+        viewModel.showProgressTranslation.observe(this){
+            percentTrn!!.text = "--%"
+        }
+        viewModel.addedWords.observe(this){
+            val adapter = statisticAdapter()!!
+            adapter.added = it
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.lastRepeat.observe(this){
+            val adapter = statisticAdapter()!!
+            adapter.lastRepeat = it
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.nextRepeat.observe(this){
+            val adapter =statisticAdapter()!!
+            adapter.nextRepeat = it
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.repeatedWords.observe(this){
+            val adapter = statisticAdapter()!!
+            adapter.repeated = it
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.repeatRecomend.observe(this){
+            val adapter = statisticAdapter()!!
+            adapter.repeatRecomend = it
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.notifyUsers.observe(this){
+            setMenuItemNotify(it)
+            if (toolbar != null) {
+                val item = toolbar!!.menu.findItem(R.id.notify)
+                if (item != null) {
+                    item.isChecked = it
+                }
+            }
+        }
+        viewModel.repeadRecomedStudyWords.observe(this){
+            val adapter = (wordsRecyclerView!!.adapter as WordAdapter)
+            adapter.setNeed(it)
+            adapter.notifyDataSetChanged()
+        }
+        viewModel.otherRecomedStudyWords.observe(this){
+            val adapter = (wordsRecyclerView!!.adapter as WordAdapter)
+            adapter.setOther(it)
+            adapter.notifyDataSetChanged()
+        }
+    }
+
+    override fun onDestroy() {
+        super.onDestroy()
+        toolbar = null
+        progressBar = null
+        percentChn = null
+        percentTrn = null
+        percentPin = null
+        statisticRecyclerView = null
+        extendedButton = null
+        (actionsRecyclerView!!.adapter as ActionsAdapter).setListener(null)
+        actionsRecyclerView = null
+        (wordsRecyclerView!!.adapter as WordAdapter).also {
+            it.deleteOnClickListener(this)
+            it.deleteOnLongClickListener(this)
+        }
+        wordsRecyclerView = null
+    }
+
+    override fun onclick(position: Int) {
+        when(position){
+            1 -> {
+                TODO()
+            }
+            2 -> {
+                TODO()
+            }
+        }
+    }
+
+    fun onStartTrainCkicked( v : View){
+        val ff: FragmentFactory = supportFragmentManager.fragmentFactory
+
+        ff.instantiate(this.classLoader, StartTrainingSheetDialog::class.java.name)
+        if (ff is StartTrainFF) {
+            ff.studyListId = studyListId
+        }
+        val dialog = ff.instantiate(
+            this.classLoader,
+            StartTrainingSheetDialog::class.java.name
+        ) as DialogFragment
+        dialog.show(supportFragmentManager,"training_dialog")
+    }
+
+    override fun onLongClicked(showedStudyList: ShowedStudyWord) {
+        TODO("Not yet implemented")
+    }
+
+    override fun onClicked(showedStudyList: ShowedStudyWord) {
+        TODO("Not yet implemented")
+    }
+
+    private fun onNavigationClicked(view: View?) {
+        finish()
+    }
+
+    private fun onMenuItemClick(item: MenuItem): Boolean {
+        if (item.itemId == R.id.notify) {
+            val notify = item.isChecked
+            viewModel.setNotify(!notify).observe(this){
+                if (it){
+                    item.isChecked = !notify
+                    setMenuItemNotify(!notify)
+                }
+            }
+            return true
+        }
+        if (item.itemId == R.id.rename){
+            val dialog = UserListRenameDialog(viewModel)
+            dialog.show(supportFragmentManager, "rename_dialog")
+        }
+        return false
+    }
+
+    private fun setMenuItemNotify(isChecked: Boolean) {
+        val stateDrawable =
+            resources.getDrawable(notifyIcon, getTheme()) as StateListDrawable
+        val state =
+            intArrayOf(if (isChecked) android.R.attr.state_checked else android.R.attr.state_empty)
+        stateDrawable.state = state
+        val item = toolbar!!.menu.findItem(R.id.notify)
+        if (item != null) {
+            item.icon = stateDrawable.current
+        }
+    }
+
+    class StatisticAdapter : RecyclerView.Adapter<ViewViewHolder>(){
+
+        var lastRepeat : Date? = null
+        var nextRepeat : Date? = null
+        var repeatRecomend : RepeatRecomend = RepeatRecomend.DONT_NEED
+        var repeated : Int = 0
+        var added: Int = 0
+
+
+        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewViewHolder {
+            return ViewViewHolder(R.layout.statistic_card, parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater )
+        }
+
+        override fun onBindViewHolder(holder: ViewViewHolder, position: Int) {
+            val context = holder.itemView.context
+            when(position){
+                0 ->{
+                    holder.itemView.findViewById<TextView>(R.id.title).text = context.getString(R.string.study_list_last)
+                    if (lastRepeat != null) holder.itemView.findViewById<TextView>(R.id.value).text = UtilsVariantParams.getLstRepeat(context.resources, lastRepeat!!)
+                }
+                1 ->{
+                    holder.itemView.findViewById<TextView>(R.id.title).text = context.getString(R.string.study_list_next)
+                    if (repeatRecomend != RepeatRecomend.DONT_NEED) holder.itemView.findViewById<TextView>(R.id.value).text = context.getString(R.string.study_list_need)
+                    if (nextRepeat != null) holder.itemView.findViewById<TextView>(R.id.value).text = UtilsVariantParams.getLstRepeat(context.resources, nextRepeat!!)
+                }
+                2 ->{
+                    holder.itemView.findViewById<TextView>(R.id.title).text = context.getString(R.string.study_list_repeted)
+                    holder.itemView.findViewById<TextView>(R.id.value).text = repeated.toString()
+                }
+                3 ->{
+                    holder.itemView.findViewById<TextView>(R.id.title).text = context.getString(R.string.study_list_count)
+                    holder.itemView.findViewById<TextView>(R.id.value).text = added.toString()
+                }
+            }
+        }
+
+        override fun getItemCount(): Int {
+            return 4
+        }
+    }
+
+    private fun statisticAdapter(): StatisticAdapter?{
+        return statisticRecyclerView!!.adapter as StatisticAdapter?
+    }
+
+}
+
+class ActionsAdapter : RecyclerView.Adapter<ViewViewHolder>(){
+
+    interface OnActionClicked{
+        fun onclick(position : Int)
+    }
+
+    private var onClickListener : OnActionClicked? = null
+
+    fun setListener(listener : OnActionClicked?){
+        onClickListener  = listener
+    }
+
+    override fun getItemViewType(position: Int): Int {
+        return position
+    }
+
+    override fun getItemId(position: Int): Long {
+        return position.toLong()
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewViewHolder {
+        return when(viewType){
+            0 -> ViewViewHolder(R.layout.add_word_card,parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater)
+            1 -> ViewViewHolder(R.layout.clear_statistic_card,parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater)
+            else -> throw RuntimeException("unexpected view type")
+        }
+    }
+
+    override fun onBindViewHolder(holder: ViewViewHolder, position: Int) {
+        holder.itemView.setOnClickListener {
+            onClickListener?.onclick(position)
+        }
+    }
+
+    override fun getItemCount(): Int {
+        return 2
+    }
+}
+
+class WordAdapter : HeadersRecyclerViewAdapter<WordViewHolder>(
+    listOf(TAG_NEED, TAG_OTHER),
+    false
+){
+    companion object{
+        private const val TAG_NEED = "need"
+        private const val TAG_OTHER = "other"
+    }
+
+    interface OnWordLongClicked{
+        fun onLongClicked( showedStudyList: ShowedStudyWord)
+    }
+    interface OnWordClicked{
+        fun onClicked( showedStudyList: ShowedStudyWord)
+    }
+
+    private val longListeners : MutableList<OnWordLongClicked> = mutableListOf()
+    private val listeners : MutableList<OnWordClicked> = mutableListOf()
+
+    private var needList : List<ShowedStudyWord> = emptyList()
+    private var otherList : List<ShowedStudyWord> = emptyList()
+
+    fun setNeed(lists : List<ShowedStudyWord>){
+        needList = lists
+    }
+
+    fun setOther(lists : List<ShowedStudyWord>){
+        otherList = lists
+    }
+
+    fun setOnLongClickListener(listener : OnWordLongClicked){
+        longListeners.add(listener)
+    }
+
+    fun deleteOnLongClickListener(listener : OnWordLongClicked){
+        longListeners.remove(listener)
+    }
+
+    fun setOnClickListener(listener : OnWordClicked){
+        listeners.add(listener)
+    }
+
+    fun deleteOnClickListener(listener : OnWordClicked){
+        listeners.remove(listener)
+    }
+
+    override fun onCreateItemViewHolder(parent: ViewGroup): WordViewHolder {
+        return WordViewHolder(
+            parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater,
+            parent
+        )
+    }
+
+    override fun onCreateHeaderViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
+        return ViewViewHolder(R.layout.list_header,
+            parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater)
+    }
+
+    override fun onBindItemViewHolder(
+        holder: WordViewHolder,
+        position: Int,
+        tag: String
+    ) {
+        when(tag){
+            TAG_NEED -> {
+                val item = needList[position]
+                holder.bind(item)
+                holder.itemView.setOnLongClickListener {
+                    longListeners.forEach { it.onLongClicked(item) }
+                    true
+                }
+                holder.itemView.setOnClickListener {
+                    listeners.forEach { it.onClicked(item) }
+                }
+            }
+            TAG_OTHER -> {
+                val item = otherList[position]
+                holder.bind(otherList[position])
+                holder.itemView.setOnLongClickListener {
+                    longListeners.forEach { it.onLongClicked(item) }
+                    true
+                }
+                holder.itemView.setOnClickListener {
+                    listeners.forEach { it.onClicked(item) }
+                }
+            }
+            else -> throw RuntimeException("unexpected tag : $tag")
+        }
+    }
+
+    override fun onBindHeaderViewHolder(holder: ViewViewHolder, tag: String) {
+        when(tag){
+            TAG_NEED -> holder.itemView.findViewById<TextView>(R.id.title).text =
+                holder.itemView.context.getString(R.string.need_repeat_list)
+            TAG_OTHER -> holder.itemView.findViewById<TextView>(R.id.title).text =
+                holder.itemView.context.getString(R.string.words_other)
+        }
+    }
+
+    override fun getItemCount(tag: String): Int {
+        return when(tag){
+            TAG_NEED -> needList.size
+            TAG_OTHER -> otherList.size
+            else -> throw RuntimeException("unexpected tag : $tag")
+        }
+    }
+}
+
+class WordViewHolder(layoutInflater: LayoutInflater, parent: ViewGroup)
+    : RecyclerView.ViewHolder(layoutInflater.inflate(R.layout.study_word,parent)){
+
+        private val chin : TextView
+        private val pin : TextView
+        private val trn : TextView
+        private val success : TextView
+        private val check : CheckBox
+
+        init {
+            chin = itemView.findViewById(R.id.dictionary_item_chin_text)
+            pin = itemView.findViewById(R.id.dictionary_item_pin_text)
+            trn = itemView.findViewById(R.id.dictionary_item_second_language)
+            success = itemView.findViewById(R.id.counter)
+            check = itemView.findViewById(R.id.selected_box)
+        }
+        fun bind(studyWord: ShowedStudyWord){
+            chin.text = studyWord.chinese
+            pin.text = studyWord.pinyin
+            trn.text = studyWord.translate
+            success.text = studyWord.wordSuccess.toString() +"/10"
+        }
+}

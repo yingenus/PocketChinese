@@ -6,5 +6,6 @@ class StudyListStatisticShort(
     val words : Int,
     val repeat: RepeatRecomend,
     val percentComplete: Int,
+    val nextRepeat: Date?
 ) {
 }

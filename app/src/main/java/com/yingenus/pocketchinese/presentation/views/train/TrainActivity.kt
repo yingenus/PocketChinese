@@ -5,6 +5,7 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
+import com.yingenus.pocketchinese.domain.dto.TrainingConf
 import com.yingenus.pocketchinese.domain.entitiys.LanguageCase
 import com.yingenus.pocketchinese.view.activity.SingleFragmentActivityWithKeyboard
 import java.lang.RuntimeException
@@ -13,34 +14,33 @@ import java.util.*
 class TrainActivity:
     SingleFragmentActivityWithKeyboard() {
 
-    private class TrainActivityFragmentFactory(val lang : LanguageCase, val uuid: UUID, val block : Int) : FragmentFactory(){
+    private class TrainActivityFragmentFactory(val trainingConf: TrainingConf) : FragmentFactory(){
         override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
             if(className == TrainingFragment::class.java.name)
                 return TrainingFragment(
-                    lang,
-                    uuid,
-                    block
+                    trainingConf
                 )
             return super.instantiate(classLoader, className)
         }
     }
 
     companion object{
-        const val INNER_TRAIN_ACTIVITY_LANG = "com.pocketchinese.com.trainactivity.language"
-        const val INNER_TRAIN_ACTIVITY_UUID = "com.pocketchinese.com.trainactivity.uuid"
-        const val INNER_TRAIN_ACTIVITY_BLOCK = "com.pocketchinese.com.trainactivity.block"
+        private const val INNER_TRAIN_ACTIVITY_LANG = "com.pocketchinese.com.trainactivity.language"
+        private const val INNER_TRAIN_ACTIVITY_UUID = "com.pocketchinese.com.trainactivity.uuid"
+        private const val INNER_TRAIN_ACTIVITY_BLOCK = "com.pocketchinese.com.trainactivity.block"
+        private const val INNER_TRAIN_ACTIVITY_CONF = "com.pocketchinese.com.trainactivity.config"
 
-        fun getIntent(context: Context, language: LanguageCase, studyListUUID: UUID, block: Int): Intent {
+        fun getIntent(trainingConf: TrainingConf, context : Context): Intent {
             val intent=  Intent(context, TrainActivity::class.java)
-
-            val langCode=when(language){
-                LanguageCase.Chin->0
-                LanguageCase.Pin->1
-                LanguageCase.Trn->2
-            }
-            intent.putExtra(INNER_TRAIN_ACTIVITY_LANG,langCode)
-            intent.putExtra(INNER_TRAIN_ACTIVITY_UUID,studyListUUID.toString())
-            intent.putExtra(INNER_TRAIN_ACTIVITY_BLOCK,block)
+            intent.putExtra(INNER_TRAIN_ACTIVITY_CONF, trainingConf)
+            //val langCode=when(language){
+            //    LanguageCase.Chin->0
+            //    LanguageCase.Pin->1
+            //    LanguageCase.Trn->2
+            //}
+            //intent.putExtra(INNER_TRAIN_ACTIVITY_LANG,langCode)
+            //intent.putExtra(INNER_TRAIN_ACTIVITY_UUID,studyListUUID.toString())
+            //intent.putExtra(INNER_TRAIN_ACTIVITY_BLOCK,block)
             return intent
         }
 
@@ -71,35 +71,23 @@ class TrainActivity:
         super.onSaveInstanceState(outState)
         val ff = supportFragmentManager.fragmentFactory
         if (ff is TrainActivityFragmentFactory){
-            outState.putInt(INNER_TRAIN_ACTIVITY_BLOCK, ff.block)
-            outState.putInt(INNER_TRAIN_ACTIVITY_LANG, getLangCode(ff.lang))
-            outState.getString(INNER_TRAIN_ACTIVITY_UUID, ff.uuid.toString())
+            outState.putSerializable(INNER_TRAIN_ACTIVITY_CONF, ff.trainingConf)
         }
     }
 
     private fun createFragmentFactory(savedInstanceState: Bundle?): FragmentFactory{
-        val block : Int
-        val lang : Int
-        val uuid : String?
+        val trainingConf : TrainingConf
 
         if (savedInstanceState != null
-                && savedInstanceState.containsKey(INNER_TRAIN_ACTIVITY_BLOCK)
-                && savedInstanceState.containsKey(INNER_TRAIN_ACTIVITY_LANG)
-                && savedInstanceState.containsKey(INNER_TRAIN_ACTIVITY_UUID)
+                && savedInstanceState.containsKey(INNER_TRAIN_ACTIVITY_CONF)
         ){
-            block = savedInstanceState.getInt(INNER_TRAIN_ACTIVITY_BLOCK)
-            lang = savedInstanceState.getInt(INNER_TRAIN_ACTIVITY_LANG)
-            uuid = savedInstanceState.getString(INNER_TRAIN_ACTIVITY_UUID)
+            trainingConf = savedInstanceState.getSerializable(INNER_TRAIN_ACTIVITY_CONF) as TrainingConf
         }
         else{
-            block = intent.getIntExtra(INNER_TRAIN_ACTIVITY_BLOCK,-1)
-            lang = intent.getIntExtra(INNER_TRAIN_ACTIVITY_LANG,-1)
-            uuid = intent.getStringExtra(INNER_TRAIN_ACTIVITY_UUID)
+            trainingConf = intent.getSerializableExtra(INNER_TRAIN_ACTIVITY_CONF) as TrainingConf
         }
 
-        if (block == -1 || lang == -1 || uuid == null) throw RuntimeException("cant extract com.yingenus.pocketchinese.data")
-
-        return TrainActivityFragmentFactory(getLangFromInt(lang), UUID.fromString(uuid), block)
+        return TrainActivityFragmentFactory(trainingConf)
     }
 
     private fun getFragment():Fragment{

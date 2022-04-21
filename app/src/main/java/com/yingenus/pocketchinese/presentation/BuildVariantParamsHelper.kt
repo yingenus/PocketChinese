@@ -1,8 +1,13 @@
 package com.yingenus.pocketchinese.domain.entitiys
 
+import android.annotation.SuppressLint
 import android.content.res.Resources
 import android.graphics.Color
+import android.os.Build
+import android.view.View
+import androidx.annotation.RequiresApi
 import com.yingenus.pocketchinese.R
+import com.yingenus.pocketchinese.domain.dto.RepeatRecomend
 import com.yingenus.pocketchinese.presentation.views.userlist.UserListsInterface
 import java.util.*
 
@@ -71,6 +76,20 @@ object UtilsVariantParams {
         UserListsInterface.Expired.BED->getColor(resources,1)
         UserListsInterface.Expired.NON -> Color.TRANSPARENT
         else->getColor(resources,1)
+    }
+
+    @SuppressLint("ResourceType")
+    fun getLstRepeatColor(view : View, recomed : RepeatRecomend)=when(recomed){
+        RepeatRecomend.DONT_NEED->{
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                view.resources.getColor(android.R.attr.textColorPrimary,view.context.theme )
+            } else {
+                view.resources.getColor(android.R.attr.textColorPrimary)
+            }
+        }
+        RepeatRecomend.SHOULD->getColor(view.resources,6)
+        RepeatRecomend.NEED->getColor(view.resources,1)
+        else->getColor(view.resources,1)
     }
 
 }

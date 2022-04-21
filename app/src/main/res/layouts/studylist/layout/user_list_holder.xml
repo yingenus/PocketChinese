@@ -28,16 +28,17 @@
             android:layout_marginStart="20dp">
 
             <FrameLayout
+                android:id="@+id/icon_notify"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_gravity="center_vertical"
-                android:paddingEnd="8dp"
+                android:paddingEnd="6dp"
                 android:visibility="gone"
                 tools:visibility="visible"
                 >
                 <View
-                    android:layout_width="16dp"
-                    android:layout_height="16dp"
+                    android:layout_width="18dp"
+                    android:layout_height="18dp"
                     android:background="@drawable/ic_notify_off"
                     android:layout_gravity="fill_vertical"/>
             </FrameLayout>
@@ -60,17 +61,13 @@
                 />
 
         </LinearLayout>
-
-
-
-
         <TextView
             android:id="@+id/words"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintBottom_toTopOf="@id/linear_progress_indicator"
+            app:layout_constraintBottom_toTopOf="@id/progress"
 
 
             android:layout_marginStart="20dp"
@@ -83,7 +80,7 @@
             />
 
         <com.google.android.material.progressindicator.LinearProgressIndicator
-            android:id="@+id/linear_progress_indicator"
+            android:id="@+id/progress"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
 
@@ -103,8 +100,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
 
-            app:layout_constraintEnd_toEndOf="@id/linear_progress_indicator"
-            app:layout_constraintBottom_toTopOf="@id/linear_progress_indicator"
+            app:layout_constraintEnd_toEndOf="@id/progress"
+            app:layout_constraintBottom_toTopOf="@id/progress"
 
 
             android:layout_marginStart="20dp"

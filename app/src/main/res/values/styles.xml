@@ -29,6 +29,13 @@
         <!-- <item name="boxBackgroundColor">@color/background_color</item> -->
     </style>
 
+    <style name="Style.PocketChinese.Rounded.InputLayout.WhiteBack.TextColor" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
+        <item name="shapeAppearanceOverlay">@style/Style.PocketChinese.Rounded</item>
+        <item name="boxStrokeColor">@color/text_outlined_stoke_color</item>
+        <item name="android:textColorHint">?android:textColorSecondary</item>
+        <!-- <item name="boxBackgroundColor">@color/background_color</item> -->
+    </style>
+
     <style name="Style.PocketChinese.Rounded.Light.InputLayout.WhiteBack" parent="Widget.MaterialComponents.TextInputLayout.OutlinedBox.Dense">
         <item name="shapeAppearanceOverlay">@style/Style.PocketChinese.Rounded.Light</item>
         <item name="boxStrokeColor">@color/filled_stroke_color_secondary</item>
@@ -37,6 +44,10 @@
 
     <style name="Style.PocketChinese.Rounded.Button" parent="Widget.MaterialComponents.Button">
         <item name="shapeAppearanceOverlay">@style/Style.PocketChinese.Rounded</item>
+    </style>
+
+    <style name="Style.PocketChinese.Rounded.Button.Medium" parent="Widget.MaterialComponents.Button">
+        <item name="shapeAppearanceOverlay">@style/Style.PocketChinese.Rounded.Medium</item>
     </style>
 
     <style name="Style.PocketChinese.Rounded.Button.OutlinedButton.Gray" parent="Widget.MaterialComponents.Button.OutlinedButton">
@@ -49,6 +60,7 @@
     <style name="Style.PocketChinese.Toolbar" parent="Widget.AppCompat.Toolbar">
         <item name="titleTextAppearance">@style/Style.PocketChinese.Toolbar.Title</item>
         <item name="subtitleTextAppearance">@style/Style.PocketChinese.Toolbar.Subtitle</item>
+        <item name="titleTextColor">?android:textColorPrimary</item>
     </style>
 
     <style name="Style.PocketChinese.Toolbar.Title" parent="TextAppearance.Widget.AppCompat.Toolbar.Title">
@@ -173,6 +185,10 @@
         <item name="cornerSize">20dp</item>
     </style>
 
+    <style name="Style.PocketChinese.Rounded.Medium" parent="">
+        <item name="cornerFamily">rounded</item>
+        <item name="cornerSize">15dp</item>
+    </style>
 
     <style name="Style.PocketChinese.Rounded.Light" parent="">
         <item name="cornerFamily">rounded</item>

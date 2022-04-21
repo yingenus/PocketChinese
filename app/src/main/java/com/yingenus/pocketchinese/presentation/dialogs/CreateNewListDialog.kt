@@ -13,22 +13,21 @@ import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyListDAO
 import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyList
 import com.google.android.material.textfield.TextInputLayout
+import com.yingenus.pocketchinese.presentation.views.userlist.UserListsViewModel
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.schedulers.Schedulers
 
 
-class CreateNewListDialog : DialogFragment() {
+class CreateNewListDialog( val viewModel : UserListsViewModel) : DialogFragment() {
     object ERRORS_MES{
         const val EMPTY_FIELDS=R.string.notifi_empty_field
         const val BUSY_NAME=R.string.notifi_busy_list_name
     }
 
-    private lateinit var mInputLayout: TextInputLayout
-    private lateinit var mCreateButton: Button
-    private lateinit var mCancelButton: Button
-
-    private lateinit var listDAO: StudyListDAO
+    private var mInputLayout: TextInputLayout? = null
+    private var mCreateButton: Button? = null
+    private var mCancelButton: Button? = null
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view=inflater.inflate(R.layout.create_dialog,container)
@@ -38,15 +37,11 @@ class CreateNewListDialog : DialogFragment() {
         mCreateButton=view.findViewById(R.id.create_button)
         mCancelButton=view.findViewById(R.id.cancel_button)
 
-        mCancelButton.setOnClickListener { onCancelClicked()}
-        mCreateButton.setOnClickListener {onCreateClicked()}
+        mCancelButton!!.setOnClickListener {onCreateClicked()}
 
-        mInputLayout.editText!!.doAfterTextChanged { onEditTextChanged() }
+        mInputLayout!!.editText!!.doAfterTextChanged { onEditTextChanged() }
 
         dialog!!.window!!.setBackgroundDrawableResource(R.color.transparent)
-
-        val sqlDb = PocketDBOpenManger.getHelper(context).writableDatabase
-        listDAO = StudyListDAO(sqlDb)
 
         return view
     }
@@ -56,59 +51,44 @@ class CreateNewListDialog : DialogFragment() {
     }
 
     private fun onEditTextChanged(){
-        val text=mInputLayout.editText!!.text
+        val text=mInputLayout!!.editText!!.text
         if (text.isEmpty()||text.isBlank()){
             showEmp()
         }else{
-            mInputLayout.error=null
+            mInputLayout!!.error=null
         }
-        if (!mCreateButton.isEnabled) mCreateButton.isEnabled=true
+        if (!mCreateButton!!.isEnabled) mCreateButton!!.isEnabled=true
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
-
-        listDAO.finish()
-        PocketDBOpenManger.releaseHelper()
+        mInputLayout = null
+        mCreateButton = null
+        mCancelButton = null
     }
 
     private fun onCreateClicked(){
-        mCreateButton.isEnabled=false
-        val text=mInputLayout.editText!!.text.toString()
-        if (mInputLayout.editText!!.text.isEmpty())
+        mCreateButton!!.isEnabled=false
+        val name=mInputLayout!!.editText!!.text.toString()
+        if (mInputLayout!!.editText!!.text.isEmpty())
             showEmp()
-        else {
-            val observer = Observable.create<Boolean> { emitter ->
-                emitter.onNext(nameIsBusy(text))
+        viewModel.createStudyList(name).observe(viewLifecycleOwner){
+            if (it){
+                showBusy()
             }
-            observer.subscribeOn(Schedulers.io()).observeOn(AndroidSchedulers.mainThread())
-            observer.subscribe {
-                mCreateButton.isEnabled = true
-                if (it)
-                    showBusy()
-                else{
-                    val studyList= StudyList(text)
-                    listDAO.create(studyList)
-                    val intent=StudyListActivity.getIntent(requireActivity().applicationContext,studyList.uuid)
-                    super.dismiss()
-                    startActivity(intent)
-                }
+            else {
+                //val intent=StudyListActivity.getIntent(requireActivity().applicationContext,studyList.uuid)
+                super.dismiss()
+                //startActivity(intent)
             }
         }
     }
 
     private fun showEmp(){
-        mInputLayout.error=getString(ERRORS_MES.EMPTY_FIELDS)
+        mInputLayout!!.error=getString(ERRORS_MES.EMPTY_FIELDS)
     }
     private fun showBusy(){
-        mInputLayout.error=getString(ERRORS_MES.BUSY_NAME)
+        mInputLayout!!.error=getString(ERRORS_MES.BUSY_NAME)
     }
-
-    private fun nameIsBusy(name: String)=
-            listDAO.get(name)!=null
-
-
-
-
 }
 

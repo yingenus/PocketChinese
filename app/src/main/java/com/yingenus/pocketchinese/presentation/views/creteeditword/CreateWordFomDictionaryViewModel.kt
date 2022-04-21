@@ -77,6 +77,16 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
         }
     }
 
+    fun checkUseName(studyListName: String) : LiveData<Boolean>{
+        val isUsed : MutableLiveData<Boolean> = MutableLiveData()
+        modifyStudyListUseCase
+            .containsName(studyListName)
+            .subscribe { used ->
+                isUsed.postValue(used)
+            }
+        return isUsed
+    }
+
     fun onChineseTextChanged( newText : String){
         Single
             .just(newText)
@@ -164,7 +174,7 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
         return isSuccess
     }
 
-    fun addToExisting( studyList: ShowedStudyList, chinese : String, pinyin : String, translation : String) : LiveData<Boolean> {
+    fun addToExisting( studyListId: Long, chinese : String, pinyin : String, translation : String) : LiveData<Boolean> {
         val isSuccess: MutableLiveData<Boolean> = MutableLiveData()
 
         Single
@@ -181,7 +191,7 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
                     Single.just<Boolean>(false)
                 else
                     modifyStudyWordUseCase.createStudyWord(
-                        studyList.id,
+                        studyListId,
                         chinese,
                         pinyin,
                         translation

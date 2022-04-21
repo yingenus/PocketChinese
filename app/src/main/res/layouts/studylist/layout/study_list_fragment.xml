@@ -11,462 +11,74 @@
 
     <androidx.coordinatorlayout.widget.CoordinatorLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
+        android:layout_height="match_parent"
+        >
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"
-            android:paddingTop="28dp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="27dp"
             app:elevation="0dp">
 
-            <com.yingenus.pocketchinese.view.ScrimSimpleCollapsingLayout
+            <androidx.appcompat.widget.Toolbar
+                android:id="@+id/toolbar"
                 android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:layout_scrollFlags="scroll|exitUntilCollapsed|snap"
-                app:contentScrim="?attr/colorSurface"
-                >
-
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical"
-                    android:background="?attr/colorSurface"
-                    android:paddingHorizontal="16dp">
-
-                    <TextView
-                        android:id="@+id/statistic"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:text="@string/statistics"
-                        android:textColor="?android:textColorPrimary"
-                        android:textSize="20sp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"  />
-
-                    <GridLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:orientation="horizontal"
-                        android:background="?attr/colorSurface"
-                        android:layout_marginTop="8dp"
-                        android:rowCount="2">
-
-                        <FrameLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content">
-
-                            <com.yingenus.multipleprogressbar.MultipleProgressBar
-                                android:id="@+id/progress_bar"
-
-                                android:layout_width="200dp"
-                                android:layout_height="200dp"
-
-                                app:mpb_animate="false"
-                                app:mpb_dividerSize="10dp"
-                                app:mpb_progressSize="20dp"
-
-                                >
-                                <com.yingenus.multipleprogressbar.ProgressItem
-                                    android:id="@+id/progress_chn"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-
-                                    app:mpb_progressColor = "@color/indicator_1"
-                                    app:mpb_progressTextColor = "@color/indicator_1"
-                                    app:mpb_secondaryProgressColor = "@color/indicator1_back"
-                                    app:mpb_min="0"
-                                    app:mpb_max="100"
-                                    tools:mpb_secondaryProgress = "100"
-                                    tools:mpb_progress = "35"
-                                    />
-                                <com.yingenus.multipleprogressbar.ProgressItem
-                                    android:id="@+id/progress_pin"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-
-                                    app:mpb_progressColor = "@color/indicator_2"
-                                    app:mpb_progressTextColor = "@color/indicator_2"
-                                    app:mpb_secondaryProgressColor = "@color/indicator2_back"
-                                    app:mpb_min="0"
-                                    app:mpb_max="100"
-                                    tools:mpb_secondaryProgress = "100"
-                                    tools:mpb_progress = "50"
-                                    />
-                                <com.yingenus.multipleprogressbar.ProgressItem
-                                    android:id="@+id/progress_trn"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-
-                                    app:mpb_progressColor = "@color/indicator_3"
-                                    app:mpb_progressTextColor = "@color/indicator_3"
-                                    app:mpb_secondaryProgressColor = "@color/indicator3_back"
-                                    app:mpb_min="0"
-                                    app:mpb_max="100"
-                                    tools:mpb_secondaryProgress = "100"
-                                    tools:mpb_progress = "40"
-                                    />
-                            </com.yingenus.multipleprogressbar.MultipleProgressBar>
-                        </FrameLayout>
-
-
-
-                        <GridLayout
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-
-                            android:layout_row="0"
-                            android:layout_column="1"
-
-                            android:rowCount="3"
-                            android:columnCount="2"
-
-                            android:layout_gravity="end"
-                            >
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-
-                                android:src="@drawable/circle"
-                                android:tint="@color/indicator_1"
-
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginEnd="8dp"
-
-                                android:layout_row="0"
-                                android:layout_column="0"
-
-                                />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_row="0"
-                                android:layout_column="1"
-                                android:layout_gravity="center"
-                                >
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/chinese"
-                                    android:textSize="18sp"
-                                    android:textColor="?android:textColorPrimary"
-
-                                    android:layout_gravity="end"
-                                    />
-
-                                <TextView
-                                    android:id="@+id/chn_success"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="?android:textColorPrimary"
-                                    android:textStyle="italic"
-                                    android:textSize="18sp"
-
-                                    android:layout_gravity="center"
-
-                                    tools:text="35%"
-                                    />
-
-                            </LinearLayout>
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-
-                                android:src="@drawable/circle"
-                                android:tint="@color/indicator_2"
-
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginEnd="8dp"
-                                android:layout_row="1"
-                                android:layout_column="0"
-
-                                />
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_row="1"
-                                android:layout_column="1"
-                                android:layout_gravity="center"
-                                >
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/pinyin"
-                                    android:textSize="18sp"
-                                    android:textColor="?android:textColorPrimary"
-
-                                    android:layout_gravity="end"
-
-                                    />
-
-                                <TextView
-                                    android:id="@+id/pin_success"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="?android:textColorPrimary"
-                                    android:textStyle="italic"
-                                    android:textSize="18sp"
-
-                                    android:layout_gravity="center"
-
-                                    tools:text="50%"/>
-                            </LinearLayout>
-
-                            <androidx.appcompat.widget.AppCompatImageView
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-
-                                android:src="@drawable/circle"
-                                android:tint="@color/indicator_3"
-
-                                android:layout_gravity="center_vertical"
-                                android:layout_marginEnd="8dp"
-                                android:layout_row="2"
-                                android:layout_column="0"
-
-                                />
-
-                            <LinearLayout
-                                android:layout_width="wrap_content"
-                                android:layout_height="wrap_content"
-                                android:orientation="vertical"
-                                android:layout_row="2"
-                                android:layout_column="1"
-                                android:layout_gravity="center"
-                                >
-                                <TextView
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:text="@string/my_language"
-                                    android:textSize="18sp"
-                                    android:textColor="?android:textColorPrimary"
-
-                                    android:layout_gravity="end"
-                                    />
-
-                                <TextView
-                                    android:id="@+id/trn_success"
-                                    android:layout_width="wrap_content"
-                                    android:layout_height="wrap_content"
-                                    android:textColor="?android:textColorPrimary"
-                                    android:textStyle="italic"
-                                    android:textSize="18sp"
-
-                                    android:layout_gravity="center"
-
-                                    tools:text="40%"/>
-                            </LinearLayout>
-
-
-                        </GridLayout>
-
-                    </GridLayout>
-
-                    <GridLayout
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-
-                        android:rowCount="2"
-                        android:columnCount="2"
-
-                        app:layout_constraintTop_toBottomOf="@id/progress_bar"
-                        app:layout_constraintStart_toStartOf="parent"
-                        >
-
-                        <TextView
-                            android:id="@+id/last_repeat"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/last_repeat"
-                            android:textSize="14sp"
-                            android:textStyle="italic"
-                            android:layout_marginEnd="5dp"
-                            android:textColor="?android:textColorPrimary"
-                            android:layout_marginTop="5dp"
-
-                            android:layout_row="0"
-                            android:layout_column="0"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/list_days"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="14sp"
-                            android:textStyle="italic"
-                            android:layout_marginEnd="5dp"
-                            android:textColor="?android:textColorPrimary"
-
-                            android:layout_row="0"
-                            android:layout_column="1"
-                            android:layout_gravity="bottom"
-
-                            tools:text="TextTest"
-                            />
-
-                        <TextView
-                            android:id="@+id/next_repeat"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:text="@string/next_repeat"
-                            android:textSize="14sp"
-                            android:textStyle="italic"
-                            android:layout_marginEnd="5dp"
-                            android:textColor="?android:textColorPrimary"
-                            android:layout_marginTop="5dp"
-
-                            android:layout_row="1"
-                            android:layout_column="0"
-
-                            />
-
-                        <TextView
-                            android:id="@+id/next_days"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="14sp"
-                            android:textStyle="italic"
-                            android:layout_marginEnd="5dp"
-                            android:textColor="?android:textColorPrimary"
-
-                            android:layout_row="1"
-                            android:layout_column="1"
-                            android:layout_gravity="bottom"
-
-                            tools:text="TextTest"
-                            />
-
-                    </GridLayout>
-
-                </LinearLayout>
-            </com.yingenus.pocketchinese.view.ScrimSimpleCollapsingLayout>
+                android:layout_height="56dp"
+                android:background="?attr/colorSurface"
+                app:navigationIcon="@drawable/ic_chevrone_left"
+                app:layout_collapseMode="pin"
+                app:menu="@menu/study_list_menu"
+                tools:title="Title"
+                />
 
         </com.google.android.material.appbar.AppBarLayout>
 
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="56dp"
-            android:background="?attr/colorSurface"
-            android:elevation="0.1dp"
-            app:navigationIcon="@drawable/ic_chevrone_left"
-            app:layout_collapseMode="pin"
-            app:menu="@menu/study_list_menu"
-            tools:title="Title"
-            />
-
-        <androidx.core.widget.NestedScrollView
-            android:id="@+id/scroll_header"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            >
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                >
-                <TextView
-                    android:id="@+id/header_text"
-
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:layout_marginStart="16dp"
-                    android:layout_marginBottom="12dp"
-
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="18sp"
-                    android:text="@string/study_list_header"
-                    />
-
-                <TextView
-                    android:id="@+id/word_count"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-
-                    android:textColor="?android:textColorPrimary"
-                    android:textSize="18sp"
-                    android:textStyle="italic"
-
-                    android:layout_marginStart="8dp"
-
-                    app:layout_constraintStart_toEndOf="@id/header_text"
-                    app:layout_constraintBaseline_toBaselineOf="@id/header_text"
-
-                    tools:text="TextTest"/>
-
-
-
-                <View
-                    android:layout_width="match_parent"
-                    android:layout_height="2dp"
-
-                    android:layout_marginTop="43dp"
-                    android:layout_marginStart="16dp"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    android:alpha="0.25"
-                    android:background="?attr/colorOnSurface"
-
-                    />
-
-            </androidx.constraintlayout.widget.ConstraintLayout>
-
-        </androidx.core.widget.NestedScrollView>
-
-        <androidx.recyclerview.widget.RecyclerView
-            android:id="@+id/expanded_recyclerview"
+        <androidx.coordinatorlayout.widget.CoordinatorLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="?attr/colorSurface"
-            android:fitsSystemWindows="false"
-            android:layout_marginTop="45dp"
             app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            />
+            >
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/Style.PocketChinese.FloatingActionButton.Primary"
+                <com.google.android.material.appbar.AppBarLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:elevation="0dp">
 
-            android:id="@+id/fab_start"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:src="@drawable/ic_round_play_arrow_24"
-            android:layout_margin="16dp"
-            tools:enabled="false"
-            app:layout_behavior="com.google.android.material.floatingactionbutton.FloatingActionButton$Behavior"
+                    <include
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        layout="@layout/study_list_info_fragment"
+                        />
 
-            app:layout_anchor="@id/expanded_recyclerview"
-            app:layout_anchorGravity="bottom|end"
+                </com.google.android.material.appbar.AppBarLayout>
 
-            />
+                <androidx.recyclerview.widget.RecyclerView
+                    android:id="@+id/expanded_recyclerview"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:background="?attr/colorSurface"
+                    android:fitsSystemWindows="false"
+                    app:layout_anchor="@id/scroll_header"
+                    app:layout_anchorGravity="bottom"
+                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
+                    />
 
-        <com.google.android.material.floatingactionbutton.FloatingActionButton
-            style="@style/Style.PocketChinese.FloatingActionButton.Primary"
+            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+                style="@style/Style.PocketChinese.Rounded.Button.Medium"
+                android:id="@+id/fab_start"
+                android:layout_width="210dp"
+                android:layout_height="60dp"
+                app:icon="@drawable/ic_next"
+                app:iconGravity="textEnd"
+                app:layout_anchor="@id/expanded_recyclerview"
+                app:layout_anchorGravity="bottom|center"
+                android:text="@string/create"
+                />
 
-            android:id="@+id/fab_add"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
 
-            app:fabSize="mini"
+        </androidx.coordinatorlayout.widget.CoordinatorLayout>
 
-            android:src="@drawable/ic_round_add_24"
 
-            android:layout_marginBottom="90dp"
-
-            app:layout_anchor="@id/fab_start"
-            app:layout_anchorGravity="top|center"
-
-            />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
 </LinearLayout>

@@ -3,14 +3,28 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable-anydpi/ic_next_pr_2.xml" value="0.212" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/button_gradient.xml" value="0.2125" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/chart.xml" value="0.2155" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/ic_back_time.xml" value="0.1815" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/ic_next.xml" value="0.212" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/ic_notify_off.xml" value="0.2155" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/ic_plus.xml" value="0.1815" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/shape_round.xml" value="0.2115" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/font/mulish.xml" value="0.25" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layout/active_input_promit.xml" value="0.19923044035912782" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layout/list_header.xml" value="0.5" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/add_optionse_holder.xml" value="0.33" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/add_word_activity.xml" value="0.19923044035912782" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/chouse_list_layout.xml" value="0.19923044035912782" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/create_edit_layout.xml" value="0.19923044035912782" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/create_word_card.xml" value="0.19923044035912782" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/options_layout.xml" value="0.22" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/character/layout/character_fragment.xml" value="0.19923044035912782" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/create_dialog.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/edit_dialog_layout.xml" value="0.24270833333333333" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/load_dialog.xml" value="0.33" />
-        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/rename_dialog.xml" value="0.20697463768115942" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/rename_dialog.xml" value="0.25" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/dictionary_fragment.xml" value="0.19923044035912782" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/dictionary_start_msg.xml" value="0.17999144933732364" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/example_holder_dictionary.xml" value="0.17999144933732364" />
@@ -22,9 +36,17 @@
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/radical_select_dialog.xml" value="0.17999144933732364" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/suggest_list_holder.xml" value="0.2736212056434374" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dictionary/layout/top_search_bar.xml" value="0.19923044035912782" />
-        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/study_list_fragment.xml" value="0.2736212056434374" />
-        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/user_list_holder.xml" value="0.33" />
-        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/user_lists_fragment.xml" value="0.22" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/grammar/layout/grammar_case_layout.xml" value="0.19837537409149208" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/add_word_card.xml" value="0.5" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/clear_statistic_card.xml" value="0.33" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/create_word_fragment.xml" value="0.17452402538531278" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/holder_block_item.xml" value="0.17452402538531278" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/statistic_card.xml" value="0.33" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/study_list_fragment.xml" value="0.22" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/study_list_info_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/study_word.xml" value="0.25" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/user_list_holder.xml" value="0.5" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/layout/user_lists_fragment.xml" value="0.33" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/menu/giwen_action_mode_manu.xml" value="0.19837537409149208" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/menu/study_list_action_mode_manu.xml" value="0.19837537409149208" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/studylist/menu/user_list_menu.xml" value="0.19837537409149208" />
@@ -39,7 +61,12 @@
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/cat_chip_group_item_choice.xml" value="0.2736212056434374" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/given_study_list_fragment.xml" value="0.2736212056434374" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/hidden_item_study_suggest.xml" value="0.2736212056434374" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/holder_create_new_item.xml" value="0.17452402538531278" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/holder_suggest_list.xml" value="0.17452402538531278" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/holder_user_study_words_litem.xml" value="0.17452402538531278" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/my_study_list_fragment.xml" value="0.2736212056434374" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/repeatable_list_layout.xml" value="0.25" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/words/layout/study_lists_fragment.xml" value="0.19837537409149208" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.19837537409149208" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/menu/radical_select_menu.xml" value="0.19837537409149208" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/menu/study_list_menu.xml" value="0.19837537409149208" />

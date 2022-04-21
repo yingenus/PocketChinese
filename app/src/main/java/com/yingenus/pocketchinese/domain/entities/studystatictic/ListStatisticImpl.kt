@@ -56,6 +56,7 @@ class ListStatisticImpl @Inject constructor(
                 words = words.size,
                 repeat = getRepeatRecomend(trenings),
                 percentComplete = getPercentComplete(trenings),
+                nextRepeat = getNextRepeatDate(trenings)
             )
         }
     }

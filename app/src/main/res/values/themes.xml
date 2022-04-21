@@ -23,7 +23,7 @@
 
 
         <item name="colorSurface">@color/gray_light</item>
-        <item name="colorOnBackground">@color/white</item>
+        <item name="colorOnBackground">@color/gray_light_1</item>
         <item name="colorOnSurface">@color/white</item>
 
         <item name="android:textColorPrimary">@color/green_dark</item>

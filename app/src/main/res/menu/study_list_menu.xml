@@ -7,4 +7,9 @@
         android:icon="@drawable/on_off_notify"
         app:showAsAction="ifRoom"
         android:title="Notify" />
+    <item
+        android:id="@+id/rename"
+        android:icon="@drawable/on_off_notify"
+        app:showAsAction="ifRoom"
+        android:title="Notify" />
 </menu>

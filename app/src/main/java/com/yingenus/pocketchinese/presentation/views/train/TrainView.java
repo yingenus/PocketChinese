@@ -29,12 +29,12 @@ public abstract class TrainView extends RecyclerView.ViewHolder implements View.
         pinView.setHint(getEditHint(inflater.getContext()));
     }
 
-    public void bind(String chinText, String pinText, String trnText, boolean shouldShowHidden){
+    public void bind(String chinText, String pinText, String trnText, boolean shouldShowHidden, String hidden){
         bindItem(chinText,pinText,trnText);
         pinView.getEditText().getText().clear();
         showTestText(getHiddenWord());
-        if (shouldShowHidden){
-            pinView.getEditText().setText(getHiddenWord());
+        if (shouldShowHidden && hidden != null){
+            pinView.getEditText().setText(hidden);
         }
     }
 

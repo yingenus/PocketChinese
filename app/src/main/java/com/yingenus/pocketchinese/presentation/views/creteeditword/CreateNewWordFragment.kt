@@ -39,7 +39,7 @@ class CreateNewWordFragment: CreateEditWordFragment,CreateWordInterface{
         this.dictionaryItem = null
     }
 
-    constructor(dictionaryItem: com.yingenus.pocketchinese.domain.dto.DictionaryItem):super(){
+    constructor(dictionaryItem: DictionaryItem):super(){
         this.studyListUUID = null
         this.dictionaryItem = dictionaryItem
     }

@@ -1,0 +1,128 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <FrameLayout
+        android:id="@+id/create_title"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_marginStart="19dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="@font/mulish_light"
+        android:textColor="?android:textColorPrimary"
+        android:text="@string/create_word_title"
+        android:textSize="32sp"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:id="@+id/edit_title"
+        android:visibility="gone"
+        android:layout_width="match_parent"
+        android:layout_height="90dp"
+        android:layout_marginStart="19dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="@font/mulish_light"
+            android:textColor="?android:textColorPrimary"
+            android:text="@string/edit_word_title"
+            android:textSize="32sp"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Style.PocketChinese.Rounded.InputLayout.WhiteBack"
+
+            android:layout_marginTop="33dp"
+            android:id="@+id/edit_chn"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center_horizontal"
+            android:hint="@string/chinese"
+            app:counterEnabled="true"
+            app:counterMaxLength="10"
+            app:errorEnabled="true"
+            app:helperTextEnabled="true"
+            app:placeholderText="@string/chinese_placeholder"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Style.PocketChinese.Rounded.InputLayout.WhiteBack"
+
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center_horizontal"
+
+            android:id="@+id/edit_pin"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+
+            android:hint="@string/pinyin"
+            app:counterEnabled="true"
+            app:counterMaxLength="10"
+            app:errorEnabled="true"
+            app:helperTextEnabled="true"
+            app:placeholderText="@string/pinyin_placeholder"
+
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <com.google.android.material.textfield.TextInputLayout
+            style="@style/Style.PocketChinese.Rounded.InputLayout.WhiteBack"
+
+            android:layout_marginTop="50dp"
+            android:layout_gravity="center_horizontal"
+
+            android:id="@+id/edit_trn"
+            android:layout_width="280dp"
+            android:layout_height="wrap_content"
+
+
+            android:hint="@string/my_language"
+            app:counterEnabled="true"
+            app:counterMaxLength="10"
+            app:errorEnabled="true"
+            app:helperTextEnabled="true"
+            app:placeholderText="@string/my_language_placeholder"
+            >
+            <com.google.android.material.textfield.TextInputEditText
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+        </com.google.android.material.textfield.TextInputLayout>
+
+    </FrameLayout>
+
+
+
+
+
+</LinearLayout>

@@ -38,8 +38,8 @@ class ModifyStudyWordUseCaseImpl @Inject constructor(
             }
     }
 
-    override fun changeChinese(studyWord: StudyWord, chinese: String): Completable {
-        return studyRepository.getStudyWord(studyWord.id)
+    override fun changeChinese(studyWord: Long, chinese: String): Completable {
+        return studyRepository.getStudyWord(studyWord)
             .switchIfEmpty( Single.error(Throwable("no such study word")))
             .flatMapCompletable {
                 if ( checkCorrect(chinese,Language.CHINESE)){
@@ -51,8 +51,8 @@ class ModifyStudyWordUseCaseImpl @Inject constructor(
             }
     }
 
-    override fun changePinyin(studyWord: StudyWord, pinyin: String): Completable {
-        return studyRepository.getStudyWord(studyWord.id)
+    override fun changePinyin(studyWord : Long, pinyin: String): Completable {
+        return studyRepository.getStudyWord(studyWord)
             .switchIfEmpty( Single.error(Throwable("no such study word")))
             .flatMapCompletable {
                 if ( checkCorrect(pinyin,Language.PINYIN)){
@@ -64,8 +64,8 @@ class ModifyStudyWordUseCaseImpl @Inject constructor(
             }
     }
 
-    override fun changeTranslation(studyWord: StudyWord, translation: String): Completable {
-        return studyRepository.getStudyWord(studyWord.id)
+    override fun changeTranslation(studyWord: Long, translation: String): Completable {
+        return studyRepository.getStudyWord(studyWord)
             .switchIfEmpty( Single.error(Throwable("no such study word")))
             .flatMapCompletable {
                 if ( checkCorrect(translation,Language.RUSSIAN)){
@@ -76,6 +76,27 @@ class ModifyStudyWordUseCaseImpl @Inject constructor(
                 }
             }
     }
+
+    override fun changeAll(
+        studyWord: Long,
+        chinese: String,
+        pinyin: String,
+        translation: String
+    ): Completable {
+        return studyRepository.getStudyWord(studyWord)
+            .switchIfEmpty( Single.error(Throwable("no such study word")))
+            .flatMapCompletable {
+                if ( checkCorrect(translation,Language.RUSSIAN) && checkCorrect(pinyin,Language.PINYIN) && checkCorrect(chinese,Language.CHINESE)){
+                    it.chinese = chinese
+                    it.pinyin = pinyin
+                    it.translate = translation
+                    studyRepository.updateStudyWord(it)
+                }else{
+                    Completable.error(Throwable("translation is out from standards"))
+                }
+            }
+    }
+
     override fun deleteStudyWords(ids: List<Long>): Completable {
         return studyRepository.deleteStudyWordsByIds(ids)
     }

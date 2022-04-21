@@ -86,7 +86,7 @@ public class StudyListFragment extends Fragment implements ActionMode.Callback, 
     private final @DrawableRes int notifyIcon = R.drawable.on_off_notify;
 
     static class StartTrainFF extends FragmentFactory {
-        private UUID studyListUUID;
+        private Long studyListUUID;
 
         public void setStudyList(UUID uuid) {
             this.studyListUUID = uuid;

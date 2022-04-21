@@ -97,11 +97,11 @@ class AddWordsViewModel @AssistedInject constructor(
         return isSuccess
     }
 
-    fun addToExisting( studyList: ShowedStudyList) : LiveData<Boolean>{
+    fun addToExisting( studyListId: Long) : LiveData<Boolean>{
         val isSuccess : MutableLiveData<Boolean> = MutableLiveData()
 
         addSuggestWordsToStudyList
-            .addSuggestWords(getAddConfig(studyList.id),addedWords)
+            .addSuggestWords(getAddConfig(studyListId),addedWords)
             .subscribe({
                 isSuccess.postValue(true)
             },{

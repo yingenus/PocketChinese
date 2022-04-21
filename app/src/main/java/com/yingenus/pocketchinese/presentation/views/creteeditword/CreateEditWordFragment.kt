@@ -78,7 +78,6 @@ abstract class CreateEditWordFragment protected constructor() : Fragment(R.layou
                 if (v != null) hideKeyboard(v)
             }
         }
-
     }
 
     override fun afterTextChanged(s: Editable?) {
