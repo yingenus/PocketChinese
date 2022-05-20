@@ -165,9 +165,16 @@ public class TrainingFragment extends Fragment{
     }
 
     private void subscribeViewModel(){
+        viewModel.getResidue().observe(getViewLifecycleOwner(), (Integer residue) ->{
+            String toolBarText = getString(R.string.count_words);
+            int wordsLeft = residue;
+            toolBarText += " "+wordsLeft;
+            toolbar.setTitle(toolBarText.toUpperCase());
+        });
         viewModel.getAll().observe(getViewLifecycleOwner(), (Integer all) ->{
             progressBar.setMaxProgress(all);
             progressBar.notifiProgressChanged();
+
         });
         viewModel.getBed().observe(getViewLifecycleOwner(), (Integer value) ->{
             bed.setProgressValue(value);
@@ -235,6 +242,7 @@ public class TrainingFragment extends Fragment{
                 int postion =  adapter.getPosition(word);
                 if (postion != -1){
                     adapter.updateStudyWord(new Pair(word.getFirst(),value),postion);
+                    adapter.notifyDataSetChanged();
                 }
             });
                 //Adapter adapter = ((Adapter) viewPager.getAdapter());
@@ -401,6 +409,7 @@ public class TrainingFragment extends Fragment{
             if (postion >= mWords.size()){
                 mWords.add(word);
             }else {
+                mWords.remove(postion);
                 mWords.add(postion,word);
             }
         }

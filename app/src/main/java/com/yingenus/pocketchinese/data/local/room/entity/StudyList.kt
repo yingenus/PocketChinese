@@ -29,7 +29,8 @@ class StudyList(
     fun toStudyList(): StudyList = StudyList(
         id = id,
         name = name,
-        notifyUser = notify
+        notifyUser = notify,
+        createDate = createDate
     )
 }
 

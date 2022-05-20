@@ -11,6 +11,7 @@ import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.subjects.PublishSubject
+import io.reactivex.rxjava3.subjects.ReplaySubject
 import javax.inject.Inject
 
 class TrainingWordsUseCaseImpl @Inject constructor(
@@ -27,22 +28,22 @@ class TrainingWordsUseCaseImpl @Inject constructor(
 
     private lateinit var trainingConf: TrainingConf
 
-    private val allWordsPublish : PublishSubject<Int> = PublishSubject.create()
+    private val allWordsPublish : ReplaySubject<Int> = ReplaySubject.create()
     private var all : Int = 0
         set(value) {
             allWordsPublish.onNext(value)
             field = value
         }
-    private val badWordsPublish : PublishSubject<Int> = PublishSubject.create()
+    private val badWordsPublish : ReplaySubject<Int> = ReplaySubject.create()
     private var bad : Int = 0
         set(value) {
             badWordsPublish.onNext(value)
             field = value
         }
-    private val goodWordsPublish : PublishSubject<Int> = PublishSubject.create()
+    private val goodWordsPublish : ReplaySubject<Int> = ReplaySubject.create()
     private var good : Int = 0
         set(value) {
-            allWordsPublish.onNext(value)
+            goodWordsPublish.onNext(value)
             field = value
         }
 

@@ -41,6 +41,10 @@ class TrainingViewModel @AssistedInject constructor(
     val all : LiveData<Int>
         get() = _all
 
+    private val _residue : MutableLiveData<Int> = MutableLiveData()
+    val residue : LiveData<Int>
+        get() = _residue
+
     private val _trainingStudyWord : MutableLiveData<StudyWord> = MutableLiveData()
     val trainingStudyWord : LiveData<StudyWord>
         get() = _trainingStudyWord
@@ -82,6 +86,7 @@ class TrainingViewModel @AssistedInject constructor(
                         _all.postValue(it.all)
                         _bed.postValue(it.bed)
                         _good.postValue(it.good)
+                        _residue.postValue(it.all - it.good)
                     }
                 )
                 goNext().subscribe()
@@ -101,6 +106,14 @@ class TrainingViewModel @AssistedInject constructor(
         }
             .switchIfEmpty(Single.error(Throwable("not inited")))
             .doOnSuccess {
+                if(it){
+                    getShowed().blockingSubscribe {showed ->
+                        val word = trainedWords.find { it.second == showed }!!
+                        val index = trainedWords.indexOf(word)
+                        trainedWords.removeAt(index)
+                        trainedWords.add(index,true to word.second)
+                    }
+                }
                 isSuccess.postValue(it)
             }
             .doOnError {
@@ -143,16 +156,19 @@ class TrainingViewModel @AssistedInject constructor(
             .toSingle { Single.create<Boolean> {
                 require(trainedWords.isNotEmpty())
                 var position : Int = if (showedWord != null)
-                    trainedWords.indexOfFirst { it.second == showedWord }
+                    trainedWords.indexOfLast { it.second == showedWord }
                 else
                     0
 
                 if ( trainedWords.lastIndex == position) position = -1
 
                 val before = if (position != -1 ) trainedWords.subList(0, position) else mutableListOf()
-                val after = if (position != -1) trainedWords.subList(position, trainedWords.lastIndex) else trainedWords
-                after.addAll(before)
-                val next = after.firstOrNull { !it.first }
+                val after = if (position != -1) trainedWords.subList(position+1, trainedWords.lastIndex+1) else trainedWords
+                val tmpList = mutableListOf<Pair<Boolean,StudyWord>>()
+                tmpList.addAll(after)
+                tmpList.addAll(before)
+                val next = tmpList.firstOrNull { !it.first }
+
                 if(next != null){
                     showedWord = next.second
                     _trainingStudyWord.postValue(next.second)

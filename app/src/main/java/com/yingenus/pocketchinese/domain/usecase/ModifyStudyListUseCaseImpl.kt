@@ -6,6 +6,7 @@ import com.yingenus.pocketchinese.domain.repository.StudyRepository
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
 import io.reactivex.rxjava3.core.Single
+import java.util.*
 import javax.inject.Inject
 
 class ModifyStudyListUseCaseImpl @Inject constructor(
@@ -40,7 +41,7 @@ class ModifyStudyListUseCaseImpl @Inject constructor(
 
     override fun createStudyList(name: String): Completable {
         return studyRepository.createStudyList(
-            StudyList( 0, name,true)
+            StudyList( 0, name,true, Date(System.currentTimeMillis()))
         )
     }
 

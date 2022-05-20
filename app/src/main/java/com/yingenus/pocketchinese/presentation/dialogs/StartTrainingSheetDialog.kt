@@ -432,6 +432,8 @@ class StartTrainingSheetDialog(val studyListId: Long) : BottomSheetDialogFragmen
                     trainedWords.repeatable+ trainedWords.filed,
                     getItemText(position,holder.itemView.context),
                     position, trainedWords.repeatable+ trainedWords.filed > 0)
+
+            holder.itemView.setOnClickListener(onClickListener)
         }
 
         override fun getItemCount(): Int {

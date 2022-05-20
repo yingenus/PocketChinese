@@ -5,5 +5,6 @@ import java.util.*
 class StudyList(
     val id: Long,
     var name: String,
-    var notifyUser: Boolean) {
+    var notifyUser: Boolean,
+    val createDate: Date) {
 }

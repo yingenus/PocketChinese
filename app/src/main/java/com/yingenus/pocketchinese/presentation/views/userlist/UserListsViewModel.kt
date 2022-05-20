@@ -68,8 +68,12 @@ class UserListsViewModel @Inject constructor(
         studyListInfoUseCase
             .getAllStudyLists()
             .subscribe { onSuccess ->
-                val needRepead = onSuccess.filter { it.repeat != RepeatRecomend.DONT_NEED }
-                val other = onSuccess.filter { it.repeat == RepeatRecomend.DONT_NEED }
+                val needRepead = onSuccess.filter { it.repeat != RepeatRecomend.DONT_NEED }.toMutableList()
+                val other = onSuccess.filter { it.repeat == RepeatRecomend.DONT_NEED }.toMutableList()
+
+                needRepead.sortBy { it.createDate.time }
+                other.sortBy { it.createDate.time }
+
                 _showedNeedRepeatUserList.postValue(needRepead)
                 _showedOtherUserList.postValue(other)
         }
