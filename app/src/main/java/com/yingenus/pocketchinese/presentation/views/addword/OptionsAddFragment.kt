@@ -13,6 +13,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.card.MaterialCardView
 import com.yingenus.pocketchinese.R
+import com.yingenus.pocketchinese.controller.BoundsDecoratorBottom
+import com.yingenus.pocketchinese.controller.CardBoundTopBottom
 
 class OptionsAddFragment : Fragment(R.layout.options_layout){
 
@@ -40,6 +42,10 @@ class OptionsAddFragment : Fragment(R.layout.options_layout){
         options!!.layoutManager = LinearLayoutManager(requireContext())
         romanization!!.adapter = PinyinAdapter()
         options!!.adapter = MixAdapter()
+        romanization!!.addItemDecoration(CardBoundTopBottom(requireContext(),4))
+        romanization!!.addItemDecoration(BoundsDecoratorBottom(requireContext()))
+        options!!.addItemDecoration(CardBoundTopBottom(requireContext(),4))
+        options!!.addItemDecoration(BoundsDecoratorBottom(requireContext()))
 
         val pinSelection : SelectionTracker.SelectionObserver<Long> = object : SelectionTracker.SelectionObserver<Long>(){
             override fun onItemStateChanged(key: Long, selected: Boolean) {
@@ -136,7 +142,7 @@ abstract class OptionsAdapter : RecyclerView.Adapter<OptionsHolder>(){
         }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): OptionsHolder {
-        return OptionsHolder(parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater, parent)
+        return OptionsHolder(parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, parent)
     }
 
     override fun onBindViewHolder(holder: OptionsHolder, position: Int) {

@@ -1,5 +1,6 @@
 package com.yingenus.pocketchinese.presentation.views.suggestist
 
+import android.graphics.Bitmap
 import android.net.Uri
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -9,6 +10,8 @@ import com.yingenus.pocketchinese.domain.dto.SuggestList
 import com.yingenus.pocketchinese.domain.repository.ImageRep
 import com.yingenus.pocketchinese.domain.repository.SuggestWordsRepository
 import com.yingenus.pocketchinese.presentation.views.toUri
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.net.URI
 import javax.inject.Inject
 
@@ -22,7 +25,7 @@ class SuggestListsViewModel @Inject constructor(
         (val name : String,
          val version : String,
          val words : Int,
-         val image : Uri?,
+         val image : String,
          val tags : List<String>){
 
     }
@@ -87,18 +90,32 @@ class SuggestListsViewModel @Inject constructor(
         updateSuggestLists()
     }
 
+    fun getImageBitmap(uri : String): LiveData<Bitmap>{
+        val mutableLiveData = MutableLiveData<Bitmap>()
+        Single.defer{
+            Single.just(imageRep.getImageBitmap(uri)!!)
+        }
+            .subscribeOn(Schedulers.io())
+            .observeOn(Schedulers.computation())
+            .subscribe{ bitmap ->
+                mutableLiveData.postValue(bitmap)
+            }
+        return mutableLiveData
+    }
+
     private fun addTags( newTags : List<String>){
         val otherTags = showedTags
         val tmpTags = otherTags.toMutableList()
         val realNew = newTags.filter { tag -> !otherTags.any { it.second == tag } }
         tmpTags.addAll(realNew.map {  true to it})
-        _tags.postValue( tmpTags)
+        showedTags = tmpTags
+        //_tags.postValue( tmpTags)
     }
 
     private fun showLists(lists : List<SuggestList> ){
         val showed = filterByTag(lists)
-        showedNewSuggestLists = getNewSuggestLists(showed).map { it.toShovedSuggestList() }
         showedOtherSuggestLists = getOtherSuggestLists(showed).map { it.toShovedSuggestList() }
+        showedNewSuggestLists = getNewSuggestLists(showed).map { it.toShovedSuggestList() }
     }
 
     private fun extractTags( lists : List<SuggestList>): List<String>{
@@ -129,7 +146,7 @@ class SuggestListsViewModel @Inject constructor(
             this.name,
             this.version,
             this.words,
-            imageRep.getImageURI(this.image)?.toUri(),
+            this.image,
             this.tags
         )
 }

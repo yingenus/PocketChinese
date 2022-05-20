@@ -13,10 +13,12 @@ import androidx.fragment.app.FragmentTransaction;
 
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.PocketApplication;
+import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams;
 import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryFragment;
+import com.yingenus.pocketchinese.presentation.views.suggestist.SuggestListsFragment;
+import com.yingenus.pocketchinese.presentation.views.userlist.UserListsFragment;
 import com.yingenus.pocketchinese.view.EmptyFragment;
 import com.yingenus.pocketchinese.presentation.views.settings.SettingsFragment;
-import com.yingenus.pocketchinese.presentation.views.traning.TrainListsFragment;
 import com.yingenus.pocketchinese.view.bubblecust.BubbleTabBarCust;
 
 public class MainActivity  extends AppCompatActivity {
@@ -33,13 +35,13 @@ public class MainActivity  extends AppCompatActivity {
                 Log.d("MainFragmentFactory","create Fragment: DictionaryFragment");
                 return new DictionaryFragment();
             }
-            if (className.equals(TrainListsFragment.class.getName())) {
+            if (className.equals(SuggestListsFragment.class.getName())) {
                 Log.d("MainFragmentFactory","create Fragment: TrainListsFragment");
-                return new TrainListsFragment();
+                return new SuggestListsFragment();
             }
-            if (className.equals(EmptyFragment.class.getName())) {
+            if (className.equals(UserListsFragment.class.getName())) {
                 Log.d("MainFragmentFactory","create Fragment: EmptyFragment");
-                return new EmptyFragment();
+                return new UserListsFragment();
             }
             if (className.equals(SettingsFragment.class.getName())) {
                 Log.d("MainFragmentFactory","create Fragment: SettingsFragment");
@@ -114,11 +116,11 @@ public class MainActivity  extends AppCompatActivity {
                 showFragment(STUDY_F_TAG);
                 break;
             }
-            /**
-            case R.id.grammar: {
+
+            case R.id.suggest: {
                 showFragment(GRAMMAR_F_TAG);
                 break;
-            }*/
+            }
             case R.id.settings:{
                 showFragment(SETTINGS_F_TAG);
             }
@@ -134,6 +136,11 @@ public class MainActivity  extends AppCompatActivity {
     private void showFragment(String TAG){
         if (TAG.equals(active)){
             return;
+        }
+        if (TAG.equals(GRAMMAR_F_TAG) || TAG.equals(STUDY_F_TAG)){
+            getWindow().setStatusBarColor(UtilsVariantParams.INSTANCE.resolveColorAttr(this,R.attr.colorSurface));
+        }else {
+            getWindow().setStatusBarColor(UtilsVariantParams.INSTANCE.resolveColorAttr(this,R.attr.colorPrimaryVariant));
         }
         Fragment targetFragment = getSupportFragmentManager().findFragmentByTag(TAG);
 
@@ -178,9 +185,9 @@ public class MainActivity  extends AppCompatActivity {
         if (TAG.equals(SEARCH_F_TAG))
             return ff.instantiate(getClassLoader(),DictionaryFragment.class.getName());
         if (TAG.equals(STUDY_F_TAG))
-            return ff.instantiate(getClassLoader(),TrainListsFragment.class.getName());
+            return ff.instantiate(getClassLoader(), SuggestListsFragment.class.getName());
         if (TAG.equals(GRAMMAR_F_TAG))
-            return ff.instantiate(getClassLoader(),EmptyFragment.class.getName());
+            return ff.instantiate(getClassLoader(), UserListsFragment.class.getName());
         if (TAG.equals(SETTINGS_F_TAG))
             return ff.instantiate(getClassLoader(),SettingsFragment.class.getName());
         throw new RuntimeException("invalid tag:"+TAG);

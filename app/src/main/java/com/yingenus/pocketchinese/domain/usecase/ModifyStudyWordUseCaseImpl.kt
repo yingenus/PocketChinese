@@ -3,6 +3,7 @@ package com.yingenus.pocketchinese.domain.usecase
 import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.domain.dto.StudyWord
 import com.yingenus.pocketchinese.domain.entities.namestandards.StudyWordsStandards
+import com.yingenus.pocketchinese.domain.entities.studystatictic.UserStatistics
 import com.yingenus.pocketchinese.domain.repository.StudyRepository
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
@@ -11,7 +12,8 @@ import javax.inject.Inject
 
 class ModifyStudyWordUseCaseImpl @Inject constructor(
     private val studyRepository: StudyRepository,
-    private val studyWordsStandards: StudyWordsStandards
+    private val studyWordsStandards: StudyWordsStandards,
+    private val userStatistics: UserStatistics
 ): ModifyStudyWordUseCase{
     override fun checkCorrect(text: String, language: Language): Boolean {
         return studyWordsStandards.isCorrectField(text,language)
@@ -25,16 +27,18 @@ class ModifyStudyWordUseCaseImpl @Inject constructor(
     ): Completable {
         return studyRepository.getStudyListById(studyListId)
             .switchIfEmpty( Single.error(Throwable("no such study list")))
-            .flatMapCompletable {
+            .flatMap {
                 if ( checkCorrect(chinese,Language.CHINESE)
                     && checkCorrect(pinyin, Language.PINYIN)
                     && checkCorrect(translation,Language.RUSSIAN)){
-                    studyRepository.addStudyWord(it,
+                    studyRepository.addStudyWordWithID(it,
                         StudyWord(0, chinese,pinyin,translation, Date(System.currentTimeMillis()))
                     )
                 }else{
-                    Completable.error(Throwable("chinese or pinyin or translation is out from standards"))
+                    Single.error(Throwable("chinese or pinyin or translation is out from standards"))
                 }
+            }.flatMapCompletable {
+                userStatistics.wordAdded(it)
             }
     }
 
@@ -99,18 +103,33 @@ class ModifyStudyWordUseCaseImpl @Inject constructor(
 
     override fun deleteStudyWords(ids: List<Long>): Completable {
         return studyRepository.deleteStudyWordsByIds(ids)
+            .andThen(Completable.defer {
+                userStatistics.wordsDeleted(ids)
+            })
     }
 
 
     override fun deleteStudyWord(studyWord: StudyWord): Completable {
         return studyRepository.getStudyWord(studyWord.id)
             .switchIfEmpty( Single.error(Throwable("no such study word")))
-            .flatMapCompletable { studyRepository.deleteStudyWord(it) }
+            .flatMapCompletable {
+                studyRepository.deleteStudyWord(it).andThen(
+                    Completable.defer {
+                        userStatistics.wordDeleted(it.id)
+                    }
+                )
+            }
     }
 
     override fun deleteStudyWord(id: Long): Completable {
         return studyRepository.getStudyWord(id)
             .switchIfEmpty( Single.error(Throwable("no such study word")))
-            .flatMapCompletable { studyRepository.deleteStudyWord(it) }
+            .flatMapCompletable {
+                studyRepository.deleteStudyWord(it)
+                .andThen(
+                Completable.defer {
+                    userStatistics.wordDeleted(it.id)
+                }
+            )  }
     }
 }

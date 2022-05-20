@@ -21,10 +21,11 @@
         >
 
         <com.google.android.material.appbar.CollapsingToolbarLayout
+            android:id="@+id/toolbar_layout"
             android:layout_width="match_parent"
             android:layout_height="match_parent"
 
-            app:contentScrim="?attr/colorOnBackground"
+            app:contentScrim="?attr/colorSurface"
             app:statusBarScrim="?attr/colorPrimaryVariant"
             app:layout_scrollFlags="scroll|exitUntilCollapsed"
 
@@ -60,6 +61,7 @@
                     android:layout_height="wrap_content"
                     android:text=""
                     android:textColor="?android:textColorSecondary"
+                    android:fontFamily="@font/mulish_regular"
                     android:maxLines="5"
 
                     android:textSize="18sp"
@@ -68,6 +70,7 @@
             </FrameLayout>
 
             <androidx.appcompat.widget.Toolbar
+                style="@style/Style.PocketChinese.Toolbar"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"

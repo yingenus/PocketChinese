@@ -8,15 +8,9 @@ import android.widget.Button
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger
-import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyListDAO
-import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyList
 import com.google.android.material.textfield.TextInputLayout
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
 import com.yingenus.pocketchinese.presentation.views.userlist.UserListsViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 class RenameDialog(val showedStudyList: ShowedStudyList, val userListsViewModel: UserListsViewModel) :DialogFragment(){
     object ERRORS_MES{

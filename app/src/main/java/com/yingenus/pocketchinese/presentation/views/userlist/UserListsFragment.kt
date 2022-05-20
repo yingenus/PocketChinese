@@ -1,12 +1,14 @@
 package com.yingenus.pocketchinese.presentation.views.userlist
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
-import android.widget.Toolbar
+import androidx.appcompat.widget.Toolbar
+
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -14,18 +16,22 @@ import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
+import com.yingenus.pocketchinese.controller.BoundsDecoratorBottom
+import com.yingenus.pocketchinese.controller.CardBoundTopBottom
 import com.yingenus.pocketchinese.controller.dialog.CreateNewListDialog
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
 import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams
+import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams.resolveColorAttr
 import com.yingenus.pocketchinese.presentation.ViewModelFactory
 import com.yingenus.pocketchinese.presentation.dialogs.ActioneSheetDialog
 import com.yingenus.pocketchinese.presentation.dialogs.ActioneSheetDialog.EditSheetDialogCallback
 import com.yingenus.pocketchinese.presentation.dialogs.RenameDialog
+import com.yingenus.pocketchinese.presentation.views.stydylist.StudyListActivity
 import com.yingenus.pocketchinese.view.HeadersRecyclerViewAdapter
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import javax.inject.Inject
 
-class NewUserListsFragment : Fragment(R.layout.user_lists_fragment), StudyListAdapter.OnUserListLongClicked, StudyListAdapter.OnUserListClicked{
+class UserListsFragment : Fragment(R.layout.user_lists_fragment), StudyListAdapter.OnUserListLongClicked, StudyListAdapter.OnUserListClicked{
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -77,6 +83,8 @@ class NewUserListsFragment : Fragment(R.layout.user_lists_fragment), StudyListAd
             it.setOnLongClickListener(this)
             it.setOnClickListener(this)
         }
+        recyclerView!!.addItemDecoration(CardBoundTopBottom(requireContext(),4))
+        recyclerView!!.addItemDecoration(BoundsDecoratorBottom(requireContext()))
 
         initListeners()
 
@@ -154,7 +162,8 @@ class NewUserListsFragment : Fragment(R.layout.user_lists_fragment), StudyListAd
     }
 
     override fun onClicked(showedStudyList: ShowedStudyList) {
-        TODO("Not yet implemented")
+        val intent = StudyListActivity.getIntent(requireContext(),showedStudyList.id)
+        startActivity(intent)
     }
 
     private fun onCreteUserListClicked(){
@@ -211,14 +220,14 @@ class StudyListAdapter : HeadersRecyclerViewAdapter<UserListViewHolder>(
 
     override fun onCreateItemViewHolder(parent: ViewGroup): UserListViewHolder {
         return UserListViewHolder(
-            parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater,
+            parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
             parent
         )
     }
 
     override fun onCreateHeaderViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         return ViewViewHolder(R.layout.list_header,
-            parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater)
+            parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
     }
 
     override fun onBindItemViewHolder(
@@ -299,6 +308,10 @@ class UserListViewHolder : RecyclerView.ViewHolder{
         progressPercent.text = item.percentComplete.toString()+"%"
         lastRepeat.text = UtilsVariantParams.getLstRepeat(itemView.resources,item.repeatDate)
         lastRepeat.setTextColor(UtilsVariantParams.getLstRepeatColor(itemView,item.repeat))
+        if (!item.notifyUser)
+            notify.visibility = View.VISIBLE
+        else
+            notify.visibility = View.GONE
     }
 
 }

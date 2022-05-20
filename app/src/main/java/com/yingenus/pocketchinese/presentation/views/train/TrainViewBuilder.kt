@@ -1,10 +1,9 @@
-package com.yingenus.pocketchinese.controller.fragment.train
+package com.yingenus.pocketchinese.presentation.views.train
 
 import android.content.Context
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.presentation.views.train.TrainView
 
 interface TrainViewBuilder {
     fun build(inflater: LayoutInflater, parent: ViewGroup): TrainView
@@ -39,8 +38,9 @@ class TrnTrainView(inflater: LayoutInflater, parent: ViewGroup):
 
 class PinTrainView(inflater: LayoutInflater, parent: ViewGroup):
     TrainView(inflater,parent){
-    class Builder:TrainViewBuilder{
-        override fun build(inflater: LayoutInflater, parent: ViewGroup)=PinTrainView(inflater, parent)
+    class Builder: TrainViewBuilder {
+        override fun build(inflater: LayoutInflater, parent: ViewGroup)=
+            PinTrainView(inflater, parent)
     }
     private var mAnsLength=0
     private var mAnswer=""
@@ -65,8 +65,9 @@ class PinTrainView(inflater: LayoutInflater, parent: ViewGroup):
 
 class ChnTrainView(inflater: LayoutInflater, parent: ViewGroup):
     TrainView(inflater,parent){
-    class Builder:TrainViewBuilder{
-        override fun build(inflater: LayoutInflater, parent: ViewGroup)=ChnTrainView(inflater,parent)
+    class Builder: TrainViewBuilder {
+        override fun build(inflater: LayoutInflater, parent: ViewGroup)=
+            ChnTrainView(inflater,parent)
     }
     private var mAnsLength=0
     private var mAnswer=""

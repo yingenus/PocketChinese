@@ -31,21 +31,31 @@
         <activity
             android:name="com.yingenus.pocketchinese.presentation.views.stydylist.StudyListActivity"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.PocketChinese.NoActionBar"/>
+            android:theme="@style/Theme.PocketChinese.Default.NoActionBar.SurfaceStatusBar"/>
         <activity
-            android:name="com.yingenus.pocketchinese.presentation.views.addword.AddWordsActivity"
+            android:name="com.yingenus.pocketchinese.presentation.views.addword.AddSuggestWordsActivity"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"
-            android:theme="@style/Theme.PocketChinese.NoActionBar.NoStatusBar"/>
+            android:theme="@style/Theme.PocketChinese.Default.NoActionBar.SurfaceStatusBar"/>
         <activity
             android:name="com.yingenus.pocketchinese.presentation.views.train.TrainActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Theme.PocketChinese.NoActionBar"
             android:windowSoftInputMode="adjustNothing" />
         <activity
-            android:name="com.yingenus.pocketchinese.presentation.views.creteeditword.CreateWordActivity"
+            android:name="com.yingenus.pocketchinese.presentation.views.addword.CreateWordForList"
+            android:theme="@style/Theme.PocketChinese.Default.NoActionBar.SurfaceStatusBar"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
         <activity
-            android:name="com.yingenus.pocketchinese.presentation.views.creteeditword.EditWordActivity"
+            android:name="com.yingenus.pocketchinese.presentation.views.addword.EditWordActivity"
+            android:theme="@style/Theme.PocketChinese.Default.NoActionBar.SurfaceStatusBar"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity
+            android:name="com.yingenus.pocketchinese.presentation.views.addword.AddWordFromDictionaryActivity"
+            android:theme="@style/Theme.PocketChinese.Default.NoActionBar.SurfaceStatusBar"
+            android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.yingenus.pocketchinese.presentation.views.userlist.RepeatableUserListsActivity"

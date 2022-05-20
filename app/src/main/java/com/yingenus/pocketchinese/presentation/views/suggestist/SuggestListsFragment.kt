@@ -1,32 +1,41 @@
 package com.yingenus.pocketchinese.presentation.views.suggestist
 
 import android.annotation.SuppressLint
+import android.content.Context
+import android.graphics.Bitmap
+import android.graphics.Rect
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.core.view.get
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
+import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.controller.activity.getSuggestActivityIntent
+import com.yingenus.pocketchinese.controller.BoundsDecoratorBottom
+import com.yingenus.pocketchinese.controller.CardBoundTopBottom
+import com.yingenus.pocketchinese.controller.dp2px
+import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams.resolveColorAttr
 import com.yingenus.pocketchinese.presentation.ViewModelFactory
 import com.yingenus.pocketchinese.view.HeadersRecyclerViewAdapter
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
+import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class NewSuggestListsFragment : Fragment(R.layout.suggest_lists_layout), SuggestListAdapter.OnSuggestListClicked {
+class SuggestListsFragment : Fragment(R.layout.suggest_lists_layout), SuggestListAdapter.OnSuggestListClicked {
 
     @Inject
     lateinit var viewModelFactory : ViewModelFactory
 
-    private lateinit var viewModel: SuggestListsViewModel
+    lateinit var viewModel: SuggestListsViewModel
 
     private var chipGroup: ChipGroup? = null
     private var recyclerView : RecyclerView? = null
@@ -39,12 +48,16 @@ class NewSuggestListsFragment : Fragment(R.layout.suggest_lists_layout), Suggest
     ): View {
         val view = super.onCreateView(inflater, container, savedInstanceState)!!
 
+        PocketApplication.getAppComponent().injectSuggestListsFragment(this)
+
         viewModel = ViewModelProvider(this, viewModelFactory).get(SuggestListsViewModel::class.java)
 
         chipGroup = view.findViewById(R.id.tags_group)
         recyclerView = view.findViewById(R.id.recyclerview)
-        recyclerView!!.adapter = SuggestListAdapter().also { it.setOnClickListener(this) }
+        recyclerView!!.adapter = SuggestListAdapter(this).also { it.setOnClickListener(this) }
         recyclerView!!.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView!!.addItemDecoration(CardBoundTopBottom(requireContext(),4))
+        recyclerView!!.addItemDecoration(BoundsDecoratorBottom(requireContext()))
 
         subscribeToAll()
 
@@ -88,9 +101,10 @@ class NewSuggestListsFragment : Fragment(R.layout.suggest_lists_layout), Suggest
                         chipGroup,
                         false
                     ) as Chip
-                    chip.text = tag
+                    chip.text = it.second
                     chip.id = id
                     chips[it.second] = id
+                    chipGroup!!.addView(chip)
                 }
                 val chip = chipGroup!!.findViewById(chips[it.second]!!) as Chip
                 chip.isChecked = it.first
@@ -101,11 +115,12 @@ class NewSuggestListsFragment : Fragment(R.layout.suggest_lists_layout), Suggest
                     chipGroup!!.removeView(view)
                 }
             }
+            chipGroup?.requestLayout()
         }
     }
 }
 
-class SuggestListAdapter : HeadersRecyclerViewAdapter<SuggestListViewHolder>(
+class SuggestListAdapter(val suggestListsFragment: SuggestListsFragment) : HeadersRecyclerViewAdapter<SuggestListViewHolder>(
     listOf(TAG_NEW, TAG_OTHER),
     false
 ){
@@ -119,6 +134,8 @@ class SuggestListAdapter : HeadersRecyclerViewAdapter<SuggestListViewHolder>(
     }
 
     private val listeners : MutableList<OnSuggestListClicked> = mutableListOf()
+
+    private val observableLiveData = mutableMapOf<Int,LiveData<Bitmap>>()
 
     private var newList : List<SuggestListsViewModel.ShovedSuggestList> = emptyList()
     private var otherList : List<SuggestListsViewModel.ShovedSuggestList> = emptyList()
@@ -142,14 +159,14 @@ class SuggestListAdapter : HeadersRecyclerViewAdapter<SuggestListViewHolder>(
 
     override fun onCreateItemViewHolder(parent: ViewGroup): SuggestListViewHolder {
         return SuggestListViewHolder(
-            parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater,
+            parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater,
             parent
         )
     }
 
     override fun onCreateHeaderViewHolder(parent: ViewGroup): RecyclerView.ViewHolder {
         return ViewViewHolder(R.layout.list_header,
-            parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater)
+            parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
     }
 
     override fun onBindItemViewHolder(
@@ -162,11 +179,13 @@ class SuggestListAdapter : HeadersRecyclerViewAdapter<SuggestListViewHolder>(
                 val item = newList[position]
                 holder.bind(item)
                 holder.itemView.setOnClickListener { listeners.forEach { it.onClicked(item) } }
+                subscribeHolder(item.image,holder)
             }
             TAG_OTHER -> {
                 val item = otherList[position]
                 holder.bind(otherList[position])
                 holder.itemView.setOnClickListener { listeners.forEach { it.onClicked(item) } }
+                subscribeHolder(item.image,holder)
             }
             else -> throw RuntimeException("unexpected tag : $tag")
         }
@@ -188,9 +207,21 @@ class SuggestListAdapter : HeadersRecyclerViewAdapter<SuggestListViewHolder>(
             else -> throw RuntimeException("unexpected tag : $tag")
         }
     }
+
+    private fun subscribeHolder(image : String, holder : SuggestListViewHolder){
+        observableLiveData[holder.hashCode()]?.removeObservers(suggestListsFragment)
+        val liveData = suggestListsFragment.viewModel.getImageBitmap(image)
+        liveData.observe(suggestListsFragment,holder)
+        observableLiveData[holder.hashCode()] = liveData
+    }
+
+    override fun onViewRecycled(holder: RecyclerView.ViewHolder) {
+        super.onViewRecycled(holder)
+        observableLiveData[holder.hashCode()]?.removeObservers(suggestListsFragment)
+    }
 }
 
-class SuggestListViewHolder : RecyclerView.ViewHolder{
+class SuggestListViewHolder : RecyclerView.ViewHolder, Observer<Bitmap>{
 
     private val imageView : ImageView
     private val name : TextView
@@ -199,14 +230,18 @@ class SuggestListViewHolder : RecyclerView.ViewHolder{
     constructor( inflater: LayoutInflater, viewGroup: ViewGroup)
             : super(inflater.inflate(R.layout.suggest_list_holder,viewGroup, false))
     {
-        imageView = itemView.findViewById(R.id.image)
+        imageView = itemView.findViewById(R.id.icone)
         name = itemView.findViewById(R.id.name)
         words = itemView.findViewById(R.id.words)
     }
 
+    override fun onChanged(t: Bitmap?) {
+        imageView.setImageBitmap(t)
+    }
+
     @SuppressLint("SetTextI18n")
     fun bind(item : SuggestListsViewModel.ShovedSuggestList){
-        item.image ?: imageView.setImageURI(item.image)
+        //item.image ?: imageView.setImageURI(item.image)
         name.text = item.name
         words.text = super.itemView.context.getString(R.string.count_words) + item.words.toString()
     }

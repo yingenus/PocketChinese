@@ -87,7 +87,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             android:layout_marginStart="12dp"
-                            tools:text = "@string/user_lists_repeated"
+                            android:text = "@string/user_lists_repeated"
                             />
 
                         <TextView
@@ -147,7 +147,7 @@
                             android:textSize="16sp"
                             android:textColor="?attr/colorOnPrimary"
                             android:layout_marginStart="12dp"
-                            tools:text = "@string/user_lists_by_leng"
+                            android:text = "@string/user_lists_by_leng"
                             />
 
                         <GridLayout
@@ -178,7 +178,7 @@
                                         android:layout_gravity="start"
                                         android:textSize="16sp"
                                         android:textColor="?attr/colorOnPrimary"
-                                        tools:text = "@string/my_language"
+                                        android:text = "@string/my_language"
                                         />
                                     <TextView
                                         android:id="@+id/percent_trn"
@@ -230,7 +230,7 @@
                                         android:layout_gravity="start"
                                         android:textSize="16sp"
                                         android:textColor="?attr/colorOnPrimary"
-                                        tools:text = "@string/pinyin"
+                                        android:text = "@string/pinyin"
                                         />
                                     <TextView
                                         android:id="@+id/percent_pin"
@@ -277,7 +277,7 @@
                                         android:layout_gravity="start"
                                         android:textSize="16sp"
                                         android:textColor="?attr/colorOnPrimary"
-                                        tools:text = "@string/chinese"
+                                        android:text = "@string/chinese"
                                         />
                                     <TextView
                                         android:id="@+id/percent_chn"
@@ -349,7 +349,7 @@
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent"
                             android:layout_marginStart="12dp"
-                            tools:text = "@string/user_lists_added"
+                            android:text = "@string/user_lists_added"
                             />
 
                         <TextView
@@ -402,7 +402,7 @@
                     android:textColor="?attr/colorOnPrimary"
                     android:layout_marginStart="8dp"
                     android:layout_weight="0"
-                    tools:text = "@string/user_lists_last_30"
+                    android:text = "@string/user_lists_last_30"
                     />
 
             </LinearLayout>

@@ -1,6 +1,7 @@
 package com.yingenus.pocketchinese.presentation.views.addword
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.opengl.Visibility
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -17,6 +18,8 @@ import com.google.android.material.card.MaterialCardView
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.google.android.material.textfield.TextInputLayout
 import com.yingenus.pocketchinese.R
+import com.yingenus.pocketchinese.controller.BoundsDecoratorBottom
+import com.yingenus.pocketchinese.controller.CardBoundTopBottom
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
 import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
@@ -50,6 +53,10 @@ class ChooseListFragment : Fragment(R.layout.chouse_list_layout){
         }
     }
 
+    fun isSmhSelected(): Boolean{
+        return ! (selectionTracker?.selection?.isEmpty?:true)
+    }
+
     fun isListSelected(): Boolean{
         val item  = selectionTracker?.selection?.toList()?.first()
         return item!= null && item >= 3L
@@ -81,6 +88,8 @@ class ChooseListFragment : Fragment(R.layout.chouse_list_layout){
 
         recyclerView = view.findViewById(R.id.recyclerview)
         recyclerView!!.layoutManager = LinearLayoutManager(requireContext())
+        recyclerView!!.addItemDecoration(CardBoundTopBottom(requireContext(),4))
+        recyclerView!!.addItemDecoration(BoundsDecoratorBottom(requireContext()))
         recyclerView!!.adapter = ChooseListAdapter()
         (recyclerView!!.adapter as ChooseListAdapter).showedStudyList = studyLists
 
@@ -120,7 +129,7 @@ class ChooseListAdapter : RecyclerView.Adapter<RecyclerView.ViewHolder>(){
     var selectionTracker : SelectionTracker<Long>? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RecyclerView.ViewHolder {
-        val layoutInflater = parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater
+        val layoutInflater = parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater
         return when(viewType){
             TITLE_1 -> HeaderViewHolder(layoutInflater,parent)
             NEW_LIST -> CreateListVewHolder(layoutInflater,parent)
@@ -190,6 +199,7 @@ class CreateListVewHolder(inflater: LayoutInflater, viewGroup: ViewGroup)
 
         fun bind(text: String,position: Int, selectionTracker: SelectionTracker<Long>?){
             details.position = position.toLong()
+            editText.editText?.text?.clear()
             editText.editText?.text?.insert(0,text)
             selectionTracker?.let { bindSelection(selectionTracker) }
         }
@@ -282,7 +292,11 @@ class ListDetailsLookup( private val recyclerView: RecyclerView) : ItemDetailsLo
         val view = recyclerView.findChildViewUnder(e.x,e.y)
         if (view != null ){
             val holder  = recyclerView.getChildViewHolder(view)
-            if (holder is OptionsHolder) return  holder.details
+            when(holder){
+                is UserListViewHolder -> return holder.details
+                is CreateListVewHolder -> return holder.details
+                is HeaderViewHolder -> return holder.details
+            }
         }
         return null
     }

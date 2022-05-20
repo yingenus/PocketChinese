@@ -23,7 +23,7 @@ class CreateWordFomDictionaryViewModelFactory @AssistedInject constructor(
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when(modelClass){
-            CreateWordFomDictionaryViewModel::class -> createWordFomDictionaryViewModel.create(item)
+            CreateWordFomDictionaryViewModel::class.java -> createWordFomDictionaryViewModel.create(item)
             else -> throw IllegalArgumentException()
         } as T
     }

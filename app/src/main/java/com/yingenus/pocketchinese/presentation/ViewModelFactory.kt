@@ -3,7 +3,6 @@ package com.yingenus.pocketchinese.presentation
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.yingenus.pocketchinese.presentation.views.suggestist.SuggestListsViewModel
-import com.yingenus.pocketchinese.presentation.views.userlist.NewRepeatableUserListsActivity
 import com.yingenus.pocketchinese.presentation.views.userlist.RepeatableUserListViewModel
 import com.yingenus.pocketchinese.presentation.views.userlist.UserListsViewModel
 import java.lang.IllegalArgumentException

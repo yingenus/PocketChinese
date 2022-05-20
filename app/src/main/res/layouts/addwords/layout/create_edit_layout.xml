@@ -44,9 +44,9 @@
         >
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Style.PocketChinese.Rounded.InputLayout.WhiteBack"
+            style="@style/Style.PocketChinese.Rounded.InputLayout.WhiteBack.TextColor"
 
-            android:layout_marginTop="33dp"
+            android:layout_marginTop="23dp"
             android:id="@+id/edit_chn"
             android:layout_width="280dp"
             android:layout_height="wrap_content"
@@ -69,9 +69,9 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Style.PocketChinese.Rounded.InputLayout.WhiteBack"
+            style="@style/Style.PocketChinese.Rounded.InputLayout.WhiteBack.TextColor"
 
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
 
             android:id="@+id/edit_pin"
@@ -97,9 +97,9 @@
         android:layout_height="wrap_content">
 
         <com.google.android.material.textfield.TextInputLayout
-            style="@style/Style.PocketChinese.Rounded.InputLayout.WhiteBack"
+            style="@style/Style.PocketChinese.Rounded.InputLayout.WhiteBack.TextColor"
 
-            android:layout_marginTop="50dp"
+            android:layout_marginTop="20dp"
             android:layout_gravity="center_horizontal"
 
             android:id="@+id/edit_trn"

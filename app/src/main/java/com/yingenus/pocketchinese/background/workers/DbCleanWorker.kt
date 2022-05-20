@@ -1,5 +1,6 @@
 package com.yingenus.pocketchinese.background.workers
 
+/*
 import android.content.Context
 import android.util.Log
 import androidx.work.Worker
@@ -114,4 +115,4 @@ class DbCleanWorker(context : Context, workerParams : WorkerParameters ) : Worke
         }
 
     }
-}
+}*/

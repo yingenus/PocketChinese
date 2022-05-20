@@ -75,6 +75,7 @@ class TrainingWordsUseCaseImpl @Inject constructor(
                 list.add(item)
             })
             .doOnSuccess {
+                trainedSet = mutableSetOf<StudyWord>()
                 trainedSet.addAll(it.map { it.first })
                 all = it.size
                 //allWordsPublish.onNext(it.size)
@@ -97,9 +98,9 @@ class TrainingWordsUseCaseImpl @Inject constructor(
         check(::trainingConf.isInitialized){ " TrainingConf must be set"}
         return Single.defer {
             Single.create<List<StudyWord>> {
-                    trainedSet
-                }
+                it.onSuccess(trainedSet.toList())
             }
+        }
     }
 
     override fun getTrainingStatistic(): Observable<TrainingStatistic> {

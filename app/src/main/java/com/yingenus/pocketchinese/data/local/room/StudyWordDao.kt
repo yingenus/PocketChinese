@@ -8,16 +8,16 @@ import com.yingenus.pocketchinese.data.local.room.entity.StudyWordUpdate
 @Dao
 interface StudyWordDao {
 
-    @Query("SELECT * FROM words")
+    @Query("SELECT * FROM study_words")
     fun getAll(): List<StudyWord>
 
-    @Query("SELECT * FROM words WHERE studylist = :studyListId")
+    @Query("SELECT * FROM study_words WHERE study_list = :studyListId")
     fun getStudyWords(studyListId: Long): List<StudyWord>
 
-    @Query("SELECT COUNT(*) FROM words WHERE studylist = :studyListId")
+    @Query("SELECT COUNT(*) FROM study_words WHERE study_list = :studyListId")
     fun wordsInStudyList(studyListId : Long): Int
 
-    @Query("SELECT * FROM words WHERE id = :id")
+    @Query("SELECT * FROM study_words WHERE id = :id")
     fun getStudyWord(id: Long): StudyWord?
 
     @Update
@@ -34,8 +34,15 @@ interface StudyWordDao {
 
     @Insert
     fun creteStudyWord(studyWord: StudyWord)
+
+    @Insert
+    fun creteStudyWordWithID(studyWord: StudyWord): Long
+
     @Insert
     fun creteStudyWords( words : List<StudyWord>)
+
+    @Insert
+    fun creteStudyWordsWithID( words : List<StudyWord>): List<Long>
 
     @Delete
     fun deleteStudyWord(studyWord: StudyWord)
@@ -49,7 +56,7 @@ interface StudyWordDao {
     @Delete(entity = StudyWord::class)
     fun deleteStudyWordsU( words : List<StudyWordUpdate>)
 
-    @Query( "DELETE FROM words WHERE id IN (:words)")
+    @Query( "DELETE FROM study_words WHERE id IN (:words)")
     fun deleteStudyWordsById( words : List<Long>)
 
 }

@@ -5,10 +5,15 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="125dp"
     android:layout_height="79dp"
+    android:minWidth="125dp"
+    android:minHeight="79dp"
+    app:cardCornerRadius="10dp"
     android:elevation="3dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
+        android:minWidth="125dp"
+        android:minHeight="79dp"
         android:layout_height="match_parent">
 
         <TextView

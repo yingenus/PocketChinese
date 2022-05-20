@@ -1,14 +1,18 @@
 package com.yingenus.pocketchinese.presentation.views.userlist
 
+import android.graphics.Bitmap
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.yingenus.pocketchinese.ISettings
 import com.yingenus.pocketchinese.domain.dto.RepeatRecomend
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
+import com.yingenus.pocketchinese.domain.repository.ImageRep
 import com.yingenus.pocketchinese.domain.usecase.ModifyStudyListUseCase
 import com.yingenus.pocketchinese.domain.usecase.StudyListInfoUseCase
 import com.yingenus.pocketchinese.domain.usecase.UserStatisticUseCase
+import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.jar.Attributes
 import javax.inject.Inject
 
@@ -77,9 +81,12 @@ class UserListsViewModel @Inject constructor(
             .subscribe { statistic->
                 _addedWords.postValue(statistic.added)
                 _repeatedWords.postValue(statistic.added)
-                _progressChinese.postValue(statistic.passedChn*100 / (statistic.passedChn + statistic.failedChn))
-                _progressPinyin.postValue(statistic.passedPin*100 / (statistic.passedPin + statistic.failedPin))
-                _progressTranslation.postValue(statistic.passedTrn*100 / (statistic.passedTrn + statistic.failedTrn))
+                if(statistic.passedChn != 0) _progressChinese.postValue(statistic.passedChn*100 / (statistic.passedChn + statistic.failedChn))
+                else _progressChinese.postValue(0)
+                if(statistic.passedPin != 0) _progressPinyin.postValue(statistic.passedPin*100 / (statistic.passedPin + statistic.failedPin))
+                else  _progressPinyin.postValue(0)
+                if(statistic.passedTrn != 0) _progressTranslation.postValue(statistic.passedTrn*100 / (statistic.passedTrn + statistic.failedTrn))
+                else _progressTranslation.postValue(0)
                 val repeatType = settings.getRepeatType()
                 _showProgressChinese.postValue( !repeatType.ignoreCHN)
                 _showProgressPinyin.postValue( !repeatType.ignorePIN)
@@ -99,10 +106,16 @@ class UserListsViewModel @Inject constructor(
 
     fun createStudyList(studyListName : String) : LiveData<Boolean>{
         val isSuccess : MutableLiveData<Boolean> = MutableLiveData()
-        modifyStudyListUseCase.createStudyList(studyListName).subscribe {
-            isSuccess.postValue(true)
-            updateStudyLists()
-        }
+        modifyStudyListUseCase
+            .containsName(studyListName)
+            .flatMap {
+                if (it) Single.just(false)
+                else   modifyStudyListUseCase.createStudyList(studyListName).toSingle { true }
+            }
+            .subscribe { success ->
+                isSuccess.postValue(success)
+                updateStudyLists()
+            }
         return isSuccess
     }
 

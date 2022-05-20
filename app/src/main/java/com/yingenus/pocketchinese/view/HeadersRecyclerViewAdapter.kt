@@ -2,6 +2,7 @@ package com.yingenus.pocketchinese.view
 
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.os.persistableBundleOf
 import androidx.recyclerview.widget.RecyclerView
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import java.lang.IllegalArgumentException
@@ -49,7 +50,14 @@ abstract class  HeadersRecyclerViewAdapter<T : RecyclerView.ViewHolder> construc
     }
 
     override fun getItemCount(): Int {
-        return tags.map { getItemCount(it) }.reduce { acc, i -> acc + i }
+        return tags.map {
+            val items = getItemCount(it)
+            if (items!= 0 || showEmptyTags) items + 1
+            else 0
+        }
+            .reduce {
+                    acc, i -> acc + i
+            }
     }
 
     private fun isHeader(position: Int): Boolean{
@@ -57,7 +65,8 @@ abstract class  HeadersRecyclerViewAdapter<T : RecyclerView.ViewHolder> construc
         var index = 0
         while (index <= tags.lastIndex) {
             if (position == position_h) return true
-            position_h+= getItemCount(tags[index])
+            val items = getItemCount(tags[index])
+            position_h+= if(items == 0 ) if (showEmptyTags) 1 else 0 else items + 1
             index++
         }
         return false
@@ -67,8 +76,9 @@ abstract class  HeadersRecyclerViewAdapter<T : RecyclerView.ViewHolder> construc
         var position_h = 0
         var index = 0
         while (index <= tags.lastIndex) {
-            if (position == position_h) return tags[index]
-            position_h+= getItemCount(tags[index])
+            val items = getItemCount(tags[index])
+            if (position == position_h && (items >0 || showEmptyTags)) return tags[index]
+            position_h+= if(items == 0) if (showEmptyTags) 1 else 0 else items + 1
             index++
         }
         throw IllegalArgumentException("is not header")
@@ -78,9 +88,15 @@ abstract class  HeadersRecyclerViewAdapter<T : RecyclerView.ViewHolder> construc
         var position_h = 0
         var index = 0
         while (index <= tags.lastIndex) {
-            val position_h_next = position_h + getItemCount(tags[index])
+            val items = getItemCount(tags[index])
+            val position_h_next =
+                if (items == 0 ){
+                    if (showEmptyTags) position_h + 1
+                    else position_h
+                }
+                else position_h + items + 1
             if (position in (position_h + 1) until position_h_next){
-                return tags[index] to position - position_h + 1
+                return tags[index] to position - position_h - 1
             }
             position_h = position_h_next
             index++

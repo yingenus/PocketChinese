@@ -1,31 +1,28 @@
 package com.yingenus.pocketchinese.presentation.views.addword
 
 import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Bundle
-import android.os.PersistableBundle
-import android.view.LayoutInflater
-import android.view.MotionEvent
-import android.view.View
-import android.view.ViewGroup
+import android.view.ContextThemeWrapper
 import android.widget.Button
-import android.widget.TextView
-
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.selection.*
-import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.card.MaterialCardView
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.domain.dto.SuggestWord
+import com.yingenus.pocketchinese.view.Durations
+import com.yingenus.pocketchinese.view.vibrate
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
@@ -56,8 +53,8 @@ class AddSuggestWordsActivity : AppCompatActivity(), ChooseListFragment.Callback
     private var optionsAddFragment : OptionsAddFragment? = null
 
 
-    override fun onCreate(savedInstanceState: Bundle?, persistentState: PersistableBundle?) {
-        super.onCreate(savedInstanceState, persistentState)
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
         val words = getWordsFromIntent(intent)
 
@@ -80,13 +77,43 @@ class AddSuggestWordsActivity : AppCompatActivity(), ChooseListFragment.Callback
 
         actionButton?.setOnClickListener { onActionButtonClicked() }
 
-        subscribeViewModel()
+        toolbar?.setNavigationOnClickListener { onNavigationClicked() }
 
+        viewPager!!.registerOnPageChangeCallback( object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                when(position){
+                    1 -> {
+                        toolbar!!.setNavigationIcon(R.drawable.ic_next_pr_2)
+                    }
+                    0 -> {
+                       toolbar!!.setNavigationIcon(R.drawable.ic_close_primary)
+                    }
+                }
+
+            }
+        })
+
+        subscribeViewModel()
+    }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateStudyLists()
     }
 
     private fun subscribeViewModel(){
         viewModel.showedUserLists.observe(this){
             chooseListFragment?.studyLists = it
+        }
+        viewModel.error.observe(this){
+            showDialog()
+        }
+    }
+
+    private fun onNavigationClicked(){
+        when(viewPager!!.currentItem){
+            0 -> finish()
+            1 -> viewPager!!.currentItem = 0
         }
     }
 
@@ -98,27 +125,36 @@ class AddSuggestWordsActivity : AppCompatActivity(), ChooseListFragment.Callback
     }
 
     private fun tryGoToOptions(){
-        actionButton!!.isEnabled = false
 
-        val isNew = chooseListFragment!!.isListSelected()
-
-        if (isNew){
-            viewModel.checkUseName(chooseListFragment!!.getNewListName()!!).observe(this){
-                if (!it){
-                    chooseListFragment!!.editError = getString(R.string.notifi_busy_list_name)
-                }
-                else{
-                    viewPager!!.currentItem = 1
-                }
-                actionButton!!.isEnabled = true
-            }
+        if (!chooseListFragment!!.isSmhSelected()){
+            YoYo.with(Techniques.Shake).duration(100L).playOn(actionButton)
+            vibrate(Durations.ERROR_DURATION, this)
         }
+        else{
+            actionButton!!.isEnabled = false
 
+            val isNew = !chooseListFragment!!.isListSelected()
+
+            if (isNew){
+                viewModel.checkUseName(chooseListFragment!!.getNewListName()!!).observe(this){
+                    if (it){
+                        chooseListFragment!!.editError = getString(R.string.notifi_busy_list_name)
+                    }
+                    else{
+                        viewPager!!.currentItem = 1
+                    }
+                }
+            }
+            else{
+                viewPager!!.currentItem = 1
+            }
+            actionButton!!.isEnabled = true
+        }
 
     }
 
     private fun copleteAdd(){
-        val isnew = chooseListFragment!!.isListSelected()
+        val isnew = !chooseListFragment!!.isListSelected()
         viewModel.mixWords(optionsAddFragment!!.mixWords)
         actionButton!!.isEnabled = false
         viewModel.simplifyPinyin(optionsAddFragment!!.simplifyPinyin)
@@ -136,14 +172,14 @@ class AddSuggestWordsActivity : AppCompatActivity(), ChooseListFragment.Callback
     }
 
     private fun showDialog(){
-        MaterialAlertDialogBuilder(this)
+        AlertDialog.Builder(ContextThemeWrapper(this,R.style.Theme_PocketChinese_AlertDialog))
             .setMessage(getString(R.string.error_insert_words))
             .setPositiveButton(android.R.string.cancel) { _, _-> this.finish()}
             .show()
     }
 
     private fun onAdded() {
-        MaterialAlertDialogBuilder(applicationContext)
+        AlertDialog.Builder(ContextThemeWrapper(this,R.style.Theme_PocketChinese_AlertDialog))
             .setTitle(getString(R.string.success_insert_words))
             .setPositiveButton(android.R.string.cancel) { _, _-> finish()}
             .show()

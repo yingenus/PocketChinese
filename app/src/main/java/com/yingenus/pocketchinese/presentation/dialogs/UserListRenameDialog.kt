@@ -8,16 +8,9 @@ import android.widget.Button
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger
-import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyListDAO
-import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyList
 import com.google.android.material.textfield.TextInputLayout
-import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
+import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.presentation.views.stydylist.UserStudyListViewModel
-import com.yingenus.pocketchinese.presentation.views.userlist.UserListsViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 class UserListRenameDialog(val userStudyListViewModel: UserStudyListViewModel) :DialogFragment(){
     object ERRORS_MES{
@@ -51,6 +44,15 @@ class UserListRenameDialog(val userStudyListViewModel: UserStudyListViewModel) :
         dialog!!.window!!.setBackgroundDrawableResource(R.color.transparent)
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val window = dialog!!.window ?: return
+        val layoutParam = window.attributes
+        layoutParam.height = dp2px(410, requireContext())
+        layoutParam.width = dp2px(350, requireContext())
+        window.attributes = layoutParam
     }
 
     private fun onCancelClicked(){

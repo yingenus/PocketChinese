@@ -28,7 +28,7 @@
             android:layout_height="wrap_content"
             android:layout_gravity="clip_horizontal"
             android:layout_marginStart="20dp"
-            android:text="@string/edit_name"
+            android:text="@string/edit"
             android:textSize="30sp"
             android:textColor="?android:textColorSecondary"
 

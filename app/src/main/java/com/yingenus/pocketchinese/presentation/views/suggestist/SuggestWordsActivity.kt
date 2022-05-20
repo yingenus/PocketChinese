@@ -1,9 +1,7 @@
-package com.yingenus.pocketchinese.controller.activity
+package com.yingenus.pocketchinese.presentation.views.suggestist
 
 import android.content.Context
 import android.content.Intent
-import com.yingenus.pocketchinese.data.json.suggest.JSONObjects
-import com.yingenus.pocketchinese.presentation.views.suggestist.SuggestWordsActivity
 
 const val INNER_INTENT_GIVEN_LIST = "com.pocketchinese.com.character.givenlist"
 

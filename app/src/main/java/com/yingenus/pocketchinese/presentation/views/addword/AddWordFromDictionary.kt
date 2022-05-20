@@ -21,6 +21,8 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.google.android.material.card.MaterialCardView
 import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.yingenus.pocketchinese.PocketApplication
@@ -29,7 +31,9 @@ import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.domain.dto.SuggestWord
 import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateWordFomDictionaryViewModel
+import com.yingenus.pocketchinese.view.Durations
 import com.yingenus.pocketchinese.view.activity.SingleFragmentActivityWithKeyboard
+import com.yingenus.pocketchinese.view.vibrate
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
@@ -92,7 +96,25 @@ class AddWordFromDictionary( val item : DictionaryItem)
         chooseListFragment = ChooseListFragment()
         createEditFragment = CreateEditFragment()
 
+        createEditFragment!!.callback = this
+
         viewPager!!.adapter = ViewPagerAdapter(WeakReference(chooseListFragment),WeakReference(createEditFragment),this)
+
+        viewPager!!.registerOnPageChangeCallback( object : ViewPager2.OnPageChangeCallback(){
+            override fun onPageSelected(position: Int) {
+                when(position){
+                    1 -> {
+                        toolbar!!.setNavigationIcon(R.drawable.ic_next_pr_2)
+                    }
+                    0 -> {
+                        toolbar!!.setNavigationIcon(R.drawable.ic_close_primary)
+                    }
+                }
+
+            }
+        })
+
+        toolbar!!.setNavigationOnClickListener { onNavigationClicked() }
 
         actionButton?.setOnClickListener { onActionButtonClicked() }
 
@@ -107,9 +129,17 @@ class AddWordFromDictionary( val item : DictionaryItem)
         viewPager = null
         actionButton = null
 
+        createEditFragment!!.callback = null
+
         chooseListFragment = null
         createEditFragment = null
     }
+
+    override fun onResume() {
+        super.onResume()
+        viewModel.updateStudyLists()
+    }
+
 
     private fun subscribeViewModel(){
         viewModel.showedUserLists.observe(viewLifecycleOwner){
@@ -148,7 +178,6 @@ class AddWordFromDictionary( val item : DictionaryItem)
                 CreateWordFomDictionaryViewModel.WordsError.INVALID_CHARS -> createEditFragment!!.showInvalCharsMes(Language.RUSSIAN,true)
             }
         }
-        viewModel.updateStudyLists()
     }
 
     private fun onActionButtonClicked(){
@@ -158,42 +187,71 @@ class AddWordFromDictionary( val item : DictionaryItem)
         }
     }
 
-    private fun tryGoToOptions(){
-        actionButton!!.isEnabled = false
-
-        val isNew = chooseListFragment!!.isListSelected()
-
-        if (isNew){
-
-            viewModel.checkUseName(chooseListFragment!!.getNewListName()!!).observe(viewLifecycleOwner){
-                if (!it){
-                    chooseListFragment!!.editError = getString(R.string.notifi_busy_list_name)
-                }
-                else{
-                    viewPager!!.currentItem = 1
-                }
-                actionButton!!.isEnabled = true
-            }
+    private fun onNavigationClicked(){
+        when(viewPager!!.currentItem){
+            0 -> requireActivity().finish()
+            1 -> viewPager!!.currentItem = 0
         }
+    }
 
+    private fun tryGoToOptions(){
 
+        if (!chooseListFragment!!.isSmhSelected()){
+            YoYo.with(Techniques.Shake).duration(100L).playOn(actionButton)
+            vibrate(Durations.ERROR_DURATION, requireContext())
+        }
+        else{
+            actionButton!!.isEnabled = false
+
+            val isNew = !chooseListFragment!!.isListSelected()
+
+            if (isNew){
+
+                viewModel.checkUseName(chooseListFragment!!.getNewListName()!!).observe(viewLifecycleOwner){
+                    if (!it){
+                        chooseListFragment!!.editError = getString(R.string.notifi_busy_list_name)
+                    }
+                    else{
+                        viewPager!!.currentItem = 1
+                    }
+                }
+            }else{
+                viewPager!!.currentItem = 1
+            }
+            actionButton!!.isEnabled = true
+        }
     }
 
     private fun copleteAdd(){
-        val isnew = chooseListFragment!!.isListSelected()
+        val isnew = !chooseListFragment!!.isListSelected()
         actionButton!!.isEnabled = false
         val chinese = createEditFragment!!.getText(Language.CHINESE)
         val pinyin = createEditFragment!!.getText(Language.PINYIN)
         val translation = createEditFragment!!.getText(Language.RUSSIAN)
+
         if (isnew){
             viewModel.addToNewStudyList(chooseListFragment!!.getNewListName()!!,chinese,pinyin,translation).observe(viewLifecycleOwner){
-                if (it) onAdded()
-                else showDialog()
+                when(it){
+                    CreateWordFomDictionaryViewModel.AddResult.ADDED -> onAdded()
+                    CreateWordFomDictionaryViewModel.AddResult.NO_REQUIRE -> {
+                        YoYo.with(Techniques.Shake).duration(100L).playOn(actionButton)
+                        vibrate(Durations.ERROR_DURATION, requireContext())
+                        actionButton!!.isEnabled = true
+                    }
+                    CreateWordFomDictionaryViewModel.AddResult.ERROR -> showDialog()
+                }
             }
         }else{
             viewModel.addToExisting(chooseListFragment!!.getSelectedListId(),chinese,pinyin,translation).observe(viewLifecycleOwner){
-                if (it) onAdded()
-                else showDialog()
+                when(it){
+                    CreateWordFomDictionaryViewModel.AddResult.ADDED -> onAdded()
+                    CreateWordFomDictionaryViewModel.AddResult.NO_REQUIRE -> {
+                        YoYo.with(Techniques.Shake).duration(100L).playOn(actionButton)
+                        vibrate(Durations.ERROR_DURATION, requireContext())
+                        actionButton!!.isEnabled = true
+                    }
+                    CreateWordFomDictionaryViewModel.AddResult.ERROR -> showDialog()
+                }
             }
         }
     }
@@ -221,7 +279,7 @@ class AddWordFromDictionary( val item : DictionaryItem)
         when(language){
             Language.RUSSIAN -> viewModel.onTranslationTextChanged(text)
             Language.PINYIN -> viewModel.onPinyinTextChanged(text)
-            Language.CHINESE -> viewModel.onPinyinTextChanged(text)
+            Language.CHINESE -> viewModel.onChineseTextChanged(text)
         }
     }
 

@@ -9,6 +9,8 @@ import java.util.*
 interface UserStatistics {
     fun getStatistic(interval : TimePeriod): Single<ShowedUserStatistic>
     fun wordAdded(id: Long) : Completable
+    fun wordsAdded(ids : List<Long>): Completable
     fun wordDeleted(id: Long) : Completable
+    fun wordsDeleted(ids: List<Long>) : Completable
     fun wordTrained(id: Long,trainedResult: TrainedResult, language: Language) : Completable
 }

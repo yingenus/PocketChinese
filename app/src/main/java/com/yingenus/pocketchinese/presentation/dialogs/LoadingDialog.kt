@@ -30,6 +30,8 @@ class LoadingDialog : DialogFragment() {
         progressIndicator = view.findViewById(R.id.progressBar)
         progressIndicator.show()
 
+        isCancelable = false
+
         return view
     }
 

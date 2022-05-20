@@ -5,8 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
+import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.domain.dto.TrainingConf
-import com.yingenus.pocketchinese.domain.entitiys.LanguageCase
 import com.yingenus.pocketchinese.view.activity.SingleFragmentActivityWithKeyboard
 import java.lang.RuntimeException
 import java.util.*
@@ -44,16 +44,16 @@ class TrainActivity:
             return intent
         }
 
-        private fun getLangCode(lang : LanguageCase) =when(lang){
-            LanguageCase.Chin->0
-            LanguageCase.Pin->1
-            LanguageCase.Trn->2
+        private fun getLangCode(language: Language) =when(language){
+            Language.CHINESE->0
+            Language.PINYIN->1
+            Language.RUSSIAN->2
         }
         private fun getLangFromInt(int : Int) = when(int){
-            0->LanguageCase.Chin
-            1->LanguageCase.Pin
-            2->LanguageCase.Trn
-            else->LanguageCase.Chin
+            0->Language.CHINESE
+            1->Language.PINYIN
+            2->Language.RUSSIAN
+            else->Language.CHINESE
         }
 
     }

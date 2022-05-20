@@ -64,9 +64,16 @@ class TrainingViewModel @AssistedInject constructor(
     fun startTraining(){
         trainingWordsUseCase
             .init(trainingConf)
-            .andThen(trainingWordsUseCase.getTrainingWords())
+            .toSingle {
+                trainingWordsUseCase.getTrainingWords()
+            }
+            .flatMap {
+                it
+            }
             .observeOn(Schedulers.single())
-            .doOnSuccess { trainedWords = it.map { false to it }.toMutableList() }
+            .doOnSuccess {
+                trainedWords = it.map { false to it }.toMutableList()
+            }
             .ignoreElement()
             .observeOn(Schedulers.computation())
             .doOnComplete {
@@ -77,6 +84,7 @@ class TrainingViewModel @AssistedInject constructor(
                         _good.postValue(it.good)
                     }
                 )
+                goNext().subscribe()
             }
             .subscribe()
     }
@@ -95,6 +103,10 @@ class TrainingViewModel @AssistedInject constructor(
             .doOnSuccess {
                 isSuccess.postValue(it)
             }
+            .doOnError {
+                isSuccess.postValue(false)
+            }
+            .onErrorReturnItem(false)
             .flatMapCompletable { if (it) goNext() else Completable.complete() }
             .subscribe()
 
@@ -117,7 +129,8 @@ class TrainingViewModel @AssistedInject constructor(
 
     private fun getShowed() : Maybe<StudyWord>{
         return Maybe.defer { Maybe.create<StudyWord> {
-            if (showedWord != null) it.onSuccess(showedWord!!)
+            if (showedWord != null)
+                it.onSuccess(showedWord!!)
             it.onComplete()
         } }.subscribeOn(Schedulers.single())
     }
@@ -127,23 +140,28 @@ class TrainingViewModel @AssistedInject constructor(
             Completable.create { it.onComplete() }
         }
             .observeOn(Schedulers.single())
-            .andThen(Single.create<Boolean> {
-                    require(trainedWords.isNotEmpty())
-                    var position : Int = if (showedWord != null)
-                        trainedWords.indexOfFirst { it.second == showedWord }
-                    else
-                        0
+            .toSingle { Single.create<Boolean> {
+                require(trainedWords.isNotEmpty())
+                var position : Int = if (showedWord != null)
+                    trainedWords.indexOfFirst { it.second == showedWord }
+                else
+                    0
 
-                    if ( trainedWords.lastIndex == position) position = -1
+                if ( trainedWords.lastIndex == position) position = -1
 
-                    val before = if (position != -1 ) trainedWords.subList(0, position) else mutableListOf()
-                    val after = if (position != -1) trainedWords.subList(position, trainedWords.lastIndex) else trainedWords
-                    after.addAll(before)
-                    val next = after.firstOrNull { !it.first }
-
-                    it.onSuccess(next == null)
+                val before = if (position != -1 ) trainedWords.subList(0, position) else mutableListOf()
+                val after = if (position != -1) trainedWords.subList(position, trainedWords.lastIndex) else trainedWords
+                after.addAll(before)
+                val next = after.firstOrNull { !it.first }
+                if(next != null){
+                    showedWord = next.second
+                    _trainingStudyWord.postValue(next.second)
                 }
-            ).flatMapCompletable {
+
+                it.onSuccess(next == null)
+            } }
+            .flatMap { it }
+            .flatMapCompletable {
                 if (it) finish()
                 else Completable.complete()
             }

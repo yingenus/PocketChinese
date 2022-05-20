@@ -2,7 +2,6 @@ package com.yingenus.pocketchinese.domain.usecase
 
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
 import com.yingenus.pocketchinese.domain.dto.StudyList
-import com.yingenus.pocketchinese.domain.entities.studystatictic.UserStatistics
 import com.yingenus.pocketchinese.domain.repository.StudyRepository
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Maybe
@@ -10,8 +9,7 @@ import io.reactivex.rxjava3.core.Single
 import javax.inject.Inject
 
 class ModifyStudyListUseCaseImpl @Inject constructor(
-    private val studyRepository: StudyRepository,
-    private val userStatistics: UserStatistics
+    private val studyRepository: StudyRepository
 ): ModifyStudyListUseCase {
 
     override fun containsName(name: String): Single<Boolean> {
@@ -43,10 +41,7 @@ class ModifyStudyListUseCaseImpl @Inject constructor(
     override fun createStudyList(name: String): Completable {
         return studyRepository.createStudyList(
             StudyList( 0, name,true)
-        ).andThen {
-            studyRepository.getStudyListByName(name)
-                .flatMapCompletable { userStatistics.wordAdded(it.id) }
-        }
+        )
     }
 
     override fun deleteStudyList(name: String): Completable {
@@ -54,9 +49,6 @@ class ModifyStudyListUseCaseImpl @Inject constructor(
             .switchIfEmpty(Single.error(Throwable("cant rename because no such item")))
             .flatMapCompletable { list->
                 studyRepository.deleteStudyList(list)
-                    .andThen{
-                        userStatistics.wordDeleted(list.id)
-                    }
             }
     }
 }

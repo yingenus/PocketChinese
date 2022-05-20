@@ -14,7 +14,7 @@ abstract class AssetsRepository(context: Context) {
         val files =  manager.list(getFolder())
 
         if (files!!.contains(name)){
-            return URI("file:///android_asset/${getFolder()}/$name")
+            return URI("file://android_asset/${getFolder()}/$name")
         }
         return null
     }

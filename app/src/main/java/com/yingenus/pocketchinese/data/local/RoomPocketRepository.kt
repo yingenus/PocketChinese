@@ -38,8 +38,9 @@ class RoomPocketRepository @Inject constructor(private val pocketDb: PocketDb) :
         return Maybe.defer{
             Maybe.create<StudyList> {
                 val result = studyListDao.getById(id)
-                result?: it.onSuccess(result!!.toStudyList())
-                it.onComplete()
+                if (result == null) it.onComplete()
+                else it.onSuccess(result.toStudyList())
+
             }
                 .subscribeOn(Schedulers.io())
         }
@@ -49,8 +50,8 @@ class RoomPocketRepository @Inject constructor(private val pocketDb: PocketDb) :
         return Maybe.defer{
             Maybe.create<StudyList> {
                 val result = studyListDao.getByName(name)
-                result?: it.onSuccess(result!!.toStudyList())
-                it.onComplete()
+                if (result != null) it.onSuccess(result.toStudyList())
+                else it.onComplete()
             }
                 .subscribeOn(Schedulers.io())
         }
@@ -119,8 +120,8 @@ class RoomPocketRepository @Inject constructor(private val pocketDb: PocketDb) :
         return Maybe.defer{
             Maybe.create<StudyWord> {
                 val result = studyWordDao.getStudyWord(id)
-                result?: it.onSuccess(result!!.toStudyWord())
-                it.onComplete()
+                if (result != null) it.onSuccess(result.toStudyWord())
+                else it.onComplete()
             }
                 .subscribeOn(Schedulers.io())
         }
@@ -131,6 +132,15 @@ class RoomPocketRepository @Inject constructor(private val pocketDb: PocketDb) :
             Completable.create {
                 studyWordDao.creteStudyWord( RoomStudyWord.fromStudyWord(studyList.id,studyWord))
                 it.onComplete()
+            }
+        }.subscribeOn(Schedulers.io())
+    }
+
+    override fun addStudyWordWithID(studyList: StudyList, studyWord: StudyWord): Single<Long> {
+        return Single.defer<Long> {
+            Single.create {
+                val id = studyWordDao.creteStudyWordWithID( RoomStudyWord.fromStudyWord(studyList.id,studyWord))
+                it.onSuccess(id)
             }
         }.subscribeOn(Schedulers.io())
     }
@@ -156,10 +166,21 @@ class RoomPocketRepository @Inject constructor(private val pocketDb: PocketDb) :
     override fun addStudyWords(studyList: StudyList ,studyWords: List<StudyWord>): Completable {
         return Completable.defer {
             Completable.create {
+                val words = studyWords.map { RoomStudyWord.fromStudyWord(studyList.id,it) }
                 studyWordDao.creteStudyWords(
-                    studyWords.map { RoomStudyWord.fromStudyWord(studyList.id,it) }
+                    words
                 )
                 it.onComplete()
+            }
+        }.subscribeOn(Schedulers.io())
+    }
+
+    override fun addStudyWordsWithID(studyList: StudyList ,studyWords: List<StudyWord>): Single<List<Long>> {
+        return Single.defer<List<Long>> {
+            Single.create {
+                val words = studyWords.map { RoomStudyWord.fromStudyWord(studyList.id,it) }
+                val ids = studyWordDao.creteStudyWordsWithID(words)
+                it.onSuccess(ids)
             }
         }.subscribeOn(Schedulers.io())
     }
@@ -186,8 +207,8 @@ class RoomPocketRepository @Inject constructor(private val pocketDb: PocketDb) :
         return Maybe.defer{
             Maybe.create<UserStatistic> {
                 val result = statisticDao.getStatistic(dateToDays(date))?.toUserStatistic()
-                result ?: it.onSuccess(result!!)
-                it.onComplete()
+                if (result != null) it.onSuccess(result)
+                else it.onComplete()
             }
                 .subscribeOn(Schedulers.io())
         }
@@ -234,15 +255,20 @@ class RoomPocketRepository @Inject constructor(private val pocketDb: PocketDb) :
         return Maybe.defer{
             Maybe.create<TrainingCond> {
                 val result = repeatDao.getRepeat(studyWordId)?.toTrainingCond()
-                result ?: it.onSuccess(result!!)
-                it.onComplete()
+                if (result != null) it.onSuccess(result)
+                else it.onComplete()
             }
                 .subscribeOn(Schedulers.io())
         }
     }
 
     override fun getTrainingCondForList(studyListId: Long): Single<List<TrainingCond>> {
-        TODO("Not yet implemented")
+        return Single.defer{
+            Single.create<List<TrainingCond>> {
+                val result = repeatDao.getRepeatsForList(studyListId).map { it.toTrainingCond() }
+                it.onSuccess(result)
+            }
+        }.subscribeOn(Schedulers.io())
     }
 
     override fun creteTrainingCond(trainingCond: TrainingCond): Completable {

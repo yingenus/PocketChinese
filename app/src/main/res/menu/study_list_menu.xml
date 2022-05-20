@@ -4,12 +4,12 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
         android:id="@+id/notify"
-        android:icon="@drawable/on_off_notify"
+        android:icon="@drawable/ic_notify_off_gray"
         app:showAsAction="ifRoom"
         android:title="Notify" />
     <item
         android:id="@+id/rename"
-        android:icon="@drawable/on_off_notify"
+        android:icon="@drawable/ic_edit_primary"
         app:showAsAction="ifRoom"
         android:title="Notify" />
 </menu>

@@ -8,9 +8,9 @@ internal fun String.string2Array(): Array<String>{
 }
 
 internal fun string2ArrayNoNULL(str: String): Array<String>{
-    return str.split(SEPARATOR).toTypedArray()
+    return if (str.isNotBlank()) str.split(SEPARATOR).toTypedArray() else emptyArray()
 }
 
 internal fun array2String(array: Array<String>):String{
-    return array.reduce { acc, s -> acc+ SEPARATOR+s }
+    return if(!array.isEmpty()) array.reduce { acc, s -> acc+ SEPARATOR+s } else ""
 }

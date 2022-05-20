@@ -14,13 +14,20 @@ import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.presentation.views.userlist.RepeatableUserListsActivity
 import com.yingenus.pocketchinese.logErrorMes
 import com.yingenus.pocketchinese.domain.dto.RepeatType
-import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger
-import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.*
 import com.yingenus.pocketchinese.domain.entities.repeat.FibRepeatHelper
 import com.yingenus.pocketchinese.domain.entities.repeat.RepeatHelperOld
 import com.yingenus.pocketchinese.background.notifications.Channels
+import com.yingenus.pocketchinese.common.Language
+import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
+import com.yingenus.pocketchinese.domain.dto.TrainedWords
+import com.yingenus.pocketchinese.domain.usecase.ModifyStudyListUseCase
+import com.yingenus.pocketchinese.domain.usecase.StudyListInfoUseCase
+import com.yingenus.pocketchinese.domain.usecase.TrainedWordsUseCase
+import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.core.Single
 
 import java.sql.SQLException
+import javax.inject.Inject
 
 class CheckRepeatableWordsWorker( context: Context, workerParameters: WorkerParameters) : Worker(context , workerParameters){
 
@@ -52,26 +59,47 @@ class CheckRepeatableWordsWorker( context: Context, workerParameters: WorkerPara
         }
     }
 
+    @Inject
+    lateinit var trainedWords: TrainedWordsUseCase
+    @Inject
+    lateinit var studyListInfoUseCase: StudyListInfoUseCase
+
     override fun doWork(): Result{
         Log.d("CheckRepeatable","Worker start")
 
         PocketApplication.setupApplication()
+        PocketApplication.getAppComponent().injectCheckRepeatableWordsWorker(this)
 
         try {
-            val checker = RepeatableChecker(applicationContext, Settings.getRepeatType(applicationContext))
-            val expired = checker.haveExpired()
-            Log.d("CheckRepeatable","Have Expired: "+expired)
-            if (! expired) return Result.success()
 
-            val repeatable = checker.repealable!!
-
-            checker.finish()
-
-            with(NotificationManagerCompat.from(applicationContext)){
-                val words = repeatable.map { it.second.size }.reduce { acc, i -> acc+i }
-                val lists = repeatable.size
-                notify(R.id.repeat_words_notification, notifyBuilder(applicationContext,words,lists).build())
-            }
+            studyListInfoUseCase
+                .getAllStudyLists()
+                .flatMapObservable{
+                    Observable.fromIterable(it)
+                }.flatMap { studyList ->
+                    Single.zip(
+                        trainedWords.getTrainedWords(Language.CHINESE,studyList.id),
+                        trainedWords.getTrainedWords(Language.PINYIN,studyList.id),
+                        trainedWords.getTrainedWords(Language.RUSSIAN,studyList.id)
+                    ){ chn, pin, trn ->
+                        val chnNeeded = chn.filed + chn.repeatable
+                        val pinNeeded = pin.filed + pin.repeatable
+                        val trnNeeded = trn.filed + trn.repeatable
+                        maxOf(chnNeeded,pinNeeded,trnNeeded)
+                    }
+                        .map { studyList to it }
+                        .toObservable()
+                }.collect({ mutableListOf<Pair<ShowedStudyList, Int>>()},{ list, item ->
+                    if(item.second != 0) list.add(item)
+                })
+                .subscribe({result ->
+                    if (result.isNotEmpty())
+                        with(NotificationManagerCompat.from(applicationContext)){
+                            val words = result.map { it.second }.reduce { acc, pair -> acc + pair }
+                            val lists = result.size
+                            notify(R.id.repeat_words_notification, notifyBuilder(applicationContext,words,lists).build())
+                        }
+                },{})
 
             return Result.success()
 
@@ -79,70 +107,6 @@ class CheckRepeatableWordsWorker( context: Context, workerParameters: WorkerPara
             Log.e("CheckRepeatable", e.cause?.logErrorMes()?:"error with no msg")
             return Result.failure()
         }
-    }
-
-    private class RepeatableChecker(context: Context, val repeatType: RepeatType){
-
-        private val repeatHelper = FibRepeatHelper()
-
-        private val listDAO : StudyListDAO
-        private val wordsDAO : StudyWordDAO
-
-        var repealable : List<Pair<StudyList,List<StudyWord>>>? = emptyList()
-            get(){
-                if (field.isNullOrEmpty()){
-                    field = getExpired()
-                }
-                return field
-            }
-
-        init {
-            val sqlDb = PocketDBOpenManger.getHelper(context).writableDatabase
-
-            listDAO = StudyListDAO(sqlDb)
-            wordsDAO = StudyWordDAO(sqlDb)
-        }
-
-        fun haveExpired(): Boolean{
-            return !repealable.isNullOrEmpty()
-        }
-
-        fun finish(){
-            listDAO.finish()
-            wordsDAO.finish()
-
-            PocketDBOpenManger.releaseHelper()
-        }
-
-        private fun getExpired(): List<Pair<StudyList,List<StudyWord>>>{
-            val lists = listDAO.getAll()?.filter { it.notifyUser }?: emptyList()
-
-            val expired = lists?.map { list ->
-                val words = wordsDAO.getAllIn(list)?.map { it.second }?: emptyList()
-
-                val expired = getExpiredWords(words)
-
-                Pair(list,expired)
-            }
-
-            return expired.filter { !it.second.isNullOrEmpty() }
-        }
-
-        private fun getExpiredWords(words : List<StudyWord>): List<StudyWord>{
-            return words.filter {word ->  howExpired(word) != RepeatHelperOld.Expired.GOOD }
-        }
-
-        private fun howExpired(word: StudyWord): Int{
-            val pinE = if (repeatType.ignorePIN) RepeatHelperOld.Expired.GOOD else
-                repeatHelper.howExpired(word.pinLastRepeat, word.pinLevel)
-            val trnE = if (repeatType.ignoreTRN) RepeatHelperOld.Expired.GOOD else
-                repeatHelper.howExpired(word.trnLastRepeat, word.trnLevel)
-            val chnE = if (repeatType.ignoreCHN) RepeatHelperOld.Expired.MEDIUM else
-                repeatHelper.howExpired(word.chnLastRepeat, word.chnLevel)
-
-            return Math.max(pinE,Math.max(trnE,chnE))
-        }
-
     }
 
 }

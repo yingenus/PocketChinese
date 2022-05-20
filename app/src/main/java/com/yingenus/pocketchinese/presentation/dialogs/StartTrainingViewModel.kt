@@ -50,8 +50,14 @@ class StartTrainingViewModel @AssistedInject constructor(
 
     fun updateStatistic(){
         updateChinese()
-            .andThen{updateTranslation()}
-            .andThen { updatePinyin() }
+            .andThen{
+                updateTranslation()
+                    .andThen {
+                        updatePinyin().subscribe()
+                    }
+                    .subscribe()
+            }
+            .subscribe()
     }
 
     private fun updateChinese(): Completable{
@@ -65,7 +71,7 @@ class StartTrainingViewModel @AssistedInject constructor(
     private fun updatePinyin(): Completable{
         return trainedWordsUseCase.getTrainedWords(Language.PINYIN, studyListId)
             .doOnSuccess {
-                _showPinyin.postValue(!settings.getRepeatType().ignoreCHN)
+                _showPinyin.postValue(!settings.getRepeatType().ignorePIN)
                 _statisticPinyin.postValue(it)
             }.ignoreElement()
     }
@@ -73,7 +79,7 @@ class StartTrainingViewModel @AssistedInject constructor(
     private fun updateTranslation(): Completable{
         return trainedWordsUseCase.getTrainedWords(Language.RUSSIAN, studyListId)
             .doOnSuccess {
-                _showTranslation.postValue(!settings.getRepeatType().ignoreCHN)
+                _showTranslation.postValue(!settings.getRepeatType().ignoreTRN)
                 _statisticTranslation.postValue(it)
             }.ignoreElement()
     }

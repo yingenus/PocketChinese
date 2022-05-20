@@ -24,10 +24,12 @@ interface StudyRepository {
     fun getStudyWord(id: Long): Maybe<StudyWord>
 
     fun addStudyWord(studyList: StudyList ,studyWord: StudyWord) : Completable
+    fun addStudyWordWithID(studyList: StudyList ,studyWord: StudyWord) : Single<Long>
     fun updateStudyWord(studyWord: StudyWord) : Completable
     fun deleteStudyWord(studyWord: StudyWord) : Completable
 
     fun addStudyWords(studyList: StudyList ,studyWords: List<StudyWord>) : Completable
+    fun addStudyWordsWithID(studyList: StudyList ,studyWords: List<StudyWord>) : Single<List<Long>>
     fun deleteStudyWords(studyWords: List<StudyWord>) : Completable
     fun deleteStudyWordsByIds(studyWords: List<Long>) : Completable
 }

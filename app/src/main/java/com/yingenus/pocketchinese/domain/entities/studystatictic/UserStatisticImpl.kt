@@ -18,7 +18,17 @@ class UserStatisticImpl @Inject constructor(
         return userStatisticRepository.getStatisticsLast(interval)
             .observeOn(Schedulers.computation())
             .map {
-                ShowedUserStatistic(
+                if(it.isNullOrEmpty() )ShowedUserStatistic(
+                    added = 0,
+                    repeated = 0,
+                    passedChn = 0,
+                    passedPin = 0,
+                    passedTrn = 0,
+                    failedChn = 0,
+                    failedPin = 0,
+                    failedTrn = 0,
+                )
+                else ShowedUserStatistic(
                     added = getClearAdded(it),
                     repeated = it.map { it.repeated.size }.reduce { acc, i -> acc + i },
                     passedChn = it.map { it.passedChn }.reduce { acc, i -> acc + i },
@@ -43,12 +53,37 @@ class UserStatisticImpl @Inject constructor(
             .ignoreElement()
     }
 
+    override fun wordsAdded(ids: List<Long>): Completable {
+        return userStatisticRepository
+            .getStatistic(Date(System.currentTimeMillis()))
+            .switchIfEmpty(creteStatistic())
+            .doOnSuccess {
+                it.added = it.added.toMutableList().also { it.addAll(ids) }
+                userStatisticRepository.updateStatistic(it).blockingSubscribe()
+            }
+            .observeOn(Schedulers.computation())
+            .ignoreElement()
+    }
+
+
     override fun wordDeleted(id: Long): Completable  {
         return userStatisticRepository
             .getStatistic(Date(System.currentTimeMillis()))
             .switchIfEmpty(creteStatistic())
             .doOnSuccess {
                 it.deleted = it.deleted.toMutableList().also { it.add(id) }
+                userStatisticRepository.updateStatistic(it).blockingSubscribe()
+            }
+            .observeOn(Schedulers.computation())
+            .ignoreElement()
+    }
+
+    override fun wordsDeleted(ids: List<Long>): Completable  {
+        return userStatisticRepository
+            .getStatistic(Date(System.currentTimeMillis()))
+            .switchIfEmpty(creteStatistic())
+            .doOnSuccess {
+                it.deleted = it.deleted.toMutableList().also { it.addAll(ids) }
                 userStatisticRepository.updateStatistic(it).blockingSubscribe()
             }
             .observeOn(Schedulers.computation())

@@ -22,7 +22,6 @@ import com.yingenus.pocketchinese.presentation.views.train.TrainActivity
 import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.controller.getDisplayHeight
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
-import com.yingenus.pocketchinese.domain.entitiys.LanguageCase
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.google.android.material.bottomsheet.BottomSheetDialogFragment
 import com.yingenus.pocketchinese.PocketApplication

@@ -51,7 +51,7 @@
             style="@style/Style.PocketChinese.Rounded.InputLayout.WhiteBack.TextColor"
 
             android:id="@+id/edit_name"
-            android:layout_width="280dp"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="4dp"
             android:hint="@string/enter_name"

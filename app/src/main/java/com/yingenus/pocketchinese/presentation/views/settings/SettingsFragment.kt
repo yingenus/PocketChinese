@@ -8,17 +8,20 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
-import android.widget.*
+import android.widget.Button
+import android.widget.LinearLayout
+import android.widget.ScrollView
+import android.widget.Switch
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import com.yingenus.pocketchinese.ISettings
-import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.PocketApplication
+import com.yingenus.pocketchinese.R
+import com.yingenus.pocketchinese.domain.dto.RepeatType
+import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams.resolveColorAttr
 import com.yingenus.pocketchinese.presentation.views.about.AboutActivity
 import com.yingenus.pocketchinese.view.activity.ActivateInputActivity
-import com.yingenus.pocketchinese.domain.dto.RepeatType
-import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
 class SettingsFragment: Fragment(){

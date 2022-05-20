@@ -1,11 +1,10 @@
 package com.yingenus.pocketchinese.domain.usecase
 
-import com.yingenus.pocketchinese.domain.dto.AddWordsConfig
-import com.yingenus.pocketchinese.domain.dto.StudyList
-import com.yingenus.pocketchinese.domain.dto.StudyWord
-import com.yingenus.pocketchinese.domain.dto.SuggestWord
+import com.yingenus.pocketchinese.domain.dto.*
+import com.yingenus.pocketchinese.domain.entities.studystatictic.UserStatistics
 import com.yingenus.pocketchinese.domain.repository.StudyRepository
 import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Observable
 import io.reactivex.rxjava3.core.Single
 import java.lang.RuntimeException
 import java.util.*
@@ -13,7 +12,8 @@ import javax.inject.Inject
 import kotlin.random.Random
 
 class AddSuggestWordsToStudyListImpl @Inject constructor(
-    private val studyRepository: StudyRepository
+    private val studyRepository: StudyRepository,
+    private val userStatistic: UserStatistics
 ): AddSuggestWordsToStudyList {
 
 
@@ -23,12 +23,11 @@ class AddSuggestWordsToStudyListImpl @Inject constructor(
     ): Completable {
         return studyRepository.getStudyListById(addWordsConfig.studyListId)
             .switchIfEmpty(Single.error(Throwable("cant complete because no such item")))
-            .flatMap { Single.create<Pair<StudyList,List<SuggestWord>>> {
-                    if (addWordsConfig.mixWords){
-                        it to getRandomize(words)
-                    }else{
-                        it to words
-                    }
+            .flatMap {
+                if(addWordsConfig.mixWords){
+                    Single.just(it to getRandomize(words))
+                }else{
+                    Single.just(it to words)
                 }
             }
             .map {
@@ -41,9 +40,11 @@ class AddSuggestWordsToStudyListImpl @Inject constructor(
             .map {
                 it.first to it.second.map { it.toStudyWord() }
             }
+            .flatMap { studyRepository.addStudyWordsWithID(it.first, it.second) }
             .flatMapCompletable {
-                studyRepository.addStudyWords(it.first,it.second)
+                userStatistic.wordsAdded(it)
             }
+
     }
 
     private fun SuggestWord.toStudyWord() : StudyWord =

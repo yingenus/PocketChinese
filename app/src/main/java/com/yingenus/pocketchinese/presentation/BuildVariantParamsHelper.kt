@@ -1,14 +1,18 @@
 package com.yingenus.pocketchinese.domain.entitiys
 
 import android.annotation.SuppressLint
+import android.content.Context
 import android.content.res.Resources
 import android.graphics.Color
 import android.os.Build
+import android.util.TypedValue
 import android.view.View
+import androidx.annotation.AttrRes
+import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
+import androidx.core.content.ContextCompat
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.domain.dto.RepeatRecomend
-import com.yingenus.pocketchinese.presentation.views.userlist.UserListsInterface
 import java.util.*
 
 object UtilsVariantParams {
@@ -70,26 +74,36 @@ object UtilsVariantParams {
         2->getColor(resources,1)
         else->getColor(resources,1)
     }
-    fun getLstRepeatColor(resources:Resources, expired: UserListsInterface.Expired)=when(expired){
-        UserListsInterface.Expired.GOOD->getColor(resources,10)
-        UserListsInterface.Expired.MEDIUM->getColor(resources,6)
-        UserListsInterface.Expired.BED->getColor(resources,1)
-        UserListsInterface.Expired.NON -> Color.TRANSPARENT
-        else->getColor(resources,1)
-    }
+    //fun getLstRepeatColor(resources:Resources, expired: UserListsInterface.Expired)=when(expired){
+     //   UserListsInterface.Expired.GOOD->getColor(resources,10)
+    //    UserListsInterface.Expired.MEDIUM->getColor(resources,6)
+    //    UserListsInterface.Expired.BED->getColor(resources,1)
+    //    UserListsInterface.Expired.NON -> Color.TRANSPARENT
+    //    else->getColor(resources,1)
+    //}
 
     @SuppressLint("ResourceType")
     fun getLstRepeatColor(view : View, recomed : RepeatRecomend)=when(recomed){
         RepeatRecomend.DONT_NEED->{
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
-                view.resources.getColor(android.R.attr.textColorPrimary,view.context.theme )
-            } else {
-                view.resources.getColor(android.R.attr.textColorPrimary)
-            }
+            view.context.resolveColorAttr(android.R.attr.textColorPrimary)
         }
         RepeatRecomend.SHOULD->getColor(view.resources,6)
         RepeatRecomend.NEED->getColor(view.resources,1)
         else->getColor(view.resources,1)
+    }
+
+    @ColorInt
+    fun Context.resolveColorAttr(@AttrRes colorAttr: Int): Int {
+        val resolvedAttr = resolveThemeAttr(colorAttr)
+        // resourceId is used if it's a ColorStateList, and data if it's a color reference or a hex color
+        val colorRes = if (resolvedAttr.resourceId != 0) resolvedAttr.resourceId else resolvedAttr.data
+        return ContextCompat.getColor(this, colorRes)
+    }
+
+    fun Context.resolveThemeAttr(@AttrRes attrRes: Int): TypedValue {
+        val typedValue = TypedValue()
+        theme.resolveAttribute(attrRes, typedValue, true)
+        return typedValue
     }
 
 }

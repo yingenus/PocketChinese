@@ -87,13 +87,18 @@ class PocketApplication: Application(), Configuration.Provider {
     override fun onCreate() {
         pocketApplication = this
         super.onCreate()
-        appComponent = DaggerAppComponent
-            .builder()
+        appComponent = DaggerAppComponent.builder()
             .context(this)
-            .proxyRepository(proxyRepositoryProvider)
-            .proxySearchers(proxySearcherProvider)
             .sqliteDatabaseManager(sqliteDatabaseManager)
-            .build()
+            .proxySearchers(proxySearcherProvider)
+            .proxyRepository(proxyRepositoryProvider).build()
+        //appComponent = DaggerAppComponent
+        //    .builder()
+        //    .context(this)
+        //    .proxyRepository(proxyRepositoryProvider)
+        //    .proxySearchers(proxySearcherProvider)
+        //    .sqliteDatabaseManager(sqliteDatabaseManager)
+        //    .build()
         //setup()
 
         if (Settings.isNightModeOn(applicationContext)){
@@ -275,13 +280,14 @@ class SetUpWorkers( next : SetupChain?): SetupChain(next){
         val cleanConstrains = Constraints.Builder()
             .setRequiresBatteryNotLow(true).build()
 
-        val cleanWork =
-            PeriodicWorkRequestBuilder<DbCleanWorker>(3, TimeUnit.DAYS)
-                .setInitialDelay(3,TimeUnit.DAYS)
-                .setConstraints(cleanConstrains)
-                .build()
+        //val cleanWork =
+        //    PeriodicWorkRequestBuilder<DbCleanWorker>(3, TimeUnit.DAYS)
+        //        .setInitialDelay(3,TimeUnit.DAYS)
+        //        .setConstraints(cleanConstrains)
+       //         .build()
 
-        wm.enqueueUniquePeriodicWork("clean_db",ExistingPeriodicWorkPolicy.KEEP,cleanWork)
+       //
+    // wm.enqueueUniquePeriodicWork("clean_db",ExistingPeriodicWorkPolicy.KEEP,cleanWork)
     }
 }
 

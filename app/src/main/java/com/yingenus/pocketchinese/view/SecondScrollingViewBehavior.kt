@@ -9,6 +9,7 @@ import com.google.android.material.appbar.AppBarLayout
 
 class SecondScrollingViewBehavior : AppBarLayout.ScrollingViewBehavior() {
 
+    /*
     private var tempRect1 = Rect()
     private val tempRect2 = Rect()
 
@@ -49,4 +50,6 @@ class SecondScrollingViewBehavior : AppBarLayout.ScrollingViewBehavior() {
             verticalLayoutGap = 0
         }
     }
+
+     */
 }

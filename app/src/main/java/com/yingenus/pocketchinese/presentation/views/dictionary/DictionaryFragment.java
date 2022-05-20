@@ -31,6 +31,7 @@ import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.controller.InPutUtilsKt;
 import com.yingenus.pocketchinese.Settings;
 
+import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams;
 import com.yingenus.pocketchinese.presentation.views.character.CharacterSheetDialog;
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder;
 
@@ -189,6 +190,8 @@ public class DictionaryFragment extends Fragment implements DictionaryInterface 
 
         return view;
     }
+
+
 
     @Override
     public void onDestroy() {

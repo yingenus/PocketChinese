@@ -14,9 +14,7 @@ import com.google.android.material.textfield.TextInputLayout
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.Settings
 import com.yingenus.pocketchinese.common.Language
-import com.yingenus.pocketchinese.controller.fragment.CreateEditWordFragment
 import com.yingenus.pocketchinese.controller.hideKeyboard
-import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateWordInterface
 import com.yingenus.pocketchinese.view.utils.KeyboardCallbackInterface
 
 class CreateEditFragment : Fragment(R.layout.create_edit_layout), TextWatcher, View.OnFocusChangeListener {
@@ -44,11 +42,25 @@ class CreateEditFragment : Fragment(R.layout.create_edit_layout), TextWatcher, V
     private var editPin: TextInputLayout? = null
     private var editTrn: TextInputLayout? = null
 
+    private var chineseText: String = ""
+    private var pinyinText: String = ""
+    private var translationText: String = ""
+
     override fun afterTextChanged(s: Editable?) {
         when (requireActivity().window.currentFocus) {
-            editChn!!.editText -> callback?.afterTextChanged(Language.CHINESE, s.toString())
-            editPin!!.editText -> callback?.afterTextChanged(Language.PINYIN, s.toString())
-            editTrn!!.editText -> callback?.afterTextChanged(Language.RUSSIAN, s.toString())
+            editChn!!.editText -> {
+                chineseText = s.toString()
+                callback?.afterTextChanged(Language.CHINESE, s.toString())
+            }
+            editPin!!.editText -> {
+                pinyinText = s.toString()
+                callback?.afterTextChanged(Language.PINYIN, s.toString())
+            }
+            editTrn!!.editText ->{
+                translationText = s.toString()
+                callback?.afterTextChanged(Language.RUSSIAN, s.toString())
+            }
+
         }
 
     }
@@ -88,6 +100,10 @@ class CreateEditFragment : Fragment(R.layout.create_edit_layout), TextWatcher, V
         editChn!!.editText?.addTextChangedListener(this)
         editPin!!.editText?.addTextChangedListener(this)
         editTrn!!.editText?.addTextChangedListener(this)
+
+        editChn!!.editText!!.setText(chineseText)
+        editPin!!.editText!!.setText(pinyinText)
+        editTrn!!.editText!!.setText(translationText)
 
         editChn!!.editText?.onFocusChangeListener = this
         editPin!!.editText?.onFocusChangeListener = this
@@ -141,25 +157,34 @@ class CreateEditFragment : Fragment(R.layout.create_edit_layout), TextWatcher, V
 
     fun setText(language: Language, text: String) =
         when(language){
-            Language.RUSSIAN -> editTrn!!.editText!!.setText(text)
-            Language.PINYIN -> editPin!!.editText!!.setText(text)
-            Language.CHINESE -> editChn!!.editText!!.setText(text)
+            Language.RUSSIAN -> {
+                translationText = text
+                editTrn?.editText?.setText(translationText)
+            }
+            Language.PINYIN -> {
+                pinyinText = text
+                editPin?.editText?.setText(pinyinText)
+            }
+            Language.CHINESE -> {
+                chineseText = text
+                editChn?.editText?.setText(chineseText)
+            }
         }
 
     fun getText(language: Language) =
         when(language){
-            Language.RUSSIAN -> editTrn!!.editText!!.editableText.toString()
-            Language.PINYIN -> editPin!!.editText!!.editableText.toString()
-            Language.CHINESE -> editChn!!.editText!!.editableText.toString()
+            Language.RUSSIAN -> translationText
+            Language.PINYIN -> pinyinText
+            Language.CHINESE -> chineseText
         }
 
 
     fun showEmtFieldMes(language: Language, show: Boolean) {
         val inputLayout = getInputLayout(language)
         if (show)
-            showError(getString(CreateEditWordFragment.ERRORS_MES.EMPTY_FIELDS),getInputLayout(language))
-        else if (inputLayout.error!= null && inputLayout.error!!.equals(getString(
-                CreateEditWordFragment.ERRORS_MES.EMPTY_FIELDS))){
+            showError(getString(ERRORS_MES.EMPTY_FIELDS),getInputLayout(language))
+        else if (inputLayout?.error!= null && inputLayout.error!!.equals(getString(
+                ERRORS_MES.EMPTY_FIELDS))){
             inputLayout.error = null
         }
     }
@@ -167,9 +192,9 @@ class CreateEditFragment : Fragment(R.layout.create_edit_layout), TextWatcher, V
     fun showInvalCharsMes(language: Language, show: Boolean) {
         val inputLayout = getInputLayout(language)
         if (show)
-            showError(getString(CreateEditWordFragment.ERRORS_MES.INVALID_CHARS),getInputLayout(language))
-        else if (inputLayout.error!= null && inputLayout.error!!.equals(getString(
-                CreateEditWordFragment.ERRORS_MES.INVALID_CHARS))){
+            showError(getString(ERRORS_MES.INVALID_CHARS),getInputLayout(language))
+        else if (inputLayout?.error!= null && inputLayout.error!!.equals(getString(
+                ERRORS_MES.INVALID_CHARS))){
             inputLayout.error = null
         }
     }
@@ -177,9 +202,9 @@ class CreateEditFragment : Fragment(R.layout.create_edit_layout), TextWatcher, V
     fun showMaxCharsMes(language: Language, show: Boolean) {
         val inputLayout = getInputLayout(language)
         if (show)
-            showError(getString(CreateEditWordFragment.ERRORS_MES.MORE_THEN_MAX_CHARS),getInputLayout(language))
-        else if (inputLayout.error!= null && inputLayout.error!!.equals(getString(
-                CreateEditWordFragment.ERRORS_MES.MORE_THEN_MAX_CHARS))){
+            showError(getString(ERRORS_MES.MORE_THEN_MAX_CHARS),getInputLayout(language))
+        else if (inputLayout?.error!= null && inputLayout.error!!.equals(getString(
+                ERRORS_MES.MORE_THEN_MAX_CHARS))){
             inputLayout.error = null
         }
 
@@ -187,17 +212,17 @@ class CreateEditFragment : Fragment(R.layout.create_edit_layout), TextWatcher, V
 
     fun hideError(language: Language){
         val inputLayout = getInputLayout(language)
-        inputLayout.error = null
+        inputLayout?.error = null
     }
 
-    private fun getInputLayout(language: Language): TextInputLayout = when(language){
-        Language.RUSSIAN -> editTrn!!
-        Language.PINYIN -> editPin!!
-        Language.CHINESE-> editChn!!
+    private fun getInputLayout(language: Language): TextInputLayout? = when(language){
+        Language.RUSSIAN -> editTrn
+        Language.PINYIN -> editPin
+        Language.CHINESE-> editChn
     }
 
-    private fun showError(mes: String, inputLayout: TextInputLayout){
-        inputLayout.error=mes
+    private fun showError(mes: String, inputLayout: TextInputLayout?){
+        inputLayout?.error=mes
     }
 
     private fun registerHideTouchListener(view : View){

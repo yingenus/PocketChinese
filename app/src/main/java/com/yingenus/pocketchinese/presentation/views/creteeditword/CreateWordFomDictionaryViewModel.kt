@@ -31,6 +31,10 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
         ZERO_LENGTH, TOO_LONG, INVALID_CHARS, NOTHING
     }
 
+    enum class AddResult{
+        ADDED, NO_REQUIRE, ERROR
+    }
+
     companion object{
         const val MAX_PINYIN = 28
         const val MAX_CHINESE = 10
@@ -114,9 +118,6 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
     fun onTranslationTextChanged( newText : String){
         Single
             .just(newText)
-            .doOnSuccess {
-                _translation.postValue(newText)
-            }
             .flatMap { checkTranslation(it) }
             .subscribe { error ->
                 _errorTranslation.postValue(error)
@@ -131,26 +132,32 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
             }
     }
 
-    fun addToNewStudyList( studyListName: String, chinese : String, pinyin : String, translation : String) : LiveData<Boolean>{
-        val isSuccess : MutableLiveData<Boolean> = MutableLiveData()
+    fun addToNewStudyList( studyListName: String, chinese : String, pinyin : String, translation : String) : LiveData<AddResult>{
+        val isSuccess : MutableLiveData<AddResult> = MutableLiveData()
         Single
             .zip(
-            checkChinese(chinese),
-            checkPinyin(pinyin),
-            checkTranslation(translation))
+                checkChinese(chinese).doOnSuccess {
+                    _errorChinese.postValue(it)
+                },
+                checkPinyin(pinyin).doOnSuccess {
+                    _errorPinyin.postValue(it)
+                },
+                checkTranslation(translation).doOnSuccess {
+                    _errorTranslation.postValue(it)
+                })
             { chn, pin, trn ->
                 Triple(chn,pin,trn)
             }
-            .flatMap<Boolean> {
+            .flatMap<AddResult> {
                 if (it.first != WordsError.NOTHING || it.second != WordsError.NOTHING || it.third != WordsError.NOTHING)
-                    Single.just<Boolean>(false)
+                    Single.just<AddResult>(AddResult.NO_REQUIRE)
                 else
                     modifyStudyListUseCase
                         .containsName(studyListName)
                         .flatMap {
                             if (it) {
                                 _error.postValue("name exist")
-                                Single.just<Boolean>(false)
+                                Single.just<AddResult>(AddResult.ERROR)
                             } else {
                                 modifyStudyListUseCase
                                     .createStudyList(studyListName)
@@ -161,8 +168,8 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
                                     .flatMapMaybe { it }
                                     .flatMapCompletable {
                                         modifyStudyWordUseCase.createStudyWord(it.id, chinese, pinyin, translation)
-                                    }.toSingle<Boolean>{
-                                        true
+                                    }.toSingle<AddResult>{
+                                        AddResult.ADDED
                                     }
                             }
                         }
@@ -174,29 +181,35 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
         return isSuccess
     }
 
-    fun addToExisting( studyListId: Long, chinese : String, pinyin : String, translation : String) : LiveData<Boolean> {
-        val isSuccess: MutableLiveData<Boolean> = MutableLiveData()
+    fun addToExisting( studyListId: Long, chinese : String, pinyin : String, translation : String) : LiveData<AddResult> {
+        val isSuccess: MutableLiveData<AddResult> = MutableLiveData()
 
         Single
             .zip(
-                checkChinese(chinese),
-                checkPinyin(pinyin),
-                checkTranslation(translation)
+                checkChinese(chinese).doOnSuccess {
+                    _errorChinese.postValue(it)
+                },
+                checkPinyin(pinyin).doOnSuccess {
+                    _errorPinyin.postValue(it)
+                },
+                checkTranslation(translation).doOnSuccess {
+                    _errorTranslation.postValue(it)
+                }
             )
             { chn, pin, trn ->
                 Triple(chn, pin, trn)
             }
-            .flatMap<Boolean> {
+            .flatMap<AddResult> {
                 if (it.first != WordsError.NOTHING || it.second != WordsError.NOTHING || it.third != WordsError.NOTHING)
-                    Single.just<Boolean>(false)
+                    Single.just<AddResult>(AddResult.NO_REQUIRE)
                 else
                     modifyStudyWordUseCase.createStudyWord(
                         studyListId,
                         chinese,
                         pinyin,
                         translation
-                    ).toSingle<Boolean> {
-                        true
+                    ).toSingle<AddResult> {
+                        AddResult.ADDED
                     }
             }
             .subscribe { success ->
@@ -213,7 +226,7 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
             .map {
                 if (it.length> MAX_CHINESE) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
-                else if (modifyStudyWordUseCase.checkCorrect(it,Language.CHINESE)) WordsError.INVALID_CHARS
+                else if (!modifyStudyWordUseCase.checkCorrect(it,Language.CHINESE)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING
             }
 
@@ -224,9 +237,9 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
             .just(pinyin)
             .observeOn(Schedulers.computation())
             .map {
-                if (it.length> MAX_CHINESE) WordsError.TOO_LONG
+                if (it.length> MAX_PINYIN) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
-                else if (modifyStudyWordUseCase.checkCorrect(it,Language.PINYIN)) WordsError.INVALID_CHARS
+                else if (!modifyStudyWordUseCase.checkCorrect(it,Language.PINYIN)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING
             }
     }
@@ -236,9 +249,9 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
             .just(translation)
             .observeOn(Schedulers.computation())
             .map {
-                if (it.length> MAX_CHINESE) WordsError.TOO_LONG
+                if (it.length> MAX_TRANSLATION) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
-                else if (modifyStudyWordUseCase.checkCorrect(it,Language.RUSSIAN)) WordsError.INVALID_CHARS
+                else if (!modifyStudyWordUseCase.checkCorrect(it,Language.RUSSIAN)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING
             }
     }

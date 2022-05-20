@@ -25,25 +25,16 @@ import com.daimajia.androidanimations.library.Techniques;
 import com.daimajia.androidanimations.library.YoYo;
 import com.yingenus.pocketchinese.PocketApplication;
 import com.yingenus.pocketchinese.R;
+import com.yingenus.pocketchinese.common.Language;
 import com.yingenus.pocketchinese.domain.dto.TrainingConf;
 import com.yingenus.pocketchinese.view.Durations;
 import com.yingenus.pocketchinese.view.utils.KeyboardCallbackInterface;
 import com.yingenus.pocketchinese.Settings;
 import com.yingenus.pocketchinese.view.VibrationUtilsKt;
-import com.yingenus.pocketchinese.controller.fragment.train.ChnTrainView;
-import com.yingenus.pocketchinese.controller.fragment.train.PinTrainView;
-import com.yingenus.pocketchinese.controller.fragment.train.TrainViewBuilder;
-import com.yingenus.pocketchinese.controller.fragment.train.TrnTrainView;
-import com.yingenus.pocketchinese.domain.entitiys.LanguageCase;
-import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.PocketBaseHelper;
-import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger;
-import com.yingenus.pocketchinese.domain.entities.repeat.FibRepeatHelper;
-//import com.yingenus.pocketchinese.domain.entitiys.words.RepeatManager;
 import com.yingenus.pocketchinese.domain.dto.StudyWord;
 import com.yingenus.pocketchinese.view.MultiColorProgressBar;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
 
@@ -62,7 +53,7 @@ public class TrainingFragment extends Fragment{
 
     private TrainingConf trainingConf;
 
-    private LanguageCase trainingLang;
+    private Language language;
     private UUID studyList;
     private int block;
 
@@ -81,6 +72,7 @@ public class TrainingFragment extends Fragment{
     public TrainingFragment(TrainingConf trainingConf){
         this();
         this.trainingConf = trainingConf;
+        this.language = trainingConf.getLanguage();
         //trainingLang =languageCase;
         //this.studyList =studyList;
         //this.block =block;
@@ -168,6 +160,8 @@ public class TrainingFragment extends Fragment{
     @Override
     public void onResume() {
         super.onResume();
+        viewModel.startTraining();
+
     }
 
     private void subscribeViewModel(){
@@ -186,9 +180,10 @@ public class TrainingFragment extends Fragment{
         viewModel.getTrainingStudyWord().observe(getViewLifecycleOwner(), (StudyWord word) ->{
             Adapter adapter = ((Adapter) viewPager.getAdapter());
             adapter.addStudyWord( new Pair(word, null));
+            adapter.notifyDataSetChanged();
             int position= viewPager.getCurrentItem();
             position++;
-            viewPager.setCurrentItem(position);
+            viewPager.setCurrentItem(adapter.getItemCount());
         });
         viewModel.getFinish().observe(getViewLifecycleOwner(), (Boolean finish) ->{
             if (finish) getActivity().finish();
@@ -360,12 +355,12 @@ public class TrainingFragment extends Fragment{
     }
 
     private TrainViewBuilder getBuilder(){
-        switch (trainingLang){
-            case Trn:
+        switch (language){
+            case RUSSIAN:
                 return new TrnTrainView.Builder();
-            case Pin:
+            case PINYIN:
                 return new PinTrainView.Builder();
-            case Chin:
+            case CHINESE:
                 return new ChnTrainView.Builder();
         }
         return null ;

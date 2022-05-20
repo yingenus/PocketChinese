@@ -7,6 +7,10 @@
     android:elevation="0dp"
     app:cardCornerRadius="10dp"
 
+    android:clickable="true"
+    android:checkable="true"
+    android:focusable="true"
+
     android:layout_width="match_parent"
     android:layout_height="52dp"
     app:cardBackgroundColor="?attr/colorOnSurface"

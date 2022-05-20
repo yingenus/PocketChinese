@@ -17,15 +17,16 @@ import dagger.assisted.AssistedInject
 import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.schedulers.Schedulers
 import javax.inject.Inject
+import javax.inject.Named
 
 class EditWordViewModelFactory @AssistedInject constructor(
-    @Assisted private val studyListId: Long,
-    @Assisted private val studyWordId: Long
+    @Assisted("studyList_id") private val studyListId: Long,
+    @Assisted("studyWord_id") private val studyWordId: Long
 ) : ViewModelProvider.Factory{
 
     @AssistedFactory
     interface Factory{
-        fun create( studyListId: Long, studyWordId: Long) : EditWordViewModelFactory
+        fun create( @Assisted("studyList_id") studyListId: Long, @Assisted("studyWord_id") studyWordId: Long) : EditWordViewModelFactory
     }
 
     @Inject
@@ -33,15 +34,15 @@ class EditWordViewModelFactory @AssistedInject constructor(
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when(modelClass){
-            EditWordViewModel::class -> editWordViewModel.create(studyListId,studyWordId)
+            EditWordViewModel::class.java -> editWordViewModel.create(studyListId,studyWordId)
             else -> throw IllegalArgumentException()
         } as T
     }
 }
 
 class EditWordViewModel @AssistedInject constructor(
-    @Assisted private val studyListId: Long,
-    @Assisted private val studyWordId: Long,
+    @Assisted("studyList_id") private val studyListId: Long,
+    @Assisted("studyWord_id") private val studyWordId: Long,
     private val studyWordInfoUseCase: WordInfoUseCase,
     private val studyListInfoUseCase: StudyListInfoUseCase,
     private val modifyStudyListUseCase: ModifyStudyListUseCase,
@@ -50,11 +51,15 @@ class EditWordViewModel @AssistedInject constructor(
 
     @AssistedFactory
     interface Factory{
-        fun create( studyListId: Long, studyWordId: Long) : EditWordViewModel
+        fun create( @Assisted("studyList_id") studyListId: Long,@Assisted("studyWord_id") studyWordId: Long) : EditWordViewModel
     }
 
     enum class WordsError{
         ZERO_LENGTH, TOO_LONG, INVALID_CHARS, NOTHING
+    }
+
+    enum class AddResult{
+        ADDED, NO_REQUIRE, ERROR
     }
 
     companion object{
@@ -116,9 +121,6 @@ class EditWordViewModel @AssistedInject constructor(
     fun onChineseTextChanged( newText : String){
         Single
             .just(newText)
-            .doOnSuccess {
-                _chinese.postValue(newText)
-            }
             .flatMap { checkChinese(it) }
             .subscribe { error ->
                 _errorChinese.postValue(error)
@@ -128,9 +130,6 @@ class EditWordViewModel @AssistedInject constructor(
     fun onPinyinTextChanged( newText : String){
         Single
             .just(newText)
-            .doOnSuccess {
-                _pinyin.postValue(newText)
-            }
             .flatMap { checkPinyin(it) }
             .subscribe { error ->
                 _errorPinyin.postValue(error)
@@ -140,38 +139,41 @@ class EditWordViewModel @AssistedInject constructor(
     fun onTranslationTextChanged( newText : String){
         Single
             .just(newText)
-            .doOnSuccess {
-                _translation.postValue(newText)
-            }
             .flatMap { checkTranslation(it) }
             .subscribe { error ->
                 _errorTranslation.postValue(error)
             }
     }
 
-    fun update( chinese : String, pinyin : String, translation : String) : LiveData<Boolean> {
-        val isSuccess: MutableLiveData<Boolean> = MutableLiveData()
+    fun update( chinese : String, pinyin : String, translation : String) : LiveData<AddResult> {
+        val isSuccess: MutableLiveData<AddResult> = MutableLiveData()
 
         Single
             .zip(
-                checkChinese(chinese),
-                checkPinyin(pinyin),
-                checkTranslation(translation)
+                checkChinese(chinese).doOnSuccess {
+                    _errorChinese.postValue(it)
+                },
+                checkPinyin(pinyin).doOnSuccess {
+                    _errorPinyin.postValue(it)
+                },
+                checkTranslation(translation).doOnSuccess {
+                    _errorTranslation.postValue(it)
+                }
             )
             { chn, pin, trn ->
                 Triple(chn, pin, trn)
             }
-            .flatMap<Boolean> {
+            .flatMap<AddResult> {
                 if (it.first != WordsError.NOTHING || it.second != WordsError.NOTHING || it.third != WordsError.NOTHING)
-                    Single.just<Boolean>(false)
+                    Single.just<AddResult>(AddResult.NO_REQUIRE)
                 else
                     modifyStudyWordUseCase.changeAll(
-                        studyListId,
+                        studyWordId,
                         chinese,
                         pinyin,
                         translation
-                    ).toSingle<Boolean> {
-                        true
+                    ).toSingle<AddResult> {
+                        AddResult.ADDED
                     }
             }
             .subscribe { success ->
@@ -188,7 +190,7 @@ class EditWordViewModel @AssistedInject constructor(
             .map {
                 if (it.length> MAX_CHINESE) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
-                else if (modifyStudyWordUseCase.checkCorrect(it,Language.CHINESE)) WordsError.INVALID_CHARS
+                else if (!modifyStudyWordUseCase.checkCorrect(it,Language.CHINESE)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING
             }
 
@@ -199,9 +201,9 @@ class EditWordViewModel @AssistedInject constructor(
             .just(pinyin)
             .observeOn(Schedulers.computation())
             .map {
-                if (it.length> MAX_CHINESE) WordsError.TOO_LONG
+                if (it.length> MAX_PINYIN) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
-                else if (modifyStudyWordUseCase.checkCorrect(it,Language.PINYIN)) WordsError.INVALID_CHARS
+                else if (!modifyStudyWordUseCase.checkCorrect(it,Language.PINYIN)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING
             }
     }
@@ -211,9 +213,9 @@ class EditWordViewModel @AssistedInject constructor(
             .just(translation)
             .observeOn(Schedulers.computation())
             .map {
-                if (it.length> MAX_CHINESE) WordsError.TOO_LONG
+                if (it.length> MAX_TRANSLATION) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
-                else if (modifyStudyWordUseCase.checkCorrect(it,Language.RUSSIAN)) WordsError.INVALID_CHARS
+                else if (!modifyStudyWordUseCase.checkCorrect(it,Language.RUSSIAN)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING
             }
     }

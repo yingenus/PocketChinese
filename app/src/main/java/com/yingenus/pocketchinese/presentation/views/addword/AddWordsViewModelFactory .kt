@@ -23,7 +23,7 @@ class AddWordsViewModelFactory @AssistedInject constructor(
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when(modelClass){
-            AddWordsViewModel::class -> addWordsViewModel.create(addedWords)
+            AddWordsViewModel::class.java -> addWordsViewModel.create(addedWords)
             else -> throw IllegalArgumentException()
         } as T
     }

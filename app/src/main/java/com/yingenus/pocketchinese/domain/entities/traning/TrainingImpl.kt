@@ -36,7 +36,7 @@ class TrainingImpl @Inject constructor(
         }
     }
 
-    private val answerChecker : AnswerChecker = CheckerFactory.getAnswerChecker(language)
+    private val answerChecker : AnswerChecker by lazy { CheckerFactory.getAnswerChecker(language) }
 
     override fun setLanguage(language: Language) {
         this.language = language

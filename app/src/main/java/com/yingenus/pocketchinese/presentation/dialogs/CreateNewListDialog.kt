@@ -4,19 +4,14 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Button
 import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.presentation.views.stydylist.StudyListActivity
-import com.yingenus.pocketchinese.domain.entitiys.database.PocketDBOpenManger
-import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyListDAO
-import com.yingenus.pocketchinese.domain.entitiys.database.pocketDB.StudyList
 import com.google.android.material.textfield.TextInputLayout
+import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.presentation.views.userlist.UserListsViewModel
-import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
-import io.reactivex.rxjava3.core.Observable
-import io.reactivex.rxjava3.schedulers.Schedulers
 
 
 class CreateNewListDialog( val viewModel : UserListsViewModel) : DialogFragment() {
@@ -37,13 +32,23 @@ class CreateNewListDialog( val viewModel : UserListsViewModel) : DialogFragment(
         mCreateButton=view.findViewById(R.id.create_button)
         mCancelButton=view.findViewById(R.id.cancel_button)
 
-        mCancelButton!!.setOnClickListener {onCreateClicked()}
+        mCreateButton!!.setOnClickListener {onCreateClicked()}
+        mCancelButton!!.setOnClickListener { onCancelClicked() }
 
         mInputLayout!!.editText!!.doAfterTextChanged { onEditTextChanged() }
 
         dialog!!.window!!.setBackgroundDrawableResource(R.color.transparent)
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val window = dialog!!.window ?: return
+        val layoutParam = window.attributes
+        layoutParam.height = dp2px(410, requireContext())
+        layoutParam.width = dp2px(350, requireContext())
+        window.attributes = layoutParam
     }
 
     private fun onCancelClicked(){
@@ -73,13 +78,14 @@ class CreateNewListDialog( val viewModel : UserListsViewModel) : DialogFragment(
         if (mInputLayout!!.editText!!.text.isEmpty())
             showEmp()
         viewModel.createStudyList(name).observe(viewLifecycleOwner){
-            if (it){
+            if (!it){
                 showBusy()
+                mCreateButton!!.isEnabled=true
             }
             else {
-                //val intent=StudyListActivity.getIntent(requireActivity().applicationContext,studyList.uuid)
+                viewModel.updateStatistic()
+                viewModel.updateStudyLists()
                 super.dismiss()
-                //startActivity(intent)
             }
         }
     }

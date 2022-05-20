@@ -11,7 +11,7 @@ interface RepeatDao {
     @Query( "SELECT * FROM repeat WHERE word_id = :studyWordId" )
     fun getRepeat( studyWordId: Long): Repeat?
 
-    @Query("SELECT repeat.* FROM repeat INNER JOIN study_list ON words.id = repeat.word_id WHERE words.studylist = :studyListId" )
+    @Query("SELECT repeat.* FROM repeat INNER JOIN study_words ON study_words.id = repeat.word_id WHERE study_words.study_list = :studyListId" )
     fun getRepeatsForList( studyListId: Long): List<Repeat>
 
     @Update

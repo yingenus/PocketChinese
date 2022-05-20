@@ -6,7 +6,7 @@ import androidx.room.PrimaryKey
 import com.yingenus.pocketchinese.domain.dto.StudyWord
 import java.util.*
 
-@Entity(tableName = "words")
+@Entity(tableName = "study_words")
 class StudyWord (
     @PrimaryKey(autoGenerate = true) @ColumnInfo(name = "id") val id: Long,
     @ColumnInfo( name = "wordchn") val chinese : String,

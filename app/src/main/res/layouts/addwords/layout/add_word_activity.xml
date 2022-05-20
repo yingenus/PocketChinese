@@ -13,7 +13,7 @@
         android:layout_width="match_parent"
         android:layout_height="56dp"
         android:background="?attr/colorSurface"
-        app:navigationIcon="@drawable/ic_close"
+        app:navigationIcon="@drawable/ic_close_primary"
         app:layout_collapseMode="pin"
         />
 

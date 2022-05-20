@@ -12,13 +12,17 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateWordFomDictionaryViewModel
 import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateWordForStudyListViewModel
 import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateWordForStudyListViewModelFragment
+import com.yingenus.pocketchinese.view.Durations
 import com.yingenus.pocketchinese.view.activity.SingleFragmentActivityWithKeyboard
+import com.yingenus.pocketchinese.view.vibrate
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
@@ -53,6 +57,7 @@ class CreateWordForListFragment(val studyListId : Long ) :
     private var viewPager : ViewPager2? = null
     private var actionButton : Button? = null
 
+
     private var createEditFragment : CreateEditFragment? = null
 
     override fun onCreateView(
@@ -73,11 +78,16 @@ class CreateWordForListFragment(val studyListId : Long ) :
         viewPager!!.isUserInputEnabled = false
 
         createEditFragment = CreateEditFragment()
+        createEditFragment!!.callback = this
 
         viewPager!!.adapter = ViewPagerAdapter(WeakReference(createEditFragment),this)
 
         actionButton!!.setOnClickListener {
             onCreateClicked()
+        }
+
+        toolbar!!.setNavigationOnClickListener {
+            requireActivity().finish()
         }
 
         subscribeViewModer()
@@ -90,6 +100,7 @@ class CreateWordForListFragment(val studyListId : Long ) :
         toolbar = null
         viewPager = null
         actionButton = null
+        createEditFragment!!.callback = null
         createEditFragment = null
     }
 
@@ -146,8 +157,19 @@ class CreateWordForListFragment(val studyListId : Long ) :
         val chinese = createEditFragment!!.getText(Language.CHINESE)
         val pinyin = createEditFragment!!.getText(Language.PINYIN)
         val translation = createEditFragment!!.getText(Language.RUSSIAN)
+        actionButton!!.isEnabled = false
         viewModel.add(chinese,pinyin, translation).observe(viewLifecycleOwner){
-            if (it) requireActivity().finish()
+            when(it){
+                CreateWordForStudyListViewModel.AddResult.ADDED -> requireActivity().finish()
+                CreateWordForStudyListViewModel.AddResult.NO_REQUIRE -> {
+                    YoYo.with(Techniques.Shake).duration(100L).playOn(actionButton)
+                    vibrate(Durations.ERROR_DURATION, requireContext())
+                    actionButton!!.isEnabled = true
+                }
+                CreateWordForStudyListViewModel.AddResult.ERROR ->{
+
+                }
+            }
         }
     }
 

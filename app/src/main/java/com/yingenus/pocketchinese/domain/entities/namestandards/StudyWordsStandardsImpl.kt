@@ -2,8 +2,9 @@ package com.yingenus.pocketchinese.domain.entities.namestandards
 
 import com.yingenus.pocketchinese.common.Language
 import java.util.*
+import javax.inject.Inject
 
-class StudyWordsStandardsImpl : StudyWordsStandards {
+class StudyWordsStandardsImpl @Inject constructor(): StudyWordsStandards {
     companion object{
         private const val PINREGEX="[A-Za-zāáǎàīíǐìōóǒòēèěéūùǔúǚ]"
         private const val CHNREGEX="[\\p{script=Han}]"

@@ -3,6 +3,8 @@ package com.yingenus.pocketchinese.presentation.views.suggestist;
 import android.annotation.SuppressLint;
 import android.app.Dialog;
 import android.content.Context;
+import android.content.Intent;
+import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
@@ -38,17 +40,19 @@ import androidx.transition.TransitionManager;
 
 import com.yingenus.pocketchinese.PocketApplication;
 import com.yingenus.pocketchinese.R;
-import com.yingenus.pocketchinese.controller.activity.SuggestWordsActivityKt;
 import com.yingenus.pocketchinese.domain.dto.Example;
 import com.yingenus.pocketchinese.domain.dto.SuggestWord;
 import com.yingenus.pocketchinese.domain.dto.SuggestWordGroup;
-import com.yingenus.pocketchinese.presentation.views.addword.AddWordsSheetDialog;
-import com.yingenus.pocketchinese.presentation.views.addword.AddWordFragment;
 
 import com.google.android.material.appbar.AppBarLayout;
 import com.google.android.material.transition.MaterialArcMotion;
 import com.google.android.material.transition.MaterialContainerTransform;
+import com.yingenus.pocketchinese.presentation.views.addword.AddSuggestWordsActivity;
 
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URI;
+import java.net.URL;
 import java.util.Arrays;
 import java.util.List;
 
@@ -74,7 +78,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
     private android.view.ActionMode actionMode;
 
     @Inject
-    public SuggestListViewModel.Factory suggestListViewModelFactory;
+    public SuggestListViewModelFactory.Builder suggestListViewModelFactory;
     private SuggestListViewModel viewModel;
 
     @Override
@@ -129,16 +133,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
         String name  =(String) getIntent().getSerializableExtra(SuggestWordsActivityKt.INNER_INTENT_GIVEN_LIST);
 
         PocketApplication.Companion.getAppComponent().injectSuggestWordsActivity(this);
-        ViewModelProvider provider = new ViewModelProvider(getViewModelStore(), new ViewModelProvider.Factory() {
-            @NonNull
-            @Override
-            public <T extends ViewModel> T create(@NonNull Class<T> modelClass) {
-                if (modelClass == SuggestListViewModel.class){
-                    return (T) suggestListViewModelFactory.create(name);
-                }
-                return null;
-            }
-        });
+        ViewModelProvider provider = new ViewModelProvider(getViewModelStore(), suggestListViewModelFactory.create(name));
         viewModel = provider.get(SuggestListViewModel.class);
 
         recycler = findViewById(R.id.expanded_recyclerview);
@@ -153,7 +148,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
 
         recycler.setLayoutManager(new LinearLayoutManager(getApplicationContext()));
 
-        setSupportActionBar(toolbar);
+        //setSupportActionBar(toolbar);
 
         toolbar.setNavigationOnClickListener(this::onNavigationButtonClicked);
 
@@ -175,6 +170,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
         selectionTracker.addObserver( getSelectionObserver());
 
         subscribeToAll();
+        viewModel.updateSuggestWords();
     }
 
     @Override
@@ -193,13 +189,13 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
         viewModel.getName().observe(this, new Observer<String>() {
             @Override
             public void onChanged(String s) {
-                getSupportActionBar().setTitle(s);
+                toolbar.setTitle(s);
             }
         });
-        viewModel.getImage().observe(this, new Observer<Uri>() {
+        viewModel.getImage().observe(this, new Observer<Bitmap>() {
             @Override
-            public void onChanged(Uri uri) {
-                imageView.setImageURI(uri);
+            public void onChanged(Bitmap bitmap) {
+                imageView.setImageBitmap(bitmap);
                 //imageView.setImageBitmap(UtilsKt.getBitmapFromAssets(getApplicationContext(),"image/"+suggestWords.getImage()));
             }
         });
@@ -217,6 +213,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
                     ((SuggestWordsAdapter)adapter).setGroups( suggestWordGroups);
                     adapter.notifyDataSetChanged();
                 }
+
             }
         });
     }
@@ -281,31 +278,12 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
     }
 
     private void showAddDialog(){
+
         List<SuggestWord> words = Arrays.asList(((SuggestWordsAdapter) recycler.getAdapter()).getSelectedWords());
         selectionTracker.clearSelection();
-        AddWordsSheetDialog dialog = new AddWordsSheetDialog();
-        dialog.setWords(words);
-        dialog.setCallback(new AddWordFragment.AddWordsCallbacks() {
-            @Override
-            public void onError() {
-                dialog.dismiss();
-                showAddStateDialog(false);
 
-            }
-
-            @Override
-            public void onClose() {
-                dialog.dismiss();
-            }
-
-            @Override
-            public void onAdded() {
-                dialog.dismiss();
-                showAddStateDialog(true);
-
-            }
-        });
-        dialog.show(getSupportFragmentManager(),"addWordsSheetDialog");
+        Intent intent = AddSuggestWordsActivity.Companion.getIntent(words,getApplicationContext());
+        startActivity(intent);
     }
 
     private void showAddStateDialog(boolean isSuccess){

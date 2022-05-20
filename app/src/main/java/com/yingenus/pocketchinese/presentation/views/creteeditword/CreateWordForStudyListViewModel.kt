@@ -33,6 +33,10 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
         ZERO_LENGTH, TOO_LONG, INVALID_CHARS, NOTHING
     }
 
+    enum class AddResult{
+        ADDED, NO_REQUIRE, ERROR
+    }
+
     companion object{
         const val MAX_PINYIN = 28
         const val MAX_CHINESE = 10
@@ -83,9 +87,6 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
     fun onChineseTextChanged( newText : String){
         Single
             .just(newText)
-            .doOnSuccess {
-                _chinese.postValue(newText)
-            }
             .flatMap { checkChinese(it) }
             .subscribe { error ->
                 _errorChinese.postValue(error)
@@ -95,9 +96,6 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
     fun onPinyinTextChanged( newText : String){
         Single
             .just(newText)
-            .doOnSuccess {
-                _pinyin.postValue(newText)
-            }
             .flatMap { checkPinyin(it) }
             .subscribe { error ->
                 _errorPinyin.postValue(error)
@@ -107,38 +105,43 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
     fun onTranslationTextChanged( newText : String){
         Single
             .just(newText)
-            .doOnSuccess {
-                _translation.postValue(newText)
-            }
             .flatMap { checkTranslation(it) }
             .subscribe { error ->
                 _errorTranslation.postValue(error)
             }
     }
 
-    fun add( chinese : String, pinyin : String, translation : String) : LiveData<Boolean> {
-        val isSuccess: MutableLiveData<Boolean> = MutableLiveData()
+    fun add( chinese : String, pinyin : String, translation : String) : LiveData<AddResult> {
+        val isSuccess: MutableLiveData<AddResult> = MutableLiveData()
 
         Single
             .zip(
-                checkChinese(chinese),
-                checkPinyin(pinyin),
-                checkTranslation(translation)
+                checkChinese(chinese).doOnSuccess {
+                    _errorChinese.postValue(it)
+                },
+                checkPinyin(pinyin).doOnSuccess {
+                    _errorPinyin.postValue(it)
+                },
+                checkTranslation(translation).doOnSuccess {
+                    _errorTranslation.postValue(it)
+                }
             )
             { chn, pin, trn ->
                 Triple(chn, pin, trn)
             }
-            .flatMap<Boolean> {
-                if (it.first != WordsError.NOTHING || it.second != WordsError.NOTHING || it.third != WordsError.NOTHING)
-                    Single.just<Boolean>(false)
+            .flatMap<AddResult> {
+                if (it.first != WordsError.NOTHING || it.second != WordsError.NOTHING || it.third != WordsError.NOTHING){
+
+                    Single.just<AddResult>(AddResult.NO_REQUIRE)
+                }
                 else
                     modifyStudyWordUseCase.createStudyWord(
                         studyListId,
                         chinese,
                         pinyin,
                         translation
-                    ).toSingle<Boolean> {
-                        true
+                    ).toSingle<AddResult> {
+                        AddResult.ADDED
                     }
             }
             .subscribe { success ->
@@ -155,7 +158,7 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
             .map {
                 if (it.length> MAX_CHINESE) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
-                else if (modifyStudyWordUseCase.checkCorrect(it,Language.CHINESE)) WordsError.INVALID_CHARS
+                else if (!modifyStudyWordUseCase.checkCorrect(it,Language.CHINESE)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING
             }
 
@@ -168,7 +171,7 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
             .map {
                 if (it.length> MAX_CHINESE) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
-                else if (modifyStudyWordUseCase.checkCorrect(it,Language.PINYIN)) WordsError.INVALID_CHARS
+                else if (!modifyStudyWordUseCase.checkCorrect(it,Language.PINYIN)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING
             }
     }
@@ -180,7 +183,7 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
             .map {
                 if (it.length> MAX_CHINESE) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
-                else if (modifyStudyWordUseCase.checkCorrect(it,Language.RUSSIAN)) WordsError.INVALID_CHARS
+                else if (!modifyStudyWordUseCase.checkCorrect(it,Language.RUSSIAN)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING
             }
     }
@@ -201,7 +204,7 @@ class CreateWordForStudyListViewModelFragment @AssistedInject constructor(
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         return when(modelClass){
-            CreateWordForStudyListViewModel::class -> createWordForStudyListViewModel.create(studyListId)
+            CreateWordForStudyListViewModel::class.java -> createWordForStudyListViewModel.create(studyListId)
             else -> throw IllegalArgumentException()
         } as T
     }

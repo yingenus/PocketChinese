@@ -1,84 +1,63 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:tools="http://schemas.android.com/tools"
-    android:orientation="vertical"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="?attr/colorSurface"
-    >
-
-    <androidx.coordinatorlayout.widget.CoordinatorLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
+        xmlns:tools="http://schemas.android.com/tools"
+        xmlns:android="http://schemas.android.com/apk/res/android"
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        android:background="?attr/colorSurface"
         >
 
         <com.google.android.material.appbar.AppBarLayout
             android:id="@+id/app_bar_layout"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:background="?attr/colorSurface"
             app:elevation="0dp">
 
             <androidx.appcompat.widget.Toolbar
+                style="@style/Style.PocketChinese.Toolbar"
                 android:id="@+id/toolbar"
                 android:layout_width="match_parent"
                 android:layout_height="56dp"
                 android:background="?attr/colorSurface"
                 app:navigationIcon="@drawable/ic_chevrone_left"
                 app:layout_collapseMode="pin"
+                app:layout_scrollFlags="scroll"
                 app:menu="@menu/study_list_menu"
                 tools:title="Title"
                 />
 
-        </com.google.android.material.appbar.AppBarLayout>
-
-        <androidx.coordinatorlayout.widget.CoordinatorLayout
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            app:layout_behavior="@string/appbar_scrolling_view_behavior"
-            >
-
-                <com.google.android.material.appbar.AppBarLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    app:elevation="0dp">
-
-                    <include
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        layout="@layout/study_list_info_fragment"
-                        />
-
-                </com.google.android.material.appbar.AppBarLayout>
-
-                <androidx.recyclerview.widget.RecyclerView
-                    android:id="@+id/expanded_recyclerview"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="?attr/colorSurface"
-                    android:fitsSystemWindows="false"
-                    app:layout_anchor="@id/scroll_header"
-                    app:layout_anchorGravity="bottom"
-                    app:layout_behavior="@string/appbar_scrolling_view_behavior"
-                    />
-
-            <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
-                style="@style/Style.PocketChinese.Rounded.Button.Medium"
-                android:id="@+id/fab_start"
-                android:layout_width="210dp"
-                android:layout_height="60dp"
-                app:icon="@drawable/ic_next"
-                app:iconGravity="textEnd"
-                app:layout_anchor="@id/expanded_recyclerview"
-                app:layout_anchorGravity="bottom|center"
-                android:text="@string/create"
+            <include
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                layout="@layout/study_list_info_fragment"
+                app:layout_scrollFlags="scroll"
                 />
 
+        </com.google.android.material.appbar.AppBarLayout>
 
-        </androidx.coordinatorlayout.widget.CoordinatorLayout>
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_marginStart="16dp"
+        android:id="@+id/expanded_recyclerview"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:background="?attr/colorSurface"
+        android:fitsSystemWindows="false"
+        app:layout_anchorGravity="bottom"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior"
+        />
 
-
+    <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
+        style="@style/Style.PocketChinese.Rounded.Button.Medium"
+        android:id="@+id/fab_start"
+        android:layout_width="210dp"
+        android:layout_height="60dp"
+        app:icon="@drawable/ic_next"
+        app:iconGravity="textEnd"
+        app:layout_anchor="@id/expanded_recyclerview"
+        app:layout_anchorGravity="bottom|center"
+        android:text="@string/repeat"
+        />
 
     </androidx.coordinatorlayout.widget.CoordinatorLayout>
-</LinearLayout>

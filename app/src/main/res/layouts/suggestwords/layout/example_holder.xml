@@ -20,7 +20,7 @@
         android:textAllCaps="false"
         android:textColor="?android:textColorPrimary"
         android:textSize="24sp"
-
+        android:fontFamily="@font/mulish_bold"
 
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -36,7 +36,7 @@
         android:maxLines="1"
         android:textSize="18sp"
         android:textColor="?android:textColorSecondary"
-
+        android:fontFamily="@font/mulish_medium"
         app:layout_constraintTop_toBottomOf="@id/chin"
         app:layout_constraintStart_toStartOf="@id/chin"
 
@@ -47,7 +47,7 @@
         android:id="@+id/language"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-
+        android:fontFamily="@font/mulish_medium"
         android:textSize="18sp"
         android:textColor="?android:textColorSecondary"
         android:layout_marginTop="5dp"

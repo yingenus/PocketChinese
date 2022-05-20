@@ -1,5 +1,7 @@
 package com.yingenus.pocketchinese.presentation.views.addword
 
+import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -10,17 +12,49 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager2.adapter.FragmentStateAdapter
 import androidx.viewpager2.widget.ViewPager2
+import com.daimajia.androidanimations.library.Techniques
+import com.daimajia.androidanimations.library.YoYo
 import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateWordForStudyListViewModel
 import com.yingenus.pocketchinese.presentation.views.creteeditword.EditWordViewModel
 import com.yingenus.pocketchinese.presentation.views.creteeditword.EditWordViewModelFactory
+import com.yingenus.pocketchinese.view.Durations
+import com.yingenus.pocketchinese.view.activity.SingleFragmentActivityWithKeyboard
+import com.yingenus.pocketchinese.view.vibrate
+import io.reactivex.rxjava3.core.Single
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class EditWordActivity  {
+class EditWordActivity : SingleFragmentActivityWithKeyboard()  {
 
+    companion object{
+        private const val STUDY_LIST_ID = "com.yingenus.pocketchinese.presentation.views.addword.studyListId"
+        private const val STUDY_WORD_ID = "com.yingenus.pocketchinese.presentation.views.addword.studyWordId"
+
+        fun getIntent(studyListId: Long, studyWordId: Long, context: Context): Intent{
+            val intent = Intent(context, EditWordActivity::class.java)
+            intent.putExtra(STUDY_LIST_ID,studyListId)
+            intent.putExtra(STUDY_WORD_ID,studyWordId)
+            return intent
+        }
+
+        private fun getStudyListId(intent: Intent): Long{
+            return intent.getLongExtra(STUDY_LIST_ID, -1L)
+        }
+
+        private fun getStudyWordId(intent: Intent): Long{
+            return intent.getLongExtra(STUDY_WORD_ID, -1L)
+        }
+    }
+
+    override fun createFragment(): Fragment {
+        val list = getStudyListId(intent)
+        val word = getStudyWordId(intent)
+
+        return EditWordFragment(list,word)
+    }
 }
 
 class EditWordFragment( val studyListId: Long,val  studyWordId: Long) : Fragment(R.layout.add_word_activity),CreateEditFragment.Callback{
@@ -53,12 +87,17 @@ class EditWordFragment( val studyListId: Long,val  studyWordId: Long) : Fragment
         viewPager!!.isUserInputEnabled = false
 
         createEditFragment = CreateEditFragment()
+        createEditFragment!!.callback = this
 
         viewPager!!.adapter =
             ViewPagerAdapter(WeakReference(createEditFragment), this)
 
         actionButton!!.setOnClickListener {
             onUpdateClicked()
+        }
+
+        toolbar!!.setNavigationOnClickListener {
+            onNavigationClicked()
         }
 
         subscribeViewModer()
@@ -71,6 +110,7 @@ class EditWordFragment( val studyListId: Long,val  studyWordId: Long) : Fragment
         toolbar = null
         viewPager = null
         actionButton = null
+        createEditFragment!!.callback = null
         createEditFragment = null
     }
 
@@ -123,12 +163,24 @@ class EditWordFragment( val studyListId: Long,val  studyWordId: Long) : Fragment
 
     }
 
+    private fun onNavigationClicked(){
+        requireActivity().finish()
+    }
+
     fun onUpdateClicked(){
+        actionButton!!.isEnabled = false
         val chinese = createEditFragment!!.getText(Language.CHINESE)
         val pinyin = createEditFragment!!.getText(Language.PINYIN)
         val translation = createEditFragment!!.getText(Language.RUSSIAN)
         viewModel.update(chinese, pinyin, translation).observe(viewLifecycleOwner){
-            if (it) requireActivity().finish()
+            when(it){
+                EditWordViewModel.AddResult.ADDED -> requireActivity().finish()
+                EditWordViewModel.AddResult.NO_REQUIRE ->{
+                    YoYo.with(Techniques.Shake).duration(100L).playOn(actionButton)
+                    vibrate(Durations.ERROR_DURATION, requireContext())
+                    actionButton!!.isEnabled = true
+                }
+            }
         }
     }
 

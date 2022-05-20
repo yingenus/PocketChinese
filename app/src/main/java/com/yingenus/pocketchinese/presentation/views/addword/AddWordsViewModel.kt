@@ -13,6 +13,8 @@ import com.yingenus.pocketchinese.domain.usecase.StudyListInfoUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.rxjava3.core.Completable
+import io.reactivex.rxjava3.core.Maybe
 
 class AddWordsViewModel @AssistedInject constructor(
     @Assisted private val addedWords : List<SuggestWord>,
@@ -83,12 +85,14 @@ class AddWordsViewModel @AssistedInject constructor(
         val isSuccess : MutableLiveData<Boolean> = MutableLiveData()
         modifyStudyListUseCase
             .createStudyList(studyListName)
-            .andThen { studyListInfoUseCase
-                .getStudyList(studyListName)
-                .flatMapCompletable {
-                    addSuggestWordsToStudyList.addSuggestWords(getAddConfig(it.id),addedWords)
-                }
-            }.subscribe({
+            .andThen(Completable.defer {
+                studyListInfoUseCase
+                    .getStudyList(studyListName)
+                    .flatMapCompletable {
+                        addSuggestWordsToStudyList.addSuggestWords(getAddConfig(it.id),addedWords)
+                    }
+            })
+            .subscribe({
                    isSuccess.postValue(true)
             },{
                 isSuccess.postValue(false)

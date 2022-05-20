@@ -13,6 +13,7 @@
     <string name="search_hidden_search_format_comple">Совпадение</string>
     <string name="empty_search_result">Нет результатов...</string>
     <string name="menu_item_dictionary">Словарь</string>
+    <string name="menu_item_suggest_words">Предложенные</string>
     <string name="menu_item_learn_words">Обучение</string>
     <string name="menu_item_settings">Настройки</string>
     <string name="learn_words_available">Доступные</string>
@@ -20,6 +21,7 @@
     <string name="learn_words_sorting">Сортировка</string>
     <string name="delete">Удалить</string>
     <string name="edit_name">Переименовать</string>
+    <string name="edit">Изменить</string>
     <string name="learn_words_sorting_az">А-Я</string>
     <string name="learn_words_sorting_za">Я-А</string>
     <string name="learn_words_new_first">Показать сначала новые</string>
@@ -140,6 +142,7 @@
     <string name ="create_word_title">Создание \n слова:</string>
     <string name ="edit_word_title">Изменение \n слова:</string>
     <string name="create">Создать</string>
+    <string name="repeat">Повторить</string>
     <string name="continues">Продолжить</string>
     <string name="rename">Переименовать</string>
     <string name="cancel">Отмена</string>

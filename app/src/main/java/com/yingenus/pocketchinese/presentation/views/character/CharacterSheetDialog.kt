@@ -14,10 +14,8 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
-import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.presentation.views.creteeditword.CreateWordActivity
 import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.controller.getDisplayHeight
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
@@ -26,9 +24,7 @@ import com.google.android.material.button.MaterialButtonToggleGroup
 import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.domain.dto.Example
-import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
-import com.yingenus.pocketchinese.domain.repository.ExampleRepository
-import com.yingenus.pocketchinese.domain.repository.ToneRepository
+import com.yingenus.pocketchinese.presentation.views.addword.AddWordFromDictionaryActivity
 import java.lang.IllegalArgumentException
 import javax.inject.Inject
 
@@ -147,7 +143,7 @@ class CharacterSheetDialog(
     }
 
     override fun startAddNewStudy(word: com.yingenus.pocketchinese.domain.dto.DictionaryItem) {
-        val intent= CreateWordActivity.getIntent(requireContext(),word)
+        val intent= AddWordFromDictionaryActivity.getIntent(word,requireContext())
         requireContext().startActivity(intent)
     }
 
