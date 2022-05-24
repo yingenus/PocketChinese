@@ -106,15 +106,15 @@ class UserListsFragment : Fragment(R.layout.user_lists_fragment), StudyListAdapt
         }
         viewModel.progressChinese.observe(viewLifecycleOwner){
             successChnProgress?.progress = it
-            successChnPercent?.text = it.toString()
+            successChnPercent?.text = "$it%"
         }
         viewModel.progressPinyin.observe(viewLifecycleOwner){
             successPinProgress?.progress = it
-            successPinPercent?.text = it.toString()
+            successPinPercent?.text = "$it%"
         }
         viewModel.progressTranslation.observe(viewLifecycleOwner){
             successTrnProgress?.progress = it
-            successTrnPercent?.text = it.toString()
+            successTrnPercent?.text = "$it%"
         }
         viewModel.showedNeedRepeatUserList.observe(viewLifecycleOwner){
             val adapter = (recyclerView!!.adapter as StudyListAdapter)
@@ -264,8 +264,11 @@ class StudyListAdapter : HeadersRecyclerViewAdapter<UserListViewHolder>(
 
     override fun onBindHeaderViewHolder(holder: ViewViewHolder, tag: String) {
         when(tag){
-            TAG_NEW -> holder.itemView.findViewById<TextView>(R.id.title).text =
-                holder.itemView.context.getString(R.string.need_repeat_list)
+            TAG_NEW ->{
+                val textView = holder.itemView.findViewById<TextView>(R.id.title)
+                textView.text = holder.itemView.context.getString(R.string.need_repeat_list)
+                 UtilsVariantParams.apply { textView.setTextColor( holder.itemView.context.resolveColorAttr(android.R.attr.colorError)) }
+            }
             TAG_OTHER -> holder.itemView.findViewById<TextView>(R.id.title).text =
                 holder.itemView.context.getString(R.string.user_lists_other)
         }

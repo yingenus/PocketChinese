@@ -113,7 +113,7 @@ class TrainingWordsUseCaseImpl @Inject constructor(
         check(::trainingConf.isInitialized){ " TrainingConf must be set"}
         return training.showAnswer(studyWord)
             .doOnSuccess {
-                userStatistics.wordTrained(studyWord.id, TrainedResult.SHOWED, trainingConf.language)
+                userStatistics.wordTrained(studyWord.id, TrainedResult.SHOWED, trainingConf.language).blockingSubscribe()
             }
     }
 
@@ -125,7 +125,7 @@ class TrainingWordsUseCaseImpl @Inject constructor(
                     id = studyWord.id,
                     trainedResult = it,
                     language = trainingConf.language
-                )
+                ).blockingSubscribe()
                 when(it){
                     TrainedResult.SUCCESS -> good++
                     TrainedResult.SUCCESS_AFTER_FILED -> {

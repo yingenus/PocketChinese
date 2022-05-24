@@ -62,6 +62,7 @@ class TrainingViewModel @AssistedInject constructor(
 
     private var trainedWords : MutableList<Pair<Boolean,StudyWord>> = mutableListOf()
     private var showedWord : StudyWord? = null
+    private var wasShowedAns: Boolean = false
 
     private var adds : CompositeDisposable = CompositeDisposable()
 
@@ -100,29 +101,35 @@ class TrainingViewModel @AssistedInject constructor(
 
     fun postAnswer( answer : String) : LiveData<Boolean>{
         val isSuccess : MutableLiveData<Boolean> = MutableLiveData()
-        getShowed().flatMap {
-            trainingWordsUseCase.postAnswer(answer, it)
-                .toMaybe()
-        }
-            .switchIfEmpty(Single.error(Throwable("not inited")))
-            .doOnSuccess {
-                if(it){
-                    getShowed().blockingSubscribe {showed ->
-                        val word = trainedWords.find { it.second == showed }!!
-                        val index = trainedWords.indexOf(word)
-                        trainedWords.removeAt(index)
-                        trainedWords.add(index,true to word.second)
-                    }
-                }
-                isSuccess.postValue(it)
-            }
-            .doOnError {
-                isSuccess.postValue(false)
-            }
-            .onErrorReturnItem(false)
-            .flatMapCompletable { if (it) goNext() else Completable.complete() }
-            .subscribe()
 
+        if (wasShowedAns){
+            isSuccess.postValue(false)
+            goNext().subscribe()
+        }else {
+
+            getShowed().flatMap {
+                trainingWordsUseCase.postAnswer(answer, it)
+                    .toMaybe()
+            }
+                .switchIfEmpty(Single.error(Throwable("not inited")))
+                .doOnSuccess {
+                    if (it) {
+                        getShowed().blockingSubscribe { showed ->
+                            val word = trainedWords.find { it.second == showed }!!
+                            val index = trainedWords.indexOf(word)
+                            trainedWords.removeAt(index)
+                            trainedWords.add(index, true to word.second)
+                        }
+                    }
+                    isSuccess.postValue(it)
+                }
+                .doOnError {
+                    isSuccess.postValue(false)
+                }
+                .onErrorReturnItem(false)
+                .flatMapCompletable { if (it) goNext() else Completable.complete() }
+                .subscribe()
+        }
         return isSuccess
     }
 
@@ -133,6 +140,7 @@ class TrainingViewModel @AssistedInject constructor(
                 trainingWordsUseCase.showAnswer(it)
             }.subscribe({
                 answer.postValue(it)
+                wasShowedAns = true
             },{ error ->
 
             })
@@ -172,6 +180,7 @@ class TrainingViewModel @AssistedInject constructor(
                 if(next != null){
                     showedWord = next.second
                     _trainingStudyWord.postValue(next.second)
+                    wasShowedAns = false
                 }
 
                 it.onSuccess(next == null)

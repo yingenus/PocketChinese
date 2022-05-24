@@ -84,7 +84,7 @@ class UserListsViewModel @Inject constructor(
             .getStatistic()
             .subscribe { statistic->
                 _addedWords.postValue(statistic.added)
-                _repeatedWords.postValue(statistic.added)
+                _repeatedWords.postValue(statistic.repeated)
                 if(statistic.passedChn != 0) _progressChinese.postValue(statistic.passedChn*100 / (statistic.passedChn + statistic.failedChn))
                 else _progressChinese.postValue(0)
                 if(statistic.passedPin != 0) _progressPinyin.postValue(statistic.passedPin*100 / (statistic.passedPin + statistic.failedPin))

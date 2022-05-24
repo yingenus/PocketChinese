@@ -35,6 +35,7 @@ import com.yingenus.pocketchinese.presentation.dialogs.StartTrainingSheetDialog
 import com.yingenus.pocketchinese.presentation.dialogs.UserListRenameDialog
 import com.yingenus.pocketchinese.presentation.views.addword.CreateWordForList
 import com.yingenus.pocketchinese.presentation.views.addword.EditWordActivity
+import com.yingenus.pocketchinese.presentation.views.userlist.StudyListAdapter
 import com.yingenus.pocketchinese.view.HeadersRecyclerViewAdapter
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import java.util.*
@@ -172,7 +173,7 @@ class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,Wo
             }
             else {
                 progressBar!!.getProgressItemById(R.id.progress_chn)!!.setProgress(it)
-                percentChn!!.text = it.toString() + "%"
+                percentChn!!.text = "$it%"
             }
         }
         viewModel.progressPinyin.observe(this){
@@ -182,7 +183,7 @@ class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,Wo
             }
             else {
                 progressBar!!.getProgressItemById(R.id.progress_pin)!!.setProgress(it)
-                percentPin!!.text = it.toString() + "%"
+                percentPin!!.text = "$it%"
             }
         }
         viewModel.progressTranslation.observe(this){
@@ -192,17 +193,17 @@ class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,Wo
             }
             else {
                 progressBar!!.getProgressItemById(R.id.progress_trn)!!.setProgress(it)
-                percentTrn!!.text = it.toString() + "%"
+                percentTrn!!.text = "$it%"
             }
         }
         viewModel.showProgressChinese.observe(this){
-            percentChn!!.text = "--%"
+            if (!it) percentChn!!.text = "--%"
         }
         viewModel.showProgressPinyin.observe(this){
-            percentPin!!.text = "--%"
+            if (!it) percentPin!!.text = "--%"
         }
         viewModel.showProgressTranslation.observe(this){
-            percentTrn!!.text = "--%"
+            if (!it) percentTrn!!.text = "--%"
         }
         viewModel.addedWords.observe(this){
             val adapter = statisticAdapter()!!

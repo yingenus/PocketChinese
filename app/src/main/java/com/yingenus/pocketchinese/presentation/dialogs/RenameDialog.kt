@@ -9,6 +9,7 @@ import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.DialogFragment
 import com.yingenus.pocketchinese.R
 import com.google.android.material.textfield.TextInputLayout
+import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
 import com.yingenus.pocketchinese.presentation.views.userlist.UserListsViewModel
 
@@ -42,6 +43,15 @@ class RenameDialog(val showedStudyList: ShowedStudyList, val userListsViewModel:
         dialog!!.window!!.setBackgroundDrawableResource(R.color.transparent)
 
         return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+        val window = dialog!!.window ?: return
+        val layoutParam = window.attributes
+        layoutParam.height = dp2px(410, requireContext())
+        layoutParam.width = dp2px(350, requireContext())
+        window.attributes = layoutParam
     }
 
     private fun onCancelClicked(){

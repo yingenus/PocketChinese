@@ -29,6 +29,7 @@
         <item name="android:textColorPrimary">@color/green_dark</item>
         <item name="android:textColorSecondary">@color/gray</item>
 
+
         <item name="actionModeCloseDrawable">@drawable/ic_back</item>
 
         <item name="alertDialogTheme">@style/Theme.PocketChinese.AlertDialog</item>

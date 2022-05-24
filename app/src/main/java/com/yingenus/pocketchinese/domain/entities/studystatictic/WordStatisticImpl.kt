@@ -80,7 +80,7 @@ class WordStatisticImpl @Inject constructor(
         if (!repeatType.ignoreTRN)
             levels.add(trainingCond.translationLevel.level)
 
-        return levels.reduce { acc, i -> acc + i } / levels.size
+        return Math.ceil((levels.reduce { acc, i -> acc + i }.toDouble() / levels.size)).toInt()
     }
 
     private fun getRepeatRecomend(trainingCond : TrainingCond) : RepeatRecomend {

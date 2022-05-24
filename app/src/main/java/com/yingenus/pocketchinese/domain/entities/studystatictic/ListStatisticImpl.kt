@@ -36,9 +36,15 @@ class ListStatisticImpl @Inject constructor(
                 words = words.size,
                 lastRepeat = getLastRepeatDate(trenings),
                 nextRepeat = getNextRepeatDate(trenings),
-                successChn = if(trenings.isNotEmpty())(trenings.map { it.chineseLevel.level }.reduce { acc, i -> acc + i }* 100) / KnownLevel.maxLevel.level else 0,
-                successPin = if(trenings.isNotEmpty()) (trenings.map { it.pinyinLevel.level }.reduce { acc, i -> acc + i }* 100) / KnownLevel.maxLevel.level else 0,
-                successTrn = if(trenings.isNotEmpty()) (trenings.map { it.translationLevel.level }.reduce { acc, i -> acc + i }* 100) / KnownLevel.maxLevel.level else 0,
+                successChn = if(trenings.isNotEmpty())
+                    (((trenings.map { it.chineseLevel.level }.reduce { acc, i -> acc + i }.toFloat() / trenings.size)* 100) / KnownLevel.maxLevel.level).toInt()
+                else 0,
+                successPin = if(trenings.isNotEmpty())
+                    (((trenings.map { it.pinyinLevel.level }.reduce { acc, i -> acc + i }.toFloat() / trenings.size)* 100) / KnownLevel.maxLevel.level).toInt()
+                else 0,
+                successTrn = if(trenings.isNotEmpty())
+                    (((trenings.map { it.translationLevel.level }.reduce { acc, i -> acc + i }.toFloat() / trenings.size)* 100) / KnownLevel.maxLevel.level).toInt()
+                else 0,
                 repeat = getRepeatRecomend(trenings),
                 percentComplete = getPercentComplete(trenings),
                 repeatedWords = getRepeatedWords(ststistics,words),
@@ -137,7 +143,10 @@ class ListStatisticImpl @Inject constructor(
         if (!repeatType.ignoreTRN)
             levls.addAll(trainingConds.map { it.translationLevel.level })
 
-        return if (levls.isNotEmpty()) levls.reduce { acc, i -> acc + i } / levls.size else 0
+        return if (levls.isNotEmpty())
+            (levls.reduce { acc, i -> acc + i }.toDouble()*10 / levls.size).toInt()
+        else
+            0
     }
 
     private fun getRepeatedWords(statistics : List<UserStatistic>, words : List<StudyWord>) : Int{
