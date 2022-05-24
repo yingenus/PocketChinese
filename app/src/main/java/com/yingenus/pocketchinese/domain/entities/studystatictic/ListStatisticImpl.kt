@@ -45,7 +45,7 @@ class ListStatisticImpl @Inject constructor(
                 successTrn = if(trenings.isNotEmpty())
                     (((trenings.map { it.translationLevel.level }.reduce { acc, i -> acc + i }.toFloat() / trenings.size)* 100) / KnownLevel.maxLevel.level).toInt()
                 else 0,
-                repeat = getRepeatRecomend(trenings),
+                repeat = if(trenings.size < words.size) RepeatRecomend.FIRST else getRepeatRecomend(trenings),
                 percentComplete = getPercentComplete(trenings),
                 repeatedWords = getRepeatedWords(ststistics,words),
                 addedWords = getAddedWord(ststistics,words)
@@ -60,9 +60,10 @@ class ListStatisticImpl @Inject constructor(
         ){ words, trenings ->
             StudyListStatisticShort(
                 words = words.size,
-                repeat = getRepeatRecomend(trenings),
+                repeat = if(trenings.size < words.size) RepeatRecomend.FIRST else getRepeatRecomend(trenings),
                 percentComplete = getPercentComplete(trenings),
-                nextRepeat = getNextRepeatDate(trenings)
+                nextRepeat = getNextRepeatDate(trenings),
+                lastRepeat = getLastRepeatDate(trenings)
             )
         }
     }
@@ -106,6 +107,7 @@ class ListStatisticImpl @Inject constructor(
                         it.trainingDateChinese,
                         it.chineseLevel)
                 })
+
             if (trainingConds.any { it.trainingStatusChinese == TrainingStatus.FILED }) repeatRecomends.add(Expired.BED)
         }
         if (!repeatType.ignorePIN) {

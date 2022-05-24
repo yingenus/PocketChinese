@@ -34,7 +34,7 @@ class WordStatisticImpl @Inject constructor(
                 )
             }
             .defaultIfEmpty(
-                StudyWordStatistic(0,0,0,0,RepeatRecomend.DONT_NEED)
+                StudyWordStatistic(0,0,0,0,RepeatRecomend.FIRST)
             )
     }
 
@@ -61,9 +61,9 @@ class WordStatisticImpl @Inject constructor(
                     0,
                     0,
                     0,
-                    RepeatRecomend.DONT_NEED,
-                    RepeatRecomend.DONT_NEED,
-                    RepeatRecomend.DONT_NEED,
+                    RepeatRecomend.FIRST,
+                    RepeatRecomend.FIRST,
+                    RepeatRecomend.FIRST,
                     TrainingStatus.SUCCESS,
                     TrainingStatus.SUCCESS,
                     TrainingStatus.SUCCESS)

@@ -108,7 +108,10 @@ class UserStudyListViewModel @AssistedInject constructor(
                 _addedWords.postValue(info.second.addedWords)
                 _repeatedWords.postValue(info.second.repeatedWords)
                 _lastRepeat.postValue(info.second.lastRepeat?.toTimeOrDate()?:"--")
-                _nextRepeat.postValue(info.second.nextRepeat?.toTimeOrDate()?:"--")
+                if(info.second.repeat != RepeatRecomend.FIRST)
+                    _nextRepeat.postValue(info.second.nextRepeat?.toTimeOrDate()?:"--")
+                else
+                    _nextRepeat.postValue("--")
                 _repeatRecomend.postValue(info.second.repeat)
                 _progressChinese.postValue(info.second.successChn)
                 _progressPinyin.postValue(info.second.successPin)

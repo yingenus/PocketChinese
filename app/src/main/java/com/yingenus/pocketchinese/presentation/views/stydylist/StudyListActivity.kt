@@ -230,7 +230,7 @@ class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdap
             }
             else{
                 shouldRepeatNotify!!.visibility = View.VISIBLE
-                nextRepeat!!.setTextColor( this.resources.getColor(R.color.notify_color) )
+                if(it != RepeatRecomend.FIRST) nextRepeat!!.setTextColor( this.resources.getColor(R.color.notify_color) )
             }
 
         }

@@ -24,6 +24,14 @@ object UtilsVariantParams {
     fun getColor(resources:Resources,lvl: Int)=
             resources.getIntArray(R.array.success_colors).get(if (lvl==0)0 else lvl-1)
 
+    fun getRepeatString(resources: Resources, date :Date): String{
+        val  currentTime = System.currentTimeMillis()
+        return if (currentTime < date.time){
+            getNextRepeat(resources,date)
+        }else{
+            getLstRepeat(resources, date)
+        }
+    }
 
     fun getLstRepeat(resources:Resources,date: Date) =
         getRepeatStr(resources,date,GregorianCalendar.getInstance().time)+" "+resources.getString(R.string.ago_suffix)

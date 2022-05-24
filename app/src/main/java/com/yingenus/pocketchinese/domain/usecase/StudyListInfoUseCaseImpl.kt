@@ -73,7 +73,7 @@ class StudyListInfoUseCaseImpl @Inject constructor(
             repeat = shortStatistic.repeat,
             percentComplete = shortStatistic.percentComplete,
             words = shortStatistic.words,
-            repeatDate = shortStatistic.nextRepeat?: Date(System.currentTimeMillis()),
+            repeatDate = shortStatistic.lastRepeat,
             createDate = studyList.createDate
         )
     }

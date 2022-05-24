@@ -8,7 +8,7 @@ class ShowedStudyList(
     val words: Int = 0,
     val notifyUser: Boolean,
     val repeat: RepeatRecomend,
-    val repeatDate: Date,
+    val repeatDate: Date?,
     val percentComplete: Int,
     val createDate: Date
 ) {

@@ -242,8 +242,13 @@ class UserListViewHolder : RecyclerView.ViewHolder{
         words.text = super.itemView.context.getString(R.string.count_words) + item.words.toString()
         progress.progress = item.percentComplete
         progressPercent.text = item.percentComplete.toString()+"%"
-        lastRepeat.text = UtilsVariantParams.getLstRepeat(itemView.resources,item.repeatDate)
-        lastRepeat.setTextColor(UtilsVariantParams.getLstRepeatColor(itemView,item.repeat))
+        if (item.repeatDate == null){
+            lastRepeat.visibility = View.GONE
+        }else{
+            lastRepeat.visibility = View.VISIBLE
+            lastRepeat.text = UtilsVariantParams.getRepeatString(itemView.resources,item.repeatDate)
+            lastRepeat.setTextColor(UtilsVariantParams.getLstRepeatColor(itemView,item.repeat))
+        }
         details.position = position.toLong()
         selectionTracker?.let {  bindSelection(selectionTracker) }
     }
