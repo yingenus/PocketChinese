@@ -15,8 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.PocketApplication
+import com.yingenus.pocketchinese.controller.BoundsDecoratorBottom
+import com.yingenus.pocketchinese.controller.CardBoundTopBottom
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
 import com.yingenus.pocketchinese.presentation.ViewModelFactory
+import com.yingenus.pocketchinese.presentation.views.stydylist.StudyListActivity
 import javax.inject.Inject
 
 
@@ -40,6 +43,8 @@ class RepeatableUserListsActivity : AppCompatActivity(),StudyListAdapter.OnUserL
         installSplashScreen()
         PocketApplication.setupApplication()
 
+        PocketApplication.getAppComponent().injectRepeatableUserListsActivity(this)
+
         viewModel = ViewModelProvider(viewModelStore, viewModelFactory).get(RepeatableUserListViewModel::class.java)
 
         super.onCreate(savedInstanceState)
@@ -50,7 +55,10 @@ class RepeatableUserListsActivity : AppCompatActivity(),StudyListAdapter.OnUserL
         toolbar!!.setNavigationOnClickListener { finish() }
         recyclerView = findViewById(R.id.recyclerview)
         recyclerView!!.layoutManager = LinearLayoutManager(this)
-        recyclerView!!.adapter = UserListAdapter()
+        recyclerView!!.adapter = UserListAdapter().also { it.setOnClickListener(this) }
+
+        recyclerView!!.addItemDecoration(CardBoundTopBottom(this,4))
+        recyclerView!!.addItemDecoration(BoundsDecoratorBottom(this))
 
         viewModel.showedNeedRepeatUserList.observe(this){
             val adapter = (recyclerView!!.adapter as UserListAdapter)
@@ -69,10 +77,12 @@ class RepeatableUserListsActivity : AppCompatActivity(),StudyListAdapter.OnUserL
         super.onDestroy()
         toolbar = null
         (recyclerView!!.adapter as UserListAdapter).deleteOnClickListener(this)
+        recyclerView = null
     }
 
     override fun onClicked(showedStudyList: ShowedStudyList) {
-        TODO("Not yet implemented")
+        val intent = StudyListActivity.getIntent(this,showedStudyList.id)
+        startActivity(intent)
     }
 
     class UserListAdapter : RecyclerView.Adapter<UserListViewHolder>(){
@@ -92,7 +102,7 @@ class RepeatableUserListsActivity : AppCompatActivity(),StudyListAdapter.OnUserL
         }
 
         override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserListViewHolder {
-            return UserListViewHolder(parent.context.getSystemService(LayoutInflater::class.java.name) as LayoutInflater, parent)
+            return UserListViewHolder(parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater, parent)
         }
 
         override fun onBindViewHolder(holder: UserListViewHolder, position: Int) {

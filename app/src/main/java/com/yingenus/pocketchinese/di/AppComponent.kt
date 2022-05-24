@@ -18,6 +18,7 @@ import com.yingenus.pocketchinese.presentation.views.stydylist.StudyListActivity
 import com.yingenus.pocketchinese.presentation.views.suggestist.SuggestListsFragment
 import com.yingenus.pocketchinese.presentation.views.suggestist.SuggestWordsActivity
 import com.yingenus.pocketchinese.presentation.views.train.TrainingFragment
+import com.yingenus.pocketchinese.presentation.views.userlist.RepeatableUserListsActivity
 import com.yingenus.pocketchinese.presentation.views.userlist.UserListsFragment
 import dagger.Component
 import dagger.BindsInstance
@@ -62,4 +63,5 @@ interface AppComponent {
     fun injectEditWordFragment(editWordFragment: com.yingenus.pocketchinese.presentation.views.addword.EditWordFragment)
     fun injectCheckRepeatableWordsWorker(checkRepeatableWordsWorker : CheckRepeatableWordsWorker)
     fun injectSuggestListsFragment(suggestListsFragment : SuggestListsFragment)
+    fun injectRepeatableUserListsActivity(repeatableUserListsActivity : RepeatableUserListsActivity)
 }

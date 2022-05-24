@@ -60,7 +60,7 @@
         <activity
             android:name="com.yingenus.pocketchinese.presentation.views.userlist.RepeatableUserListsActivity"
             android:parentActivityName="com.yingenus.pocketchinese.presentation.views.MainActivity"
-            android:theme="@style/Theme.PocketChinese.Start.NoActionBar"
+            android:theme="@style/Theme.PocketChinese.Default.NoActionBar.SurfaceStatusBar"
             android:screenOrientation="portrait"/>
         <activity
             android:name="com.yingenus.pocketchinese.presentation.views.suggestist.SuggestWordsActivity"

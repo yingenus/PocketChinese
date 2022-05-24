@@ -250,7 +250,7 @@
     <string name="no_info">Нет данных</string>
     <string name="remind_channel_name">Напоминания</string>
     <string name="remind_channel_description">Напоминает о том, что нужно повторить слова</string>
-    <string name="repeatable_lists_title">Необходимо повторить</string>
+    <string name="repeatable_lists_title">Можно повторить</string>
     <string name="remind_notify_title">Можно повторить слова</string>
     <string name="remind_notify_text">Доступно %1$s в %2$s</string>
     <string name="other">Другое</string>
