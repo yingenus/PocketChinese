@@ -7,6 +7,7 @@ import com.yingenus.pocketchinese.ISettings
 import com.yingenus.pocketchinese.domain.dto.RepeatRecomend
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyWord
+import com.yingenus.pocketchinese.domain.entities.toTimeOrDate
 import com.yingenus.pocketchinese.domain.usecase.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
@@ -45,12 +46,12 @@ class UserStudyListViewModel @AssistedInject constructor(
     val repeatedWords : LiveData<Int>
         get() = _repeatedWords
 
-    private val _lastRepeat : MutableLiveData<Date> = MutableLiveData()
-    val lastRepeat : LiveData<Date>
+    private val _lastRepeat : MutableLiveData<String> = MutableLiveData()
+    val lastRepeat : LiveData<String>
         get() = _lastRepeat
 
-    private val _nextRepeat : MutableLiveData<Date> = MutableLiveData()
-    val nextRepeat : LiveData<Date>
+    private val _nextRepeat : MutableLiveData<String> = MutableLiveData()
+    val nextRepeat : LiveData<String>
         get() = _nextRepeat
 
     private val _repeatRecomend : MutableLiveData<RepeatRecomend> = MutableLiveData()
@@ -106,7 +107,8 @@ class UserStudyListViewModel @AssistedInject constructor(
                 _notifyUsers.postValue(info.first.notifyUser)
                 _addedWords.postValue(info.second.addedWords)
                 _repeatedWords.postValue(info.second.repeatedWords)
-                _lastRepeat.postValue(info.second.lastRepeat)
+                _lastRepeat.postValue(info.second.lastRepeat?.toTimeOrDate()?:"--")
+                _nextRepeat.postValue(info.second.nextRepeat?.toTimeOrDate()?:"--")
                 _repeatRecomend.postValue(info.second.repeat)
                 _progressChinese.postValue(info.second.successChn)
                 _progressPinyin.postValue(info.second.successPin)

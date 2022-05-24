@@ -119,8 +119,8 @@
     <string name="successed">Успешность</string>
     <string name="actions">Действия</string>
     <string name="block">Блок %d</string>
-    <string name="clear_statistic">Сбросить \n статистику</string>
-    <string name="add_word">Добавить \n слова</string>
+    <string name="clear_statistic">Сбросить</string>
+    <string name="add_word">Добавить</string>
     <string name="new_list">Придумайте название \n нового списка</string>
     <string name="rename_list">Придумайте новое \n название для списка</string>
     <string name="change">Изменить</string>
@@ -227,6 +227,7 @@
     <string name="example">Примеры</string>
     <string name="character">Иероглифы</string>
     <string name="error_in_examples">Внимание: в переводе и романизации \n \ могут быть неточности</string>
+    <string name="notify_should_repeat_words_in_list">Есть слова кторые необходимо \n повторить</string>
     <string name="add_words_choose_list">Выбор списка</string>
     <string name="add_words_exist_list">Выбрать</string>
     <string name="add_words_new_list">Создать</string>

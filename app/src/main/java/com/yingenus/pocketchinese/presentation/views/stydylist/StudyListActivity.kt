@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
 import android.widget.CheckBox
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
@@ -29,6 +30,7 @@ import com.yingenus.pocketchinese.controller.CardBoundTopBottom
 import com.yingenus.pocketchinese.domain.dto.RepeatRecomend
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyWord
 import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams
+import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams.resolveColorAttr
 import com.yingenus.pocketchinese.presentation.dialogs.ActioneSheetDialog
 import com.yingenus.pocketchinese.presentation.dialogs.RenameDialog
 import com.yingenus.pocketchinese.presentation.dialogs.StartTrainingSheetDialog
@@ -41,7 +43,7 @@ import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import java.util.*
 import javax.inject.Inject
 
-class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,WordAdapter.OnWordClicked,WordAdapter.OnWordLongClicked {
+class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdapter.OnWordLongClicked {
 
     companion object{
         private const val INNER_STUDY_LIST="com.pocketchinese.com.studylist.studyword"
@@ -79,8 +81,14 @@ class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,Wo
     private var percentTrn : TextView? = null
     private var percentPin : TextView? = null
     private var extendedButton : ExtendedFloatingActionButton? = null
-    private var statisticRecyclerView : RecyclerView? = null
-    private var actionsRecyclerView : RecyclerView? = null
+    private var crearButton : Button? = null
+    private var addButton : Button? = null
+    private var lastRepeat: TextView? = null
+    private var nextRepeat: TextView? = null
+    private var repeatCount: TextView? = null
+    private var addedWords: TextView? = null
+    private var shouldRepeatNotify : View? = null
+
     private var wordsRecyclerView : RecyclerView? = null
 
     private var studyListId: Long = -1L
@@ -108,8 +116,13 @@ class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,Wo
         percentChn = findViewById(R.id.chn_success)
         percentPin = findViewById(R.id.pin_success)
         percentTrn = findViewById(R.id.trn_success)
-        statisticRecyclerView = findViewById(R.id.recycler_info)
-        actionsRecyclerView = findViewById(R.id.recycler_action)
+        lastRepeat = findViewById(R.id.last_repeat)
+        nextRepeat = findViewById(R.id.next_repeat)
+        repeatCount = findViewById(R.id.repeat_count)
+        addedWords = findViewById(R.id.added_words)
+        crearButton = findViewById(R.id.clear_statistic)
+        addButton  = findViewById(R.id.add)
+        shouldRepeatNotify = findViewById(R.id.notify_view)
         wordsRecyclerView = findViewById(R.id.expanded_recyclerview)
         extendedButton = findViewById(R.id.fab_start)
 
@@ -120,20 +133,6 @@ class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,Wo
             onMenuItemClick(item)
         }
 
-        statisticRecyclerView!!.layoutManager = LinearLayoutManager(this)
-            .also { it.orientation = RecyclerView.HORIZONTAL }
-        statisticRecyclerView!!.adapter = StatisticAdapter()
-        statisticRecyclerView!!.addItemDecoration(CardBoundTopBottom(this,4))
-        statisticRecyclerView!!.addItemDecoration(CardBoundLeftRight(this,4))
-
-        actionsRecyclerView!!.layoutManager = LinearLayoutManager(this)
-            .also { it.orientation = RecyclerView.HORIZONTAL }
-        actionsRecyclerView!!.adapter = ActionsAdapter().also {
-            it.setListener(this)
-        }
-        actionsRecyclerView!!.addItemDecoration(CardBoundTopBottom(this,4))
-        actionsRecyclerView!!.addItemDecoration(CardBoundLeftRight(this,4))
-
         wordsRecyclerView!!.layoutManager = LinearLayoutManager(this)
             .also { it.orientation = RecyclerView.VERTICAL }
         wordsRecyclerView!!.adapter = WordAdapter().also {
@@ -142,6 +141,11 @@ class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,Wo
         }
 
         extendedButton!!.setOnClickListener { onStartTrainCkicked(it) }
+
+        addButton!!.setOnClickListener {
+            val intent = CreateWordForList.getIntent(studyListId,this)
+            startActivity(intent)
+        }
 
 
         subscribeViewModel()
@@ -206,29 +210,29 @@ class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,Wo
             if (!it) percentTrn!!.text = "--%"
         }
         viewModel.addedWords.observe(this){
-            val adapter = statisticAdapter()!!
-            adapter.added = it
-            adapter.notifyDataSetChanged()
+            addedWords!!.text = it.toString()
         }
         viewModel.lastRepeat.observe(this){
-            val adapter = statisticAdapter()!!
-            adapter.lastRepeat = it
-            adapter.notifyDataSetChanged()
+            lastRepeat!!.text = it
         }
         viewModel.nextRepeat.observe(this){
-            val adapter =statisticAdapter()!!
-            adapter.nextRepeat = it
-            adapter.notifyDataSetChanged()
+            nextRepeat!!.text = it
         }
         viewModel.repeatedWords.observe(this){
-            val adapter = statisticAdapter()!!
-            adapter.repeated = it
-            adapter.notifyDataSetChanged()
+            repeatCount!!.text = it.toString()
         }
         viewModel.repeatRecomend.observe(this){
-            val adapter = statisticAdapter()!!
-            adapter.repeatRecomend = it
-            adapter.notifyDataSetChanged()
+            if (it == RepeatRecomend.DONT_NEED) {
+                shouldRepeatNotify!!.visibility = View.GONE
+                UtilsVariantParams.apply {
+                    nextRepeat!!.setTextColor( this@StudyListActivity.resolveColorAttr(android.R.attr.textColorPrimary))
+                }
+            }
+            else{
+                shouldRepeatNotify!!.visibility = View.VISIBLE
+                nextRepeat!!.setTextColor( this.resources.getColor(R.color.notify_color) )
+            }
+
         }
         viewModel.notifyUsers.observe(this){
             setMenuItemNotify(it)
@@ -258,10 +262,14 @@ class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,Wo
         percentChn = null
         percentTrn = null
         percentPin = null
-        statisticRecyclerView = null
+        lastRepeat = null
+        nextRepeat = null
+        repeatCount = null
+        addedWords = null
+        crearButton = null
+        addButton  = null
+        shouldRepeatNotify = null
         extendedButton = null
-        (actionsRecyclerView!!.adapter as ActionsAdapter).setListener(null)
-        actionsRecyclerView = null
         (wordsRecyclerView!!.adapter as WordAdapter).also {
             it.deleteOnClickListener(this)
             it.deleteOnLongClickListener(this)
@@ -269,17 +277,7 @@ class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,Wo
         wordsRecyclerView = null
     }
 
-    override fun onclick(position: Int) {
-        when(position){
-            0 -> {
-                val intent = CreateWordForList.getIntent(studyListId,this)
-                startActivity(intent)
-            }
-            1 -> {
-                TODO()
-            }
-        }
-    }
+
 
     fun onStartTrainCkicked( v : View){
         val ff: FragmentFactory = supportFragmentManager.fragmentFactory
@@ -347,91 +345,6 @@ class StudyListActivity : AppCompatActivity(), ActionsAdapter.OnActionClicked,Wo
         if (item != null) {
             item.icon = stateDrawable.current
         }
-    }
-
-    class StatisticAdapter : RecyclerView.Adapter<ViewViewHolder>(){
-
-        var lastRepeat : Date? = null
-        var nextRepeat : Date? = null
-        var repeatRecomend : RepeatRecomend = RepeatRecomend.DONT_NEED
-        var repeated : Int = 0
-        var added: Int = 0
-
-
-        override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewViewHolder {
-            return ViewViewHolder(R.layout.statistic_card, parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater )
-        }
-
-        override fun onBindViewHolder(holder: ViewViewHolder, position: Int) {
-            val context = holder.itemView.context
-            when(position){
-                0 ->{
-                    holder.itemView.findViewById<TextView>(R.id.title).text = context.getString(R.string.study_list_last)
-                    if (lastRepeat != null) holder.itemView.findViewById<TextView>(R.id.value).text = UtilsVariantParams.getLstRepeat(context.resources, lastRepeat!!)
-                }
-                1 ->{
-                    holder.itemView.findViewById<TextView>(R.id.title).text = context.getString(R.string.study_list_next)
-                    if (repeatRecomend != RepeatRecomend.DONT_NEED) holder.itemView.findViewById<TextView>(R.id.value).text = context.getString(R.string.study_list_need)
-                    if (nextRepeat != null) holder.itemView.findViewById<TextView>(R.id.value).text = UtilsVariantParams.getLstRepeat(context.resources, nextRepeat!!)
-                }
-                2 ->{
-                    holder.itemView.findViewById<TextView>(R.id.title).text = context.getString(R.string.study_list_repeted)
-                    holder.itemView.findViewById<TextView>(R.id.value).text = repeated.toString()
-                }
-                3 ->{
-                    holder.itemView.findViewById<TextView>(R.id.title).text = context.getString(R.string.study_list_count)
-                    holder.itemView.findViewById<TextView>(R.id.value).text = added.toString()
-                }
-            }
-        }
-
-        override fun getItemCount(): Int {
-            return 4
-        }
-    }
-
-    private fun statisticAdapter(): StatisticAdapter?{
-        return statisticRecyclerView!!.adapter as StatisticAdapter?
-    }
-
-}
-
-class ActionsAdapter : RecyclerView.Adapter<ViewViewHolder>(){
-
-    interface OnActionClicked{
-        fun onclick(position : Int)
-    }
-
-    private var onClickListener : OnActionClicked? = null
-
-    fun setListener(listener : OnActionClicked?){
-        onClickListener  = listener
-    }
-
-    override fun getItemViewType(position: Int): Int {
-        return position
-    }
-
-    override fun getItemId(position: Int): Long {
-        return position.toLong()
-    }
-
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewViewHolder {
-        return when(viewType){
-            0 -> ViewViewHolder(R.layout.add_word_card,parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
-            1 -> ViewViewHolder(R.layout.clear_statistic_card,parent.context.getSystemService(Context.LAYOUT_INFLATER_SERVICE) as LayoutInflater)
-            else -> throw RuntimeException("unexpected view type")
-        }
-    }
-
-    override fun onBindViewHolder(holder: ViewViewHolder, position: Int) {
-        holder.itemView.setOnClickListener {
-            onClickListener?.onclick(position)
-        }
-    }
-
-    override fun getItemCount(): Int {
-        return 2
     }
 }
 

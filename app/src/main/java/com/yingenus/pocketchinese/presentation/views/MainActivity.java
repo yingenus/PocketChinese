@@ -11,6 +11,7 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentFactory;
 import androidx.fragment.app.FragmentTransaction;
 
+import com.google.android.material.bottomnavigation.BottomNavigationView;
 import com.yingenus.pocketchinese.R;
 import com.yingenus.pocketchinese.PocketApplication;
 import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams;

@@ -31,6 +31,8 @@
     <color name="transparent">#00000000</color>
     <color name="red">#F10E00</color>
 
+    <color name="notify_color">#B3261E</color>
+
     <color name="keyboard_background">#D8D8D8</color>
     <color name="keyboard_key_background">#FAFAFA</color>
     <color name="keyboard_key_background_pressed">#C6C6C6</color>
