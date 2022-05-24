@@ -56,7 +56,8 @@ class WordInfoUseCaseImpl @Inject constructor(
             pinyin = studyWord.pinyin,
             translate = studyWord.translate,
             wordSuccess = studyWordStatistic.wordSuccess,
-            recomend = studyWordStatistic.recomend
+            recomend = studyWordStatistic.recomend,
+            createDate = studyWord.createDate
         )
     }
 }

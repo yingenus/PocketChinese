@@ -126,8 +126,12 @@ class UserStudyListViewModel @AssistedInject constructor(
         wordInfoUseCase
             .getShowedStudyWords(studyListId)
             .subscribe({ words ->
-                val repeatRecomend = words.filter { it.recomend != RepeatRecomend.DONT_NEED }
-                val other = words.filter { it.recomend == RepeatRecomend.DONT_NEED }
+                val repeatRecomend = words.filter { it.recomend != RepeatRecomend.DONT_NEED }.toMutableList()
+                val other = words.filter { it.recomend == RepeatRecomend.DONT_NEED }.toMutableList()
+
+                repeatRecomend.sortBy { it.createDate.time }
+                other.sortBy { it.createDate.time }
+
                 _repeadRecomedStudyWords.postValue(repeatRecomend)
                 _otherRecomedStudyWords.postValue(other)
             },{ error ->

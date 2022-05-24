@@ -38,7 +38,8 @@ class AddSuggestWordsToStudyListImpl @Inject constructor(
                 }
             }
             .map {
-                it.first to it.second.map { it.toStudyWord() }
+
+                it.first to it.second.toStudyWords()
             }
             .flatMap { studyRepository.addStudyWordsWithID(it.first, it.second) }
             .flatMapCompletable {
@@ -47,13 +48,21 @@ class AddSuggestWordsToStudyListImpl @Inject constructor(
 
     }
 
+    private fun List<SuggestWord>.toStudyWords(): List<StudyWord>{
+        val time = System.currentTimeMillis()
+        return this.mapIndexed { index, suggestWord -> suggestWord.toStudyWord(time + index) }
+    }
+
     private fun SuggestWord.toStudyWord() : StudyWord =
+        this.toStudyWord(System.currentTimeMillis())
+
+    private fun SuggestWord.toStudyWord( createTime : Long) : StudyWord =
         StudyWord(
             id = 0,
             chinese = this.word,
             pinyin = this.pinyin,
             translate = this.translation,
-            createDate = Date(System.currentTimeMillis())
+            createDate = Date(createTime)
         )
 
     private fun getRandomize(list : List<SuggestWord>) : List<SuggestWord>{
