@@ -23,12 +23,15 @@ import androidx.fragment.app.FragmentFactory
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
+import com.google.android.material.appbar.CollapsingToolbarLayout
 import com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton
 import com.yingenus.multipleprogressbar.MultipleProgressBar
 import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.controller.CardBoundLeftRight
 import com.yingenus.pocketchinese.controller.CardBoundTopBottom
+import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.domain.dto.RepeatRecomend
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyWord
 import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams
@@ -45,7 +48,7 @@ import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import java.util.*
 import javax.inject.Inject
 
-class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdapter.OnWordLongClicked {
+class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdapter.OnWordLongClicked, AppBarLayout.OnOffsetChangedListener {
 
     companion object{
         private const val INNER_STUDY_LIST="com.pocketchinese.com.studylist.studyword"
@@ -90,6 +93,8 @@ class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdap
     private var repeatCount: TextView? = null
     private var addedWords: TextView? = null
     private var shouldRepeatNotify : View? = null
+    private var appBarLayout : AppBarLayout? = null
+
 
     private var wordsRecyclerView : RecyclerView? = null
 
@@ -127,6 +132,9 @@ class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdap
         shouldRepeatNotify = findViewById(R.id.notify_view)
         wordsRecyclerView = findViewById(R.id.expanded_recyclerview)
         extendedButton = findViewById(R.id.fab_start)
+
+        appBarLayout = findViewById<AppBarLayout>(R.id.app_bar_layout)
+        appBarLayout!!.addOnOffsetChangedListener( this)
 
         toolbar!!.setNavigationOnClickListener{ view: View? ->
             onNavigationClicked(view)
@@ -167,6 +175,24 @@ class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdap
         if (ff is StartTrainFF) {
             val id = ff.studyListId
             outState.putLong(INNER_STUDY_LIST, id)
+        }
+    }
+
+    override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+        when(verticalOffset){
+            0 -> setElevation(0)
+            in -1 downTo -10 -> setElevation(1)
+            in -11 downTo -20 -> setElevation(2)
+            in -21 downTo -30 ->setElevation(3)
+            else -> setElevation(4)
+        }
+    }
+
+    fun setElevation( offset : Int){
+        val pix = dp2px(offset, this@StudyListActivity)
+
+        if (toolbar!!.elevation.toInt() != pix){
+            toolbar!!.elevation = pix.toFloat()
         }
     }
 
@@ -274,10 +300,12 @@ class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdap
         addButton  = null
         shouldRepeatNotify = null
         extendedButton = null
+        appBarLayout!!.removeOnOffsetChangedListener(this)
         (wordsRecyclerView!!.adapter as WordAdapter).also {
             it.deleteOnClickListener(this)
             it.deleteOnLongClickListener(this)
         }
+        appBarLayout = null
         wordsRecyclerView = null
     }
 

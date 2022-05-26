@@ -28,6 +28,7 @@
     <string name="learn_words_new_first">Показать сначала новые</string>
     <string name="tags">Теги</string>
     <string name="suggest_lists_title">Доступные списки</string>
+    <string name="user_lists_title">Изучение</string>
     <string name="suggest_lists_new">Пополнения</string>
     <string name="suggest_lists_other">Остальные списки</string>
     <string name="need_repeat_list">Необходимо повторить</string>

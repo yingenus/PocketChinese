@@ -13,40 +13,59 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:background="?attr/colorSurface"
-            app:elevation="0dp">
+            >
 
-            <androidx.appcompat.widget.Toolbar
-                style="@style/Style.PocketChinese.Toolbar"
-                android:id="@+id/toolbar"
+            <com.google.android.material.appbar.CollapsingToolbarLayout
+                android:id="@+id/collapsing_layout"
                 android:layout_width="match_parent"
-                android:layout_height="56dp"
-                android:background="?attr/colorSurface"
-                app:navigationIcon="@drawable/ic_chevrone_left"
+                android:layout_height="match_parent"
+                app:layout_scrollFlags="scroll|exitUntilCollapsed"
                 app:layout_collapseMode="pin"
-                app:layout_scrollFlags="scroll"
-                app:menu="@menu/study_list_menu"
-                tools:title="Title"
-                />
+                app:titleEnabled="false"
+                >
 
-            <include
-                android:id="@+id/notify_view"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                layout="@layout/should_repeat_notify"
-                android:layout_marginHorizontal="8dp"
-                android:layout_marginTop="4dp"
-                app:layout_scrollFlags="scroll"
-                android:visibility="gone"
-                tools:visibility="visible"
-                />
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical">
+                    <include
+                        android:id="@+id/notify_view"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        layout="@layout/should_repeat_notify"
+                        android:layout_marginHorizontal="8dp"
+                        android:layout_marginTop="60dp"
+                        android:visibility="gone"
+                        tools:visibility="visible"
+                        app:layout_collapseMode="none"
 
-            <include
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="8dp"
-                layout="@layout/study_list_info_fragment"
-                app:layout_scrollFlags="scroll"
-                />
+                        />
+                    <include
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginTop="8dp"
+                        layout="@layout/study_list_info_fragment"
+                        app:layout_collapseMode="none"
+                        android:layout_marginBottom="16dp"
+                        />
+
+                </LinearLayout>
+
+
+
+                <androidx.appcompat.widget.Toolbar
+                    style="@style/Style.PocketChinese.Toolbar"
+                    android:id="@+id/toolbar"
+                    android:layout_width="match_parent"
+                    android:layout_height="56dp"
+                    android:background="?attr/colorSurface"
+                    app:navigationIcon="@drawable/ic_chevrone_left"
+                    app:layout_collapseMode="pin"
+                    app:menu="@menu/study_list_menu"
+                    tools:title="Title"
+                    />
+
+            </com.google.android.material.appbar.CollapsingToolbarLayout>
 
         </com.google.android.material.appbar.AppBarLayout>
 
@@ -59,7 +78,7 @@
         android:fitsSystemWindows="false"
         app:layout_anchorGravity="bottom"
         app:layout_behavior="@string/appbar_scrolling_view_behavior"
-        android:layout_marginTop="16dp"
+
         />
 
     <com.google.android.material.floatingactionbutton.ExtendedFloatingActionButton

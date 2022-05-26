@@ -13,12 +13,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.progressindicator.LinearProgressIndicator
 import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.controller.BoundsDecoratorBottom
 import com.yingenus.pocketchinese.controller.CardBoundTopBottom
 import com.yingenus.pocketchinese.controller.dialog.CreateNewListDialog
+import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
 import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams
 import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams.resolveColorAttr
@@ -31,7 +33,7 @@ import com.yingenus.pocketchinese.view.HeadersRecyclerViewAdapter
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import javax.inject.Inject
 
-class UserListsFragment : Fragment(R.layout.user_lists_fragment), StudyListAdapter.OnUserListLongClicked, StudyListAdapter.OnUserListClicked{
+class UserListsFragment : Fragment(R.layout.user_lists_fragment), StudyListAdapter.OnUserListLongClicked, StudyListAdapter.OnUserListClicked, AppBarLayout.OnOffsetChangedListener{
 
     @Inject
     lateinit var viewModelFactory: ViewModelFactory
@@ -46,6 +48,7 @@ class UserListsFragment : Fragment(R.layout.user_lists_fragment), StudyListAdapt
     private var successPinPercent : TextView? = null
     private var successTrnPercent : TextView? = null
     private var toolbar : Toolbar? = null
+    private var appBarLayout : AppBarLayout? = null
 
     private var recyclerView : RecyclerView? = null
 
@@ -69,6 +72,10 @@ class UserListsFragment : Fragment(R.layout.user_lists_fragment), StudyListAdapt
         successTrnPercent = view.findViewById(R.id.percent_trn)
         successTrnProgress = view.findViewById(R.id.progress_trn)
         toolbar = view.findViewById(R.id.toolbar)
+        appBarLayout = view.findViewById(R.id.app_bar_layout)
+
+        appBarLayout!!.addOnOffsetChangedListener(this)
+
         toolbar!!.setOnMenuItemClickListener {
             if(it.itemId == R.id.create_new){
                 onCreteUserListClicked()
@@ -138,6 +145,8 @@ class UserListsFragment : Fragment(R.layout.user_lists_fragment), StudyListAdapt
         successPinProgress = null
         successTrnPercent = null
         successTrnProgress = null
+        appBarLayout!!.removeOnOffsetChangedListener(this)
+        appBarLayout = null
         (recyclerView?.adapter as StudyListAdapter).deleteOnLongClickListener(this)
         (recyclerView?.adapter as StudyListAdapter).deleteOnClickListener(this)
         recyclerView = null
@@ -158,6 +167,24 @@ class UserListsFragment : Fragment(R.layout.user_lists_fragment), StudyListAdapt
                 val dialog = RenameDialog(showedStudyList,viewModel)
                 dialog.show(childFragmentManager, "rename_dialog")
             }
+        }
+    }
+
+    override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+        when(verticalOffset){
+            0 -> setElevation(0)
+            in -1 downTo -10 -> setElevation(1)
+            in -11 downTo -20 -> setElevation(2)
+            in -21 downTo -30 ->setElevation(3)
+            else -> setElevation(4)
+        }
+    }
+
+    fun setElevation( offset : Int){
+        val pix = dp2px(offset, requireContext())
+
+        if (toolbar!!.elevation.toInt() != pix){
+            toolbar!!.elevation = pix.toFloat()
         }
     }
 

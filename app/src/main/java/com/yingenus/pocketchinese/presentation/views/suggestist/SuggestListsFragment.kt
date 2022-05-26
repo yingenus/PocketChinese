@@ -10,12 +10,14 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
+import androidx.appcompat.widget.Toolbar
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.google.android.material.appbar.AppBarLayout
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import com.yingenus.pocketchinese.PocketApplication
@@ -30,7 +32,7 @@ import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import java.lang.ref.WeakReference
 import javax.inject.Inject
 
-class SuggestListsFragment : Fragment(R.layout.suggest_lists_layout), SuggestListAdapter.OnSuggestListClicked {
+class SuggestListsFragment : Fragment(R.layout.suggest_lists_layout), SuggestListAdapter.OnSuggestListClicked, AppBarLayout.OnOffsetChangedListener {
 
     @Inject
     lateinit var viewModelFactory : ViewModelFactory
@@ -39,6 +41,8 @@ class SuggestListsFragment : Fragment(R.layout.suggest_lists_layout), SuggestLis
 
     private var chipGroup: ChipGroup? = null
     private var recyclerView : RecyclerView? = null
+    private var toolbar : Toolbar? = null
+    private var appBarLayout : AppBarLayout? = null
     private val chips : MutableMap<String,Int> = mutableMapOf()
 
     override fun onCreateView(
@@ -54,6 +58,11 @@ class SuggestListsFragment : Fragment(R.layout.suggest_lists_layout), SuggestLis
 
         chipGroup = view.findViewById(R.id.tags_group)
         recyclerView = view.findViewById(R.id.recyclerview)
+        appBarLayout = view.findViewById(R.id.app_bar_layout)
+        toolbar = view.findViewById(R.id.toolbar)
+
+        appBarLayout!!.addOnOffsetChangedListener(this)
+
         recyclerView!!.adapter = SuggestListAdapter(this).also { it.setOnClickListener(this) }
         recyclerView!!.layoutManager = LinearLayoutManager(requireContext())
         recyclerView!!.addItemDecoration(CardBoundTopBottom(requireContext(),4))
@@ -72,6 +81,9 @@ class SuggestListsFragment : Fragment(R.layout.suggest_lists_layout), SuggestLis
     override fun onDestroyView() {
         super.onDestroyView()
         chipGroup = null
+        appBarLayout!!.removeOnOffsetChangedListener(this)
+        appBarLayout = null
+        toolbar = null
         (recyclerView!!.adapter as SuggestListAdapter).deleteOnClickListener(this)
         recyclerView = null
     }
@@ -79,6 +91,24 @@ class SuggestListsFragment : Fragment(R.layout.suggest_lists_layout), SuggestLis
     override fun onClicked(showedStudyList: SuggestListsViewModel.ShovedSuggestList) {
         val intent = getSuggestActivityIntent(requireContext(),showedStudyList.name)
         startActivity(intent)
+    }
+
+    override fun onOffsetChanged(appBarLayout: AppBarLayout?, verticalOffset: Int) {
+        when(verticalOffset){
+            0 -> setElevation(0)
+            in -1 downTo -10 -> setElevation(1)
+            in -11 downTo -20 -> setElevation(2)
+            in -21 downTo -30 ->setElevation(3)
+            else -> setElevation(4)
+        }
+    }
+
+    fun setElevation( offset : Int){
+        val pix = dp2px(offset, requireContext())
+
+        if (toolbar!!.elevation.toInt() != pix){
+            toolbar!!.elevation = pix.toFloat()
+        }
     }
 
     private fun subscribeToAll(){

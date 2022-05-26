@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
@@ -8,412 +8,445 @@
     android:background="?attr/colorSurface"
     android:orientation="vertical">
 
-    <androidx.appcompat.widget.Toolbar
-        style="@style/Style.PocketChinese.Toolbar"
-        android:id="@+id/toolbar"
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:menu="@menu/user_list_menu"
-        app:title="@string/suggest_lists_title"
-        />
-
-    <TextView
-        android:fontFamily="@font/mulish_semibold"
-        android:layout_width="wrap_content"
-        android:layout_height="30dp"
-        android:layout_gravity="center_vertical"
-        android:textSize="16sp"
-        android:textColor="?android:textColorPrimary"
-        android:layout_marginStart="8dp"
-        android:text="@string/user_lists_statistic"
-        />
-
-    <com.google.android.material.card.MaterialCardView
-        android:elevation="0dp"
-        app:cardCornerRadius="10dp"
-
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="?attr/colorPrimary"
-
-        android:layout_marginHorizontal="8dp"
+        android:background="?attr/colorSurface"
         >
 
-        <FrameLayout
+        <com.google.android.material.appbar.CollapsingToolbarLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
-
-            <ImageView
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:src="@drawable/chart"
-                app:layout_collapseMode="parallax"
-                android:scaleType="centerCrop"
-                />
+            android:layout_height="wrap_content"
+            app:layout_scrollFlags="scroll|exitUntilCollapsed"
+            app:layout_collapseMode="pin"
+            app:titleEnabled="false">
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-
-                android:orientation="vertical">
-
-
-
-                <GridLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:rowCount="3"
-                    android:columnCount="3"
-                    android:layout_weight="1">
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="0dp"
-                        android:layout_height="78dp"
-                        android:orientation="vertical"
-                        android:layout_columnWeight="1"
-                        android:layout_row="0"
-                        android:layout_column="0"
-                        android:layout_gravity="fill_horizontal">
-
-                        <TextView
-                            android:id="@+id/title_1"
-                            android:fontFamily="@font/mulish_regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:textSize="16sp"
-                            android:textColor="?attr/colorOnPrimary"
-
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginStart="12dp"
-                            android:text = "@string/user_lists_repeated"
-                            />
-
-                        <TextView
-                            android:id="@+id/repeated_words"
-                            android:fontFamily="@font/mulish_bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="24sp"
-                            android:textAlignment="center"
-                            android:textColor="?attr/colorOnPrimary"
-
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/title_1"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            tools:text = "1500"
-                            />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <FrameLayout
-                        android:layout_width="1dp"
-                        android:layout_height="0dp"
-                        android:orientation="vertical"
-                        android:layout_row="0"
-                        android:layout_column="1"
-                        android:layout_gravity="fill_vertical"
-                        android:paddingVertical="6dp"
-
-                        >
-                        <View
-                            android:layout_width="1dp"
-                            android:layout_height="match_parent"
-                            android:orientation="vertical"
-                            android:layout_gravity="center"
-                            android:background="?attr/colorOnPrimary"
-                            />
-
-                    </FrameLayout>
-
-                    <LinearLayout
-                        android:layout_width="0dp"
-                        android:layout_height="0dp"
-                        android:orientation="vertical"
-                        android:layout_columnWeight="1"
-                        android:layout_row="0"
-                        android:layout_rowSpan="3"
-                        android:layout_column="2"
-                        android:layout_gravity="fill"
-                        >
-                        <TextView
-                            android:id="@+id/title_3"
-                            android:fontFamily="@font/mulish_regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:textSize="16sp"
-                            android:textColor="?attr/colorOnPrimary"
-                            android:layout_marginStart="12dp"
-                            android:text = "@string/user_lists_by_leng"
-                            />
-
-                        <GridLayout
-                            android:layout_width="match_parent"
-                            android:layout_height="match_parent"
-                            android:columnCount="1"
-                            android:rowCount="3"
-                            android:layout_marginHorizontal="12dp"
-                            android:paddingVertical="8dp">
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_column="0"
-                                android:layout_row="0"
-                                android:layout_rowWeight="1"
-                                android:orientation="vertical"
-                                >
-
-                                <FrameLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-
-                                    <TextView
-                                        android:fontFamily="@font/mulish_bold"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="start"
-                                        android:textSize="16sp"
-                                        android:textColor="?attr/colorOnPrimary"
-                                        android:text = "@string/my_language"
-                                        />
-                                    <TextView
-                                        android:id="@+id/percent_trn"
-                                        android:fontFamily="@font/mulish_mediumitalic"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="end"
-                                        android:textSize="16sp"
-                                        android:textColor="?attr/colorOnPrimary"
-                                        tools:text = "100%"
-                                        />
-                                </FrameLayout>
-
-                                <com.google.android.material.progressindicator.LinearProgressIndicator
-                                    style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
-                                    android:id="@+id/progress_trn"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-
-                                    android:progress="73"
-                                    app:trackCornerRadius="@dimen/mtrl_progress_indicator_full_rounded_corner_radius"
-
-                                    app:layout_constraintEnd_toEndOf="parent"
-                                    app:layout_constraintStart_toStartOf="parent"
-                                    app:layout_constraintBottom_toBottomOf="parent"
-
-                                    />
-
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_column="0"
-                                android:layout_row="1"
-                                android:layout_rowWeight="1"
-                                android:orientation="vertical"
-                                >
-
-                                <FrameLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-
-                                    <TextView
-                                        android:fontFamily="@font/mulish_bold"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="start"
-                                        android:textSize="16sp"
-                                        android:textColor="?attr/colorOnPrimary"
-                                        android:text = "@string/pinyin"
-                                        />
-                                    <TextView
-                                        android:id="@+id/percent_pin"
-                                        android:fontFamily="@font/mulish_mediumitalic"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="end"
-                                        android:textSize="16sp"
-                                        android:textColor="?attr/colorOnPrimary"
-                                        tools:text = "100%"
-                                        />
-                                </FrameLayout>
-
-                                <com.google.android.material.progressindicator.LinearProgressIndicator
-                                    style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
-                                    android:id="@+id/progress_pin"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-
-                                    android:progress="73"
-                                    app:trackCornerRadius="@dimen/mtrl_progress_indicator_full_rounded_corner_radius"
-                                    />
-
-
-                            </LinearLayout>
-
-                            <LinearLayout
-                                android:layout_width="match_parent"
-                                android:layout_height="wrap_content"
-                                android:layout_column="0"
-                                android:layout_row="2"
-                                android:layout_rowWeight="1"
-                                android:orientation="vertical"
-                                >
-
-                                <FrameLayout
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content">
-
-                                    <TextView
-                                        android:fontFamily="@font/mulish_bold"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="start"
-                                        android:textSize="16sp"
-                                        android:textColor="?attr/colorOnPrimary"
-                                        android:text = "@string/chinese"
-                                        />
-                                    <TextView
-                                        android:id="@+id/percent_chn"
-                                        android:fontFamily="@font/mulish_mediumitalic"
-                                        android:layout_width="wrap_content"
-                                        android:layout_height="wrap_content"
-                                        android:layout_gravity="end"
-                                        android:textSize="16sp"
-                                        android:textColor="?attr/colorOnPrimary"
-                                        tools:text = "100%"
-                                        />
-                                </FrameLayout>
-
-                                <com.google.android.material.progressindicator.LinearProgressIndicator
-                                    style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
-                                    android:id="@+id/progress_chn"
-                                    android:layout_width="match_parent"
-                                    android:layout_height="wrap_content"
-
-                                    android:progress="73"
-                                    app:trackCornerRadius="@dimen/mtrl_progress_indicator_full_rounded_corner_radius"
-                                    />
-
-
-                            </LinearLayout>
-
-
-                        </GridLayout>
-
-
-                    </LinearLayout>
-
-                    <FrameLayout
-                        android:layout_width="0dp"
-                        android:layout_height="1dp"
-                        android:orientation="vertical"
-                        android:layout_row="1"
-                        android:layout_column="0"
-                        android:layout_gravity="fill"
-                        android:paddingHorizontal="8dp"
-                        >
-                        <View
-                            android:layout_width="match_parent"
-                            android:layout_height="1dp"
-                            android:orientation="vertical"
-                            android:layout_gravity="center"
-                            android:background="?attr/colorOnPrimary"
-                            />
-                    </FrameLayout>
-
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="0dp"
-                        android:layout_height="78dp"
-                        android:orientation="vertical"
-                        android:layout_columnWeight="1"
-                        android:layout_row="2"
-                        android:layout_column="0"
-                        android:layout_gravity="fill_horizontal">
-
-                        <TextView
-                            android:id="@+id/title_2"
-                            android:fontFamily="@font/mulish_regular"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_gravity="center_vertical"
-                            android:textSize="16sp"
-                            android:textColor="?attr/colorOnPrimary"
-
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"
-                            android:layout_marginStart="12dp"
-                            android:text = "@string/user_lists_added"
-                            />
-
-                        <TextView
-                            android:id="@+id/added_words"
-                            android:fontFamily="@font/mulish_bold"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:textSize="24sp"
-                            android:textAlignment="center"
-                            android:textColor="?attr/colorOnPrimary"
-
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/title_2"
-                            app:layout_constraintBottom_toBottomOf="parent"
-                            app:layout_constraintEnd_toEndOf="parent"
-                            tools:text = "300"
-                            />
-
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-
-                    <FrameLayout
-                        android:layout_width="1dp"
-                        android:layout_height="64dp"
-                        android:orientation="vertical"
-                        android:layout_row="2"
-                        android:layout_column="1"
-                        android:layout_gravity="center"
-                        android:background="?attr/colorOnPrimary"
-                        android:paddingVertical="6dp"
-                        >
-                    <View
-                        android:layout_width="1dp"
-                        android:layout_height="match_parent"
-                        android:orientation="vertical"
-                        android:layout_gravity="center"
-                        android:background="?attr/colorOnPrimary"
-                        />
-                    </FrameLayout>
-
-
-
-                </GridLayout>
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                app:layout_collapseMode="none"
+                android:background="?attr/colorSurface"
+                android:layout_marginTop="56dp">
 
                 <TextView
                     android:fontFamily="@font/mulish_semibold"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="30dp"
                     android:layout_gravity="center_vertical"
-                    android:textSize="12sp"
-                    android:textColor="?attr/colorOnPrimary"
+                    android:textSize="16sp"
+                    android:textColor="?android:textColorPrimary"
                     android:layout_marginStart="8dp"
-                    android:layout_weight="0"
-                    android:text = "@string/user_lists_last_30"
+                    android:text="@string/user_lists_statistic"
                     />
 
+                <com.google.android.material.card.MaterialCardView
+                    android:elevation="0dp"
+                    app:cardCornerRadius="10dp"
+
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    app:cardBackgroundColor="?attr/colorPrimary"
+
+                    android:layout_marginHorizontal="8dp"
+                    android:layout_marginBottom="8dp"
+                    >
+
+                    <FrameLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent">
+
+                        <ImageView
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+                            android:src="@drawable/chart"
+                            app:layout_collapseMode="parallax"
+                            android:scaleType="centerCrop"
+                            />
+
+                        <LinearLayout
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent"
+
+                            android:orientation="vertical">
+
+
+
+                            <GridLayout
+                                android:layout_width="match_parent"
+                                android:layout_height="match_parent"
+                                android:rowCount="3"
+                                android:columnCount="3"
+                                android:layout_weight="1">
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="78dp"
+                                    android:orientation="vertical"
+                                    android:layout_columnWeight="1"
+                                    android:layout_row="0"
+                                    android:layout_column="0"
+                                    android:layout_gravity="fill_horizontal">
+
+                                    <TextView
+                                        android:id="@+id/title_1"
+                                        android:fontFamily="@font/mulish_regular"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:textSize="16sp"
+                                        android:textColor="?attr/colorOnPrimary"
+
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        android:layout_marginStart="12dp"
+                                        android:text = "@string/user_lists_repeated"
+                                        />
+
+                                    <TextView
+                                        android:id="@+id/repeated_words"
+                                        android:fontFamily="@font/mulish_bold"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="24sp"
+                                        android:textAlignment="center"
+                                        android:textColor="?attr/colorOnPrimary"
+
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@id/title_1"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        tools:text = "1500"
+                                        />
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                <FrameLayout
+                                    android:layout_width="1dp"
+                                    android:layout_height="0dp"
+                                    android:orientation="vertical"
+                                    android:layout_row="0"
+                                    android:layout_column="1"
+                                    android:layout_gravity="fill_vertical"
+                                    android:paddingVertical="6dp"
+
+                                    >
+                                    <View
+                                        android:layout_width="1dp"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:layout_gravity="center"
+                                        android:background="?attr/colorOnPrimary"
+                                        />
+
+                                </FrameLayout>
+
+                                <LinearLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="0dp"
+                                    android:orientation="vertical"
+                                    android:layout_columnWeight="1"
+                                    android:layout_row="0"
+                                    android:layout_rowSpan="3"
+                                    android:layout_column="2"
+                                    android:layout_gravity="fill"
+                                    >
+                                    <TextView
+                                        android:id="@+id/title_3"
+                                        android:fontFamily="@font/mulish_regular"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:textSize="16sp"
+                                        android:textColor="?attr/colorOnPrimary"
+                                        android:layout_marginStart="12dp"
+                                        android:text = "@string/user_lists_by_leng"
+                                        />
+
+                                    <GridLayout
+                                        android:layout_width="match_parent"
+                                        android:layout_height="match_parent"
+                                        android:columnCount="1"
+                                        android:rowCount="3"
+                                        android:layout_marginHorizontal="12dp"
+                                        android:paddingVertical="8dp">
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_column="0"
+                                            android:layout_row="0"
+                                            android:layout_rowWeight="1"
+                                            android:orientation="vertical"
+                                            >
+
+                                            <FrameLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content">
+
+                                                <TextView
+                                                    android:fontFamily="@font/mulish_bold"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="start"
+                                                    android:textSize="16sp"
+                                                    android:textColor="?attr/colorOnPrimary"
+                                                    android:text = "@string/my_language"
+                                                    />
+                                                <TextView
+                                                    android:id="@+id/percent_trn"
+                                                    android:fontFamily="@font/mulish_mediumitalic"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="end"
+                                                    android:textSize="16sp"
+                                                    android:textColor="?attr/colorOnPrimary"
+                                                    tools:text = "100%"
+                                                    />
+                                            </FrameLayout>
+
+                                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                                style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
+                                                android:id="@+id/progress_trn"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+
+                                                android:progress="73"
+                                                app:trackCornerRadius="@dimen/mtrl_progress_indicator_full_rounded_corner_radius"
+
+                                                app:layout_constraintEnd_toEndOf="parent"
+                                                app:layout_constraintStart_toStartOf="parent"
+                                                app:layout_constraintBottom_toBottomOf="parent"
+
+                                                />
+
+
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_column="0"
+                                            android:layout_row="1"
+                                            android:layout_rowWeight="1"
+                                            android:orientation="vertical"
+                                            >
+
+                                            <FrameLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content">
+
+                                                <TextView
+                                                    android:fontFamily="@font/mulish_bold"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="start"
+                                                    android:textSize="16sp"
+                                                    android:textColor="?attr/colorOnPrimary"
+                                                    android:text = "@string/pinyin"
+                                                    />
+                                                <TextView
+                                                    android:id="@+id/percent_pin"
+                                                    android:fontFamily="@font/mulish_mediumitalic"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="end"
+                                                    android:textSize="16sp"
+                                                    android:textColor="?attr/colorOnPrimary"
+                                                    tools:text = "100%"
+                                                    />
+                                            </FrameLayout>
+
+                                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                                style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
+                                                android:id="@+id/progress_pin"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+
+                                                android:progress="73"
+                                                app:trackCornerRadius="@dimen/mtrl_progress_indicator_full_rounded_corner_radius"
+                                                />
+
+
+                                        </LinearLayout>
+
+                                        <LinearLayout
+                                            android:layout_width="match_parent"
+                                            android:layout_height="wrap_content"
+                                            android:layout_column="0"
+                                            android:layout_row="2"
+                                            android:layout_rowWeight="1"
+                                            android:orientation="vertical"
+                                            >
+
+                                            <FrameLayout
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content">
+
+                                                <TextView
+                                                    android:fontFamily="@font/mulish_bold"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="start"
+                                                    android:textSize="16sp"
+                                                    android:textColor="?attr/colorOnPrimary"
+                                                    android:text = "@string/chinese"
+                                                    />
+                                                <TextView
+                                                    android:id="@+id/percent_chn"
+                                                    android:fontFamily="@font/mulish_mediumitalic"
+                                                    android:layout_width="wrap_content"
+                                                    android:layout_height="wrap_content"
+                                                    android:layout_gravity="end"
+                                                    android:textSize="16sp"
+                                                    android:textColor="?attr/colorOnPrimary"
+                                                    tools:text = "100%"
+                                                    />
+                                            </FrameLayout>
+
+                                            <com.google.android.material.progressindicator.LinearProgressIndicator
+                                                style="@style/Style.PocketChinese.LinearProgressIndicator.OnPrimary"
+                                                android:id="@+id/progress_chn"
+                                                android:layout_width="match_parent"
+                                                android:layout_height="wrap_content"
+
+                                                android:progress="73"
+                                                app:trackCornerRadius="@dimen/mtrl_progress_indicator_full_rounded_corner_radius"
+                                                />
+
+
+                                        </LinearLayout>
+
+
+                                    </GridLayout>
+
+
+                                </LinearLayout>
+
+                                <FrameLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="1dp"
+                                    android:orientation="vertical"
+                                    android:layout_row="1"
+                                    android:layout_column="0"
+                                    android:layout_gravity="fill"
+                                    android:paddingHorizontal="8dp"
+                                    >
+                                    <View
+                                        android:layout_width="match_parent"
+                                        android:layout_height="1dp"
+                                        android:orientation="vertical"
+                                        android:layout_gravity="center"
+                                        android:background="?attr/colorOnPrimary"
+                                        />
+                                </FrameLayout>
+
+                                <androidx.constraintlayout.widget.ConstraintLayout
+                                    android:layout_width="0dp"
+                                    android:layout_height="78dp"
+                                    android:orientation="vertical"
+                                    android:layout_columnWeight="1"
+                                    android:layout_row="2"
+                                    android:layout_column="0"
+                                    android:layout_gravity="fill_horizontal">
+
+                                    <TextView
+                                        android:id="@+id/title_2"
+                                        android:fontFamily="@font/mulish_regular"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:layout_gravity="center_vertical"
+                                        android:textSize="16sp"
+                                        android:textColor="?attr/colorOnPrimary"
+
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toTopOf="parent"
+                                        android:layout_marginStart="12dp"
+                                        android:text = "@string/user_lists_added"
+                                        />
+
+                                    <TextView
+                                        android:id="@+id/added_words"
+                                        android:fontFamily="@font/mulish_bold"
+                                        android:layout_width="wrap_content"
+                                        android:layout_height="wrap_content"
+                                        android:textSize="24sp"
+                                        android:textAlignment="center"
+                                        android:textColor="?attr/colorOnPrimary"
+
+                                        app:layout_constraintStart_toStartOf="parent"
+                                        app:layout_constraintTop_toBottomOf="@id/title_2"
+                                        app:layout_constraintBottom_toBottomOf="parent"
+                                        app:layout_constraintEnd_toEndOf="parent"
+                                        tools:text = "300"
+                                        />
+
+                                </androidx.constraintlayout.widget.ConstraintLayout>
+
+                                <FrameLayout
+                                    android:layout_width="1dp"
+                                    android:layout_height="64dp"
+                                    android:orientation="vertical"
+                                    android:layout_row="2"
+                                    android:layout_column="1"
+                                    android:layout_gravity="center"
+                                    android:background="?attr/colorOnPrimary"
+                                    android:paddingVertical="6dp"
+                                    >
+                                    <View
+                                        android:layout_width="1dp"
+                                        android:layout_height="match_parent"
+                                        android:orientation="vertical"
+                                        android:layout_gravity="center"
+                                        android:background="?attr/colorOnPrimary"
+                                        />
+                                </FrameLayout>
+
+
+
+                            </GridLayout>
+
+                            <TextView
+                                android:fontFamily="@font/mulish_semibold"
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="center_vertical"
+                                android:textSize="12sp"
+                                android:textColor="?attr/colorOnPrimary"
+                                android:layout_marginStart="8dp"
+                                android:layout_weight="0"
+                                android:text = "@string/user_lists_last_30"
+                                />
+
+                        </LinearLayout>
+                    </FrameLayout>
+                </com.google.android.material.card.MaterialCardView>
+
             </LinearLayout>
-        </FrameLayout>
-    </com.google.android.material.card.MaterialCardView>
+
+            <androidx.appcompat.widget.Toolbar
+                style="@style/Style.PocketChinese.Toolbar"
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:menu="@menu/user_list_menu"
+                app:layout_collapseMode="pin"
+                android:background="?attr/colorSurface"
+                app:title="@string/user_lists_title"
+                />
+
+        </com.google.android.material.appbar.CollapsingToolbarLayout>
+
+
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/recyclerview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_marginHorizontal="8dp"
-        android:layout_marginTop="12dp"/>
+        app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
+        />
 
-</LinearLayout>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -12,6 +12,7 @@
     app:cardBackgroundColor="?attr/colorOnSurface"
 
     app:cardCornerRadius="10dp"
+    app:cardElevation="0dp"
     app:elevation="0dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
