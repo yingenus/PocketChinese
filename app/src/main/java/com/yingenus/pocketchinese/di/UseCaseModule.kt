@@ -25,5 +25,7 @@ abstract class UseCaseModule {
     abstract fun provideAddSuggestWordsToStudyList( addSuggestWordsToStudyListImpl : AddSuggestWordsToStudyListImpl): AddSuggestWordsToStudyList
     @Binds
     abstract fun provideTrainedWordsUseCase(trainingWordsUseCaseImpl: TrainedWordsUseCaseImpl): TrainedWordsUseCase
+    @Binds
+    abstract fun provideClearWordsRepeatStatistics( clearWordsRepeatStatisticsImpl: ClearWordsRepeatStatisticsImpl): ClearWordsRepeatStatistics
 
 }

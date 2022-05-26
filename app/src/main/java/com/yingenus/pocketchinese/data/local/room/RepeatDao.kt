@@ -18,10 +18,14 @@ interface RepeatDao {
     fun updateRepeat( repeat: Repeat)
     @Insert
     fun creteRepeat ( repeat: Repeat)
+
     @Delete
     fun deleteRepeat ( repeat: Repeat)
     @Delete
     fun deleteRepeats ( repeat: List<Repeat>)
+
+    @Query( "DELETE FROM repeat WHERE word_id IN ( SELECT study_words.id FROM study_words WHERE study_words.study_list = :studyListId)")
+    fun deleteRepeatByStudyListId( studyListId: Long)
 
     @Query( "DELETE FROM repeat WHERE word_id = :studyWordId")
     fun deleteByWordId( studyWordId: Long)

@@ -20,6 +20,7 @@
     <string name="learn_words_my">Изучение</string>
     <string name="learn_words_sorting">Сортировка</string>
     <string name="delete">Удалить</string>
+    <string name="clear_statistic_msg">Вся статистика будет удалена, продолжить ?</string>
     <string name="edit_name">Переименовать</string>
     <string name="edit">Изменить</string>
     <string name="learn_words_sorting_az">А-Я</string>

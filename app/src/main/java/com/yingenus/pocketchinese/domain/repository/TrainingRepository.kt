@@ -11,5 +11,7 @@ interface TrainingRepository {
     fun getTrainingCondForList( studyListId: Long) : Single<List<TrainingCond>>
     fun creteTrainingCond( trainingCond : TrainingCond) : Completable
     fun deleteTrainingCond( trainingCond : TrainingCond) : Completable
+    fun deleteTrainingCondForWord( studyWordId: Long) : Completable
+    fun deleteTrainingCondForList( studyListId: Long) : Completable
     fun updateTrainingCond( trainingCond : TrainingCond) : Completable
 }

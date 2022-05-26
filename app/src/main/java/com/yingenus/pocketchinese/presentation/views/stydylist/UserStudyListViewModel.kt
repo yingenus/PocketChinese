@@ -13,6 +13,7 @@ import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.schedulers.Schedulers
 import java.util.*
 import javax.inject.Inject
 
@@ -22,6 +23,7 @@ class UserStudyListViewModel @AssistedInject constructor(
     private val modifyStudyListUseCase: ModifyStudyListUseCase,
     private val modifyStudyWordUseCase: ModifyStudyWordUseCase,
     private val studyListInfoUseCase: StudyListInfoUseCase,
+    private val clearWordsRepeatStatistics: ClearWordsRepeatStatistics,
     private val settings : ISettings
 ): ViewModel(){
 
@@ -199,6 +201,24 @@ class UserStudyListViewModel @AssistedInject constructor(
                 updateStudyListInfo()
                 updateStudyWords()
             }
+        return isSuccess
+    }
+
+    fun clearStatistics(): LiveData<Boolean>{
+        val isSuccess = MutableLiveData<Boolean>()
+
+        clearWordsRepeatStatistics.clearStatisticForList(studyListId)
+            .observeOn(Schedulers.computation())
+            .doOnComplete {
+                updateStudyWords()
+                updateStudyListInfo()
+            }
+            .subscribe({
+                       isSuccess.postValue(true)
+            },{error ->
+                isSuccess.postValue(false)
+            })
+
         return isSuccess
     }
 

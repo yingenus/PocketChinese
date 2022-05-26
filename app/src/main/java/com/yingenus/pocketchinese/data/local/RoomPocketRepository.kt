@@ -289,6 +289,23 @@ class RoomPocketRepository @Inject constructor(private val pocketDb: PocketDb) :
         }.subscribeOn(Schedulers.io())
     }
 
+    override fun deleteTrainingCondForWord( studyWordId: Long) : Completable{
+        return Completable.defer {
+            Completable.create {
+                repeatDao.deleteByWordId(studyWordId)
+                it.onComplete()
+            }
+        }.subscribeOn(Schedulers.io())
+    }
+    override fun deleteTrainingCondForList( studyListId: Long) : Completable{
+        return Completable.defer {
+            Completable.create {
+                repeatDao.deleteRepeatByStudyListId(studyListId)
+                it.onComplete()
+            }
+        }.subscribeOn(Schedulers.io())
+    }
+
     override fun updateTrainingCond(trainingCond: TrainingCond): Completable {
         return Completable.defer {
             Completable.create {

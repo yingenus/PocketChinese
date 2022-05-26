@@ -1,6 +1,7 @@
 package com.yingenus.pocketchinese.presentation.views.stydylist
 
 import android.content.Context
+import android.content.DialogInterface
 import android.content.Intent
 import android.graphics.drawable.StateListDrawable
 import android.os.Bundle
@@ -14,6 +15,7 @@ import android.widget.CheckBox
 import android.widget.TextView
 import androidx.appcompat.widget.Toolbar
 import androidx.annotation.DrawableRes
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.Fragment
@@ -81,7 +83,7 @@ class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdap
     private var percentTrn : TextView? = null
     private var percentPin : TextView? = null
     private var extendedButton : ExtendedFloatingActionButton? = null
-    private var crearButton : Button? = null
+    private var clearButton : Button? = null
     private var addButton : Button? = null
     private var lastRepeat: TextView? = null
     private var nextRepeat: TextView? = null
@@ -120,7 +122,7 @@ class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdap
         nextRepeat = findViewById(R.id.next_repeat)
         repeatCount = findViewById(R.id.repeat_count)
         addedWords = findViewById(R.id.added_words)
-        crearButton = findViewById(R.id.clear_statistic)
+        clearButton = findViewById(R.id.clear_statistic)
         addButton  = findViewById(R.id.add)
         shouldRepeatNotify = findViewById(R.id.notify_view)
         wordsRecyclerView = findViewById(R.id.expanded_recyclerview)
@@ -146,7 +148,9 @@ class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdap
             val intent = CreateWordForList.getIntent(studyListId,this)
             startActivity(intent)
         }
-
+        clearButton!!.setOnClickListener {
+            onStatisticClearClicked()
+        }
 
         subscribeViewModel()
     }
@@ -266,7 +270,7 @@ class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdap
         nextRepeat = null
         repeatCount = null
         addedWords = null
-        crearButton = null
+        clearButton = null
         addButton  = null
         shouldRepeatNotify = null
         extendedButton = null
@@ -277,7 +281,25 @@ class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdap
         wordsRecyclerView = null
     }
 
+    fun onStatisticClearClicked(){
+        val dialog= AlertDialog.Builder(this)
+        var showedDialog : AlertDialog? = null
 
+        dialog.setMessage(getString(R.string.clear_statistic_msg))
+
+        dialog.setPositiveButton(R.string.delete) { _: DialogInterface, _:Int ->
+            val isCleared = viewModel.clearStatistics()
+            isCleared.observe(this){
+                if (it) showedDialog?.dismiss()
+                else showedDialog?.dismiss()
+            }
+        }
+        dialog.setNegativeButton(R.string.cancel) { _: DialogInterface, _:Int ->
+            showedDialog?.dismiss()
+        }
+
+        showedDialog = dialog.show()
+    }
 
     fun onStartTrainCkicked( v : View){
         val ff: FragmentFactory = supportFragmentManager.fragmentFactory
