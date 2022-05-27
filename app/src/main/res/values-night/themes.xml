@@ -19,11 +19,11 @@
 
         <item name="android:navigationBarColor">?attr/colorSurface</item>
 
-        <item name="colorSurface">@color/black_light_plus</item>
+        <item name="colorSurface">@color/black_light</item>
         <item name="colorOnBackground">@color/black_light</item>
-        <item name="colorOnSurface">@color/gray_light</item>
+        <item name="colorOnSurface">@color/black_light_plus</item>
 
-        <item name="android:textColorPrimary">@color/gray_light</item>
+        <item name="android:textColorPrimary">@color/gray_light_2</item>
         <item name="android:textColorSecondary">@color/gray</item>
 
         <item name="actionModeCloseDrawable">@drawable/ic_back</item>

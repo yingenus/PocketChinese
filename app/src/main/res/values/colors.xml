@@ -11,10 +11,11 @@
 
     <color name="black">#FF000000</color>
     <color name="black_light">#1E1E1E</color>
-    <color name="black_light_plus">#272727</color>
-    <color name="gray">#787878</color>
+    <color name="black_light_plus">#505050</color>
+    <color name="gray">#919191</color>
     <color name="gray_dark">#5C5C5C</color>
     <color name="gray_light_1">#D7D7D7</color>
+    <color name="gray_light_2">#C6C6C6</color>
     <color name="gray_light">#F7F7F7</color>
     <color name="pink_light">#FFFCFC</color>
 

@@ -65,14 +65,14 @@
         <item name="windowActionModeOverlay">true</item>
     </style>
 
-    <style name="Theme.PocketChinese.Default.NoActionBar.SurfaceStatusBar" parent="Theme.PocketChinese.Default">
+    <style name="Theme.PocketChinese.Default.NoActionBar.SurfaceStatusBar" parent="Theme.PocketChinese">
         <item name="windowActionBar">false</item>
         <item name="windowNoTitle">true</item>
         <item name="windowActionModeOverlay">true</item>
         <item name="android:statusBarColor">?attr/colorSurface</item>
     </style>
 
-    <style name="Theme.PocketChinese.Default.NoActionBar.NoStatusBar" parent="Theme.PocketChinese.Default">
+    <style name="Theme.PocketChinese.Default.NoActionBar.NoStatusBar" parent="Theme.PocketChinese">
         <item name="colorSecondary">@color/blue</item>
         <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
         <item name="android:navigationBarColor">?attr/colorSurface</item>
