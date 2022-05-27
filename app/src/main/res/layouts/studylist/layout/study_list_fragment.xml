@@ -27,6 +27,8 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="60dp"
+                    android:layout_marginBottom="16dp"
                     android:orientation="vertical">
                     <include
                         android:id="@+id/notify_view"
@@ -34,7 +36,7 @@
                         android:layout_height="wrap_content"
                         layout="@layout/should_repeat_notify"
                         android:layout_marginHorizontal="8dp"
-                        android:layout_marginTop="60dp"
+
                         android:visibility="gone"
                         tools:visibility="visible"
                         app:layout_collapseMode="none"
@@ -46,7 +48,7 @@
                         android:layout_marginTop="8dp"
                         layout="@layout/study_list_info_fragment"
                         app:layout_collapseMode="none"
-                        android:layout_marginBottom="16dp"
+
                         />
 
                 </LinearLayout>
