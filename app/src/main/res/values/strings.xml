@@ -13,8 +13,8 @@
     <string name="search_hidden_search_format_comple">Совпадение</string>
     <string name="empty_search_result">Нет результатов...</string>
     <string name="menu_item_dictionary">Словарь</string>
-    <string name="menu_item_suggest_words">Предложенные</string>
-    <string name="menu_item_learn_words">Обучение</string>
+    <string name="menu_item_suggest_words">Слова</string>
+    <string name="menu_item_learn_words">Повторение</string>
     <string name="menu_item_settings">Настройки</string>
     <string name="learn_words_available">Доступные</string>
     <string name="learn_words_my">Изучение</string>

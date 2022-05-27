@@ -55,7 +55,7 @@ public class MainActivity  extends AppCompatActivity {
 
     private final static String SEARCH_F_TAG="serchf";
     private final static String STUDY_F_TAG="studyf";
-    private final static String GRAMMAR_F_TAG="grammarf";
+    private final static String WORDS_F_TAG="words";
     private final static String SETTINGS_F_TAG="settingsf";
     private final static String LAST_ACTIVE_FRAGMENT = "lastActiveFragment";
 
@@ -119,7 +119,7 @@ public class MainActivity  extends AppCompatActivity {
             }
 
             case R.id.suggest: {
-                showFragment(GRAMMAR_F_TAG);
+                showFragment(WORDS_F_TAG);
                 break;
             }
             case R.id.settings:{
@@ -138,7 +138,7 @@ public class MainActivity  extends AppCompatActivity {
         if (TAG.equals(active)){
             return;
         }
-        if (TAG.equals(GRAMMAR_F_TAG) || TAG.equals(STUDY_F_TAG)){
+        if (TAG.equals(WORDS_F_TAG) || TAG.equals(STUDY_F_TAG)){
             getWindow().setStatusBarColor(UtilsVariantParams.INSTANCE.resolveColorAttr(this,R.attr.colorSurface));
         }else {
             getWindow().setStatusBarColor(UtilsVariantParams.INSTANCE.resolveColorAttr(this,R.attr.colorPrimaryVariant));
@@ -186,9 +186,9 @@ public class MainActivity  extends AppCompatActivity {
         if (TAG.equals(SEARCH_F_TAG))
             return ff.instantiate(getClassLoader(),DictionaryFragment.class.getName());
         if (TAG.equals(STUDY_F_TAG))
-            return ff.instantiate(getClassLoader(), SuggestListsFragment.class.getName());
-        if (TAG.equals(GRAMMAR_F_TAG))
             return ff.instantiate(getClassLoader(), UserListsFragment.class.getName());
+        if (TAG.equals(WORDS_F_TAG))
+            return ff.instantiate(getClassLoader(), SuggestListsFragment.class.getName());
         if (TAG.equals(SETTINGS_F_TAG))
             return ff.instantiate(getClassLoader(),SettingsFragment.class.getName());
         throw new RuntimeException("invalid tag:"+TAG);

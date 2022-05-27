@@ -7,15 +7,15 @@
         android:color="?attr/colorOnPrimary"
         />
     <item
-        android:id="@+id/suggest"
-        android:icon="@drawable/ic_learn"
-        android:title="@string/menu_item_suggest_words"
+        android:id="@+id/study"
+        android:icon="@drawable/ic_learning"
+        android:title="@string/menu_item_learn_words"
         android:color="?attr/colorOnPrimary"
         />
     <item
-        android:id="@+id/study"
-        android:icon="@drawable/ic_learn"
-        android:title="@string/menu_item_learn_words"
+        android:id="@+id/suggest"
+        android:icon="@drawable/ic_grammar"
+        android:title="@string/menu_item_suggest_words"
         android:color="?attr/colorOnPrimary"
         />
     <item
