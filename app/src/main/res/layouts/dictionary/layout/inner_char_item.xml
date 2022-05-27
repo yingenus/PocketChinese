@@ -26,6 +26,7 @@
             android:textSize="90sp"
             android:textAlignment="center"
             android:textColor="?android:textColorPrimary"
+            android:fontFamily="@font/mulish_regular"
 
             android:layout_gravity="center"
 
@@ -42,7 +43,7 @@
             android:textSize="30sp"
             android:textAlignment="center"
             android:textColor="?android:textColorPrimary"
-
+            android:fontFamily="@font/mulish_medium"
             android:layout_marginTop="0dp"
 
             android:layout_gravity="center"
@@ -59,7 +60,7 @@
             android:textColor="?android:textColorSecondary"
             android:textAlignment="center"
             android:visibility="gone"
-
+            android:fontFamily="@font/mulish_light"
             android:layout_marginTop="0dp"
 
             android:layout_gravity="center"
@@ -71,9 +72,9 @@
     </LinearLayout>
 
     <View
-        android:layout_width="2dp"
+        android:layout_width="1dp"
         android:layout_height="match_parent"
-        android:background="?attr/colorOnSurface"
+        android:background="?android:textColorSecondary"
         android:layout_marginTop="16dp"
         android:layout_marginHorizontal="4dp"
 

@@ -3,6 +3,7 @@
   <component name="DesignSurface">
     <option name="filePathToZoomLevelMap">
       <map>
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable-anydpi/ic_chevrone_left_pr.xml" value="0.2475" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable-anydpi/ic_close.xml" value="0.212" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable-anydpi/ic_close_on_primary.xml" value="0.212" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable-anydpi/ic_close_primary.xml" value="0.212" />
@@ -22,19 +23,23 @@
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/ic_notify_off.xml" value="0.2155" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/ic_plus.xml" value="0.1815" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/ic_settings.xml" value="0.28" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/ic_sound.xml" value="0.2935" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/notify_stroke.xml" value="0.2505" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/notify_stroke_yellow.xml" value="0.2465" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/drawable/shape_round.xml" value="0.2115" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/font/mulish.xml" value="0.25" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layout/active_input_promit.xml" value="0.19923044035912782" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layout/list_header.xml" value="0.5" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layout/main_activity.xml" value="0.19837537409149208" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layout/scrolling_container_layout.xml" value="0.3009833262077811" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/add_optionse_holder.xml" value="0.33" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/add_word_activity.xml" value="0.19923044035912782" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/chouse_list_layout.xml" value="0.19923044035912782" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/create_edit_layout.xml" value="0.19923044035912782" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/create_word_card.xml" value="0.19923044035912782" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/addwords/layout/options_layout.xml" value="0.22" />
-        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/character/layout/character_fragment.xml" value="0.19923044035912782" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/character/layout/character_fragment.xml" value="0.25" />
+        <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/character/layout/example_notify.xml" value="0.33" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/drawable-anydpi/ic_chevrone_left.xml" value="0.213" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/create_dialog.xml" value="0.21927083333333333" />
         <entry key="..\:/Users/Professional/AndroidStudioProjects/PocketChinese/app/src/main/res/layouts/dialogs/layout/edit_dialog_layout.xml" value="0.24270833333333333" />

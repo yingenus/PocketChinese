@@ -52,7 +52,8 @@
                     android:scrollbarAlwaysDrawHorizontalTrack="true"
                     android:textSize="72sp"
                     android:textAlignment="center"
-                    android:textColor="?android:textColorSecondary"
+                    android:textColor="?android:textColorPrimary"
+                    android:fontFamily="@font/mulish_semibold"
 
                     android:textIsSelectable="true"
 
@@ -76,7 +77,9 @@
                     android:textSize="46sp"
                     android:textAlignment="center"
                     android:visibility="gone"
-                    android:textColor="?android:textColorSecondary"
+                    android:textColor="?android:textColorPrimary"
+
+                    android:fontFamily="@font/mulish_semibold"
 
                     app:layout_constraintHorizontal_bias="0.5"
                     app:layout_constraintLeft_toLeftOf="parent"
@@ -88,7 +91,7 @@
                     android:layout_marginHorizontal="16dp"
 
                     tools:ignore="RtlCompat"
-                    tools:text="(Links)"
+                    tools:text="(喊)"
                     tools:visibility="visible"/>
 
                 <TextView
@@ -97,8 +100,10 @@
                     android:layout_height="wrap_content"
                     android:textSize="24sp"
                     android:textAlignment="center"
-                    android:textColor="?android:textColorSecondary"
+                    android:textColor="?android:textColorPrimary"
                     android:textIsSelectable="true"
+                    android:fontFamily="@font/mulish_regular"
+
                     app:layout_constraintTop_toBottomOf="@+id/links_chin_char"
                     app:layout_constraintLeft_toLeftOf="@+id/character_chin_char"
                     app:layout_constraintRight_toRightOf="@+id/character_chin_char"
@@ -131,13 +136,15 @@
                     android:visibility="gone"
                     android:textColor="?android:textColorSecondary"
 
+                    android:fontFamily="@font/mulish_light"
+
                     app:layout_constraintTop_toBottomOf="@+id/sound_button"
                     app:layout_constraintLeft_toLeftOf="@+id/character_chin_char"
                     app:layout_constraintRight_toRightOf="@+id/character_chin_char"
                     android:layout_marginTop="8dp"
                     android:layout_marginHorizontal="16dp"
 
-                    tools:text="Tags"
+                    tools:text="TAGS TAGS TAGS"
                     tools:visibility="visible"
                     />
 

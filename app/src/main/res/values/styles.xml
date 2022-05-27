@@ -118,8 +118,8 @@
     </style>
 
     <style name="Style.PocketChinese.Button.TextButton.OnSurface" parent="Style.PocketChinese.Button.TextButton">
-        <item name="android:textColor">?attr/colorOnSurface</item>
-        <item name="iconTint">?attr/colorOnSurface</item>
+        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="iconTint">?android:textColorPrimary</item>
     </style>
 
     <style name="Style.PocketChinese.Rounded.SheetDialog.2" parent="ThemeOverlay.MaterialComponents.BottomSheetDialog">

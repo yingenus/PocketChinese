@@ -115,7 +115,7 @@
         android:layout_width="match_parent"
         android:layout_height="1dp"
         android:alpha="0.25"
-        android:background="?attr/colorOnSurface"
+        android:background="@android:color/transparent"
         android:layout_marginTop="4dp"
 
         app:layout_constraintStart_toStartOf="parent"

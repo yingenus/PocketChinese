@@ -4,6 +4,7 @@ import android.animation.Animator
 import android.animation.ValueAnimator
 import android.annotation.SuppressLint
 import android.content.Context
+import android.graphics.Typeface
 import android.os.Bundle
 import android.util.TypedValue
 import android.view.LayoutInflater
@@ -12,6 +13,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager2.widget.ViewPager2
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -488,6 +490,9 @@ class CharacterSheetDialog(
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
             textView.setTextColor(textColor.data)
 
+            val typeface = ResourcesCompat.getFont(context,R.font.mulish_medium)
+            textView.typeface = typeface
+
             return textView
         }
     }
@@ -557,6 +562,9 @@ class CharacterSheetDialog(
             textView.setTextSize(TypedValue.COMPLEX_UNIT_SP, 20F)
             textView.setTextColor(textColor.data)
 
+            val typeface = ResourcesCompat.getFont(context,R.font.mulish_medium)
+            textView.typeface = typeface
+
             return textView
         }
     }
@@ -577,8 +585,15 @@ class CharacterSheetDialog(
             messageLayoutParams.bottomMargin = dp2px(4, parent.context)
             messageLayoutParams.marginStart = dp2px(16, parent.context)
 
-            view.addView(createTextView(parent.context.getString(R.string.error_in_examples),inflater.context!!), messageLayoutParams)
 
+            val notifyLayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
+                LinearLayout.LayoutParams.WRAP_CONTENT)
+            notifyLayoutParams.topMargin = dp2px(4, parent.context)
+            notifyLayoutParams.bottomMargin = dp2px(4, parent.context)
+            notifyLayoutParams.marginStart = dp2px(16, parent.context)
+            notifyLayoutParams.marginEnd = dp2px(16, parent.context)
+            //view.addView(createTextView(parent.context.getString(R.string.error_in_examples),inflater.context!!), messageLayoutParams)
+            view.addView(inflater.inflate(R.layout.example_notify,null),notifyLayoutParams)
 
             val itemLayoutParams = LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,
                     LinearLayout.LayoutParams.WRAP_CONTENT)

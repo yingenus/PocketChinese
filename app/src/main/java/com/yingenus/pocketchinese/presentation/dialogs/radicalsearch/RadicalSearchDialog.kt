@@ -1,10 +1,7 @@
 package com.yingenus.pocketchinese.presentation.dialogs.radicalsearch
 
 import android.content.Context
-import android.graphics.Canvas
-import android.graphics.Color
-import android.graphics.Paint
-import android.graphics.Rect
+import android.graphics.*
 import android.os.Build
 import android.os.Bundle
 import android.util.TypedValue
@@ -18,6 +15,7 @@ import android.widget.TextView
 import androidx.annotation.AnyRes
 import androidx.annotation.ColorInt
 import androidx.annotation.RequiresApi
+import androidx.core.content.res.ResourcesCompat
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.google.android.material.bottomsheet.BottomSheetDialog
@@ -26,6 +24,7 @@ import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
 import com.yingenus.pocketchinese.controller.dp2px
 import com.yingenus.pocketchinese.controller.getDisplayHeight
+import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
 import com.yingenus.pocketchinese.presentation.views.findViewByClass
 import com.yingenus.pocketchinese.presentation.views.findViewsByClass
@@ -80,7 +79,11 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
         val displayWight = requireContext().resources.displayMetrics.widthPixels
         val viewWight = boxSizePx(requireContext())
 
-        recyclerView!!.addItemDecoration(Decorator(dp2px(1,requireContext()),requireContext().resources.getColor(R.color.gray_light),65, viewWight,displayWight))
+        val color : Int
+
+        UtilsVariantParams.apply { color = requireContext().resolveColorAttr(android.R.attr.textColorSecondary) }
+
+        recyclerView!!.addItemDecoration(Decorator(dp2px(1,requireContext()),color,65, viewWight,displayWight))
 
         val displayHeight = getDisplayHeight(requireContext())
         val statusBarHeight = getStatusBarHeight()
@@ -317,6 +320,8 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
                             textSize = 26f
                             textAlignment = TextView.TEXT_ALIGNMENT_VIEW_START
 
+                            typeface = ResourcesCompat.getFont(parent.context,R.font.bebasneue_regular)
+
                             val colorValue = TypedValue()
                             context.theme.resolveAttribute(android.R.attr.colorPrimary,colorValue,true)
                             setTextColor(colorValue.data)
@@ -355,7 +360,7 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
 
         init {
             val typedValue = TypedValue()
-            parent.context.theme.resolveAttribute(R.attr.colorOnSurface,typedValue,true)
+            parent.context.theme.resolveAttribute(android.R.attr.textColorSecondary,typedValue,true)
             @ColorInt val onSurface = typedValue.data
             tintColor = Color.argb((0.1*255).toInt(), Color.red(onSurface), Color.green(onSurface), Color.blue(onSurface))
             val typedValue2 = TypedValue()
@@ -381,6 +386,7 @@ class RadicalSearchDialog() : BottomSheetDialogFragment(), RadicalSearchInterfac
                 val textView = TextView(parent.context)
                         .apply {
                             textSize = 32f
+                            typeface = ResourcesCompat.getFont(parent.context, R.font.mulish_semibold)
                             textAlignment = TextView.TEXT_ALIGNMENT_CENTER
                         }
 
