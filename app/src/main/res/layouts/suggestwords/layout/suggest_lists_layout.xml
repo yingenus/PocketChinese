@@ -38,20 +38,7 @@
                 app:layout_scrollFlags="scroll"
                 app:layout_collapseMode="none"
                 >
-                <com.google.android.material.chip.Chip
-                    style="@style/Style.PocketChinese.Chip.Surface"
-                    android:layout_width="wrap_content"
-                    android:checked="true"
-                    android:checkable="true"
-                    android:text="TEST"
-                    android:layout_height="wrap_content"/>
-                <com.google.android.material.chip.Chip
-                    style="@style/Style.PocketChinese.Chip.Surface"
-                    android:layout_width="wrap_content"
-                    android:checked="false"
-                    android:checkable="true"
-                    android:text="TEST"
-                    android:layout_height="wrap_content"/>
+
 
             </com.google.android.material.chip.ChipGroup>
 

@@ -74,6 +74,12 @@ class SuggestListsViewModel @Inject constructor(
              }
     }
 
+    fun tagCheckedStateChanged(checkedTags : List<String>){
+        var new_showed = showedTags.map { if (checkedTags.contains(it.second)) true to it.second else false to it.second }
+        showedTags = new_showed
+        updateSuggestLists()
+    }
+
     fun onTagClicked( tag : String, isSelected : Boolean){
         var activeTags = showedTags.toMutableList()
         val tagPosition = activeTags.indexOfFirst { it.second == tag }

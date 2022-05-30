@@ -68,6 +68,12 @@ class SuggestListsFragment : Fragment(R.layout.suggest_lists_layout), SuggestLis
         recyclerView!!.addItemDecoration(CardBoundTopBottom(requireContext(),4))
         recyclerView!!.addItemDecoration(BoundsDecoratorBottom(requireContext()))
 
+        chipGroup!!.setOnCheckedStateChangeListener { group, checkedIds ->
+           val checked = chips.entries.filter { checkedIds.contains(it.value) }.map { it.key }
+            viewModel.tagCheckedStateChanged(checked)
+        }
+        chipGroup!!.isClickable = false
+
         subscribeToAll()
 
         return view
