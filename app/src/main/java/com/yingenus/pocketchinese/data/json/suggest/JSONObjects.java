@@ -106,6 +106,8 @@ public  class JSONObjects {
         String pinyin;
         @SerializedName("word_translation")
         String translation;
+        @SerializedName("word_description")
+        String description;
         @SerializedName("word_examples")
         List<Example> examples = new ArrayList<>();
 

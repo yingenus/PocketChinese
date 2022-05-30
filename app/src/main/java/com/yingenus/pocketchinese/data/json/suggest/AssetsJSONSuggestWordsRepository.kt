@@ -70,7 +70,7 @@ class AssetsJSONSuggestWordsRepository @Inject constructor(
             pinyin = word.pinyin,
             translation = word.translation,
             examples = word.examples.map { example(it) },
-            null
+            description = word.description?:null
         )
 
     private fun example(example : JSONObjects.Example): Example =
