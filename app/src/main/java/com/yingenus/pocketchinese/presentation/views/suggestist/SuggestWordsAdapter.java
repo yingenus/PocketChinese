@@ -243,6 +243,12 @@ public class SuggestWordsAdapter extends BlockAdapter<SuggestWordsAdapter.BlockH
 
             List<Example> examples = word.getExamples();
 
+            if (word.getDescription() != null){
+                extraIndicator.setVisibility(View.VISIBLE);
+            }else {
+                extraIndicator.setVisibility(View.GONE);
+            }
+
             if (examples != null && !examples.isEmpty()){
                 examplesIndicator.setVisibility(View.VISIBLE);
             }else {

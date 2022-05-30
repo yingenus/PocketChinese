@@ -420,10 +420,11 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
             pinText.setText(word.getPinyin());
             trnText.setText(word.getTranslation());
 
-            /** TODO : добавить вывод описания когда будет модефицировани контенер */
-            if (false){
+            if (word.getDescription() != null){
                 descriptionContainer.setVisibility(View.VISIBLE);
-                descriptionText.setText("");
+                descriptionText.setText(word.getDescription());
+            }else {
+                descriptionContainer.setVisibility(View.GONE);
             }
 
             if (!word.getExamples().isEmpty()){

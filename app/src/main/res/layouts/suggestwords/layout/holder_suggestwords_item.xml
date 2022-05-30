@@ -8,7 +8,6 @@
     android:paddingStart="16dp"
     android:paddingEnd="16dp"
     android:background="?android:attr/selectableItemBackground">
-    <!-- TODO: Update blank fragment layout -->
     <TextView
         android:id="@+id/dictionary_item_chin_text"
         android:layout_width="wrap_content"

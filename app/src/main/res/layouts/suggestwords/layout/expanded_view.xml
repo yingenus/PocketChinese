@@ -100,7 +100,7 @@
                 android:layout_height="wrap_content"
                 android:text=""
                android:textColor="?android:textColorSecondary"
-                android:maxLines="3"
+               tools:maxLines="3"
 
                 android:textSize="18sp"
                 tools:text="@string/lorem"/>
