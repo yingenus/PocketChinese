@@ -2,6 +2,7 @@ package com.yingenus.pocketchinese.domain.usecase
 
 import com.yingenus.pocketchinese.domain.dto.*
 import com.yingenus.pocketchinese.domain.entities.studystatictic.UserStatistics
+import com.yingenus.pocketchinese.domain.entities.suggestwords.SuggestWordsUtils
 import com.yingenus.pocketchinese.domain.repository.StudyRepository
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Observable
@@ -61,7 +62,7 @@ class AddSuggestWordsToStudyListImpl @Inject constructor(
             id = 0,
             chinese = this.word,
             pinyin = this.pinyin,
-            translate = this.translation,
+            translate = SuggestWordsUtils.suggestWordTranslationToRepeatStandards(this),
             createDate = Date(createTime)
         )
 
