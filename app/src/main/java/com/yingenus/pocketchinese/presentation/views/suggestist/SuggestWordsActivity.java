@@ -157,6 +157,7 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
         adapter.setBlockListener(this::onBlockClicked);
         recycler.setAdapter(adapter);
 
+
         SuggestWordsAdapter.SuggestKeyProvider keyProvider=new SuggestWordsAdapter.SuggestKeyProvider();
         selectionTracker= new SelectionTracker.Builder(
                 "dictionary_selection",
@@ -209,6 +210,10 @@ public class SuggestWordsActivity extends AppCompatActivity implements android.v
             @Override
             public void onChanged(List<SuggestWordGroup> suggestWordGroups) {
                 RecyclerView.Adapter adapter= recycler.getAdapter();
+                blocksState = new boolean[suggestWordGroups.size()];
+                for (int i = 0; i< blocksState.length; i++){
+                    blocksState[i] = true;
+                }
                 if (adapter instanceof SuggestWordsAdapter){
                     ((SuggestWordsAdapter)adapter).setGroups( suggestWordGroups);
                     adapter.notifyDataSetChanged();

@@ -153,13 +153,13 @@
     </style>
 
     <style name="Style.PocketChinese.ActionMode" parent="Widget.AppCompat.ActionMode">
-        <item name="background">?attr/colorOnBackground</item>
+        <item name="background">?attr/colorSurface</item>
         <item name="backgroundSplit">?attr/colorPrimaryVariant</item>
         <item name="titleTextStyle">@style/Style.PocketChinese.ActionMode.Title</item>
-
+        <item name="subtitleTextStyle">@style/Style.PocketChinese.ActionMode.Title</item>
     </style>
     <style name="Style.PocketChinese.ActionMode.Title" parent="TextAppearance.AppCompat.Widget.ActionMode.Title">
-        <item name="android:textColor">?android:textColorPrimary</item>
+        <item name="android:textColor">?attr/colorPrimary</item>
     </style>
 
     <style name="Style.PocketChinese.CheckBox.OnPrimary" parent="Widget.MaterialComponents.CompoundButton.CheckBox">

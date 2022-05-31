@@ -30,6 +30,7 @@
 
         <item name="alertDialogTheme">@style/Theme.PocketChinese.AlertDialog</item>
         <item name="actionModeStyle">@style/Style.PocketChinese.ActionMode</item>
+        <item name="actionBarTheme">@style/ThemeOverlay.AppCompat.Dark.ActionBar</item>
         <item name="bottomSheetDialogTheme">@style/Style.PocketChinese.Rounded.SheetDialog.2</item>
 
     </style>
