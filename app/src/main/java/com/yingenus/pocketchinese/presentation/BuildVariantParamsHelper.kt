@@ -62,7 +62,7 @@ object UtilsVariantParams {
 
         return  if (days ==0 && hours == 0 ) resources.getQuantityString(R.plurals.minuets,minutes,minutes)
                 else if (days == 0) resources.getQuantityString(R.plurals.hours,hours,hours)
-                else if (days < 14)
+                else if (days in 1..13)
                     resources.getQuantityString(R.plurals.days, days, days)
                 else if (days in 14..34) {
                     val weeks = days / 7

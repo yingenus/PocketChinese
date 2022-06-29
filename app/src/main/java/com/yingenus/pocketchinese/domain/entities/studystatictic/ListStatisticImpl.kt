@@ -72,11 +72,32 @@ class ListStatisticImpl @Inject constructor(
         val dates = mutableListOf<Date>()
 
         if (!repeatType.ignoreCHN)
-            dates.addAll(trainingConds.map { it.trainingDateChinese })
+            dates.addAll(trainingConds
+                .map {
+                    if (it.trainingDateChinese.time != 0L )
+                        it.trainingDateChinese
+                    else
+                        null
+                }
+                .filterNotNull())
         if (!repeatType.ignorePIN)
-            dates.addAll(trainingConds.map { it.trainingDatePinyin })
+            dates.addAll(trainingConds
+                .map {
+                    if (it.trainingDatePinyin.time != 0L)
+                        it.trainingDatePinyin
+                    else
+                        null
+                }
+                .filterNotNull())
         if (!repeatType.ignoreTRN)
-            dates.addAll(trainingConds.map { it.trainingDateTranslation })
+            dates.addAll(trainingConds
+                .map {
+                    if (it.trainingDateTranslation.time != 0L)
+                        it.trainingDateTranslation
+                    else
+                        null
+                }
+                .filterNotNull())
 
         return dates.maxOrNull()
     }
@@ -86,13 +107,23 @@ class ListStatisticImpl @Inject constructor(
 
         if (!repeatType.ignoreCHN)
             dates.addAll(trainingConds
-                .map { repeatHelper.nextRepeat(it.trainingDateChinese,it.chineseLevel) })
+                .map { if(it.trainingDateChinese.time != 0L)
+                        repeatHelper.nextRepeat(it.trainingDateChinese,it.chineseLevel)
+                    else null}
+                .filterNotNull())
         if (!repeatType.ignorePIN)
             dates.addAll(trainingConds
-                .map { repeatHelper.nextRepeat(it.trainingDatePinyin,it.pinyinLevel)})
+                .map { if(it.trainingDatePinyin.time != 0L)
+                        repeatHelper.nextRepeat(it.trainingDatePinyin,it.pinyinLevel)
+                    else null}
+                .filterNotNull())
         if (!repeatType.ignoreTRN)
             dates.addAll(trainingConds
-                .map { repeatHelper.nextRepeat(it.trainingDateTranslation,it.translationLevel) })
+                .map {
+                    if(it.trainingDateTranslation.time != 0L)
+                        repeatHelper.nextRepeat(it.trainingDateTranslation,it.translationLevel)
+                    else null}
+                .filterNotNull())
 
         return dates.minOrNull()
     }
@@ -178,7 +209,7 @@ class ListStatisticImpl @Inject constructor(
                 if (idsMap.containsKey(it)) count++
             }
         }
-        return count
+        return words.size
     }
 
 }
