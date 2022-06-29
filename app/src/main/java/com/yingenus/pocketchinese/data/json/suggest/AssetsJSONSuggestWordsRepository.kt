@@ -17,7 +17,7 @@ class AssetsJSONSuggestWordsRepository @Inject constructor(
 
     override fun getAllSuggestLists(): Single<List<SuggestList>> {
         return Single.defer { Single.create<List<SuggestList>> {
-                val ips = context.assets.open("suggest/ListsInfo.json")
+                val ips = context.assets.open("suggest/listsInfo.json")
                 val lists = JSONHelper.loadDirInfo(ips).files
                 it.onSuccess( lists.map { suggestList(it) })
             }
@@ -26,7 +26,7 @@ class AssetsJSONSuggestWordsRepository @Inject constructor(
 
     override fun getSuggestListByName(name: String): Maybe<SuggestListDetailed> {
         return Maybe.defer { Maybe.create<SuggestListDetailed> {
-            val ips = context.assets.open("suggest/ListsInfo.json")
+            val ips = context.assets.open("suggest/listsInfo.json")
             val fInfo = JSONHelper.loadDirInfo(ips).files.find { it.name == name }
             if (fInfo == null) it.onComplete()
             val ips1: InputStream = context.getAssets().open(
@@ -44,7 +44,7 @@ class AssetsJSONSuggestWordsRepository @Inject constructor(
 
     override fun getSuggestWords(name : String): Single<List<SuggestWordGroup>> {
         return Single.defer { Single.create<List<SuggestWordGroup>> {
-            val ips = context.assets.open("suggest/ListsInfo.json")
+            val ips = context.assets.open("suggest/listsInfo.json")
             val fInfo = JSONHelper.loadDirInfo(ips).files.find { it.name == name }
             val ips1: InputStream = context.getAssets().open(
                 "suggest/" + fInfo?.getFileName()?.lowercase(
