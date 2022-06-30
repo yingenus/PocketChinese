@@ -87,6 +87,7 @@ dependencies {
     implementation "androidx.recyclerview:recyclerview-selection:1.1.0"
     implementation "androidx.viewpager2:viewpager2:1.0.0"
     implementation 'androidx.webkit:webkit:1.4.0'
+    implementation 'androidx.gridlayout:gridlayout:1.0.0'
 
     implementation 'com.google.guava:guava:31.0.1-android'
 

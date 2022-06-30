@@ -139,7 +139,7 @@ class SettingsFragment: Fragment(){
         setupInputButton()
     }
 
-    //TODO: переделать
+
     private fun onSetDefaultClicked(v:View){
         val imm=requireContext().getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         val enableList = imm.enabledInputMethodList

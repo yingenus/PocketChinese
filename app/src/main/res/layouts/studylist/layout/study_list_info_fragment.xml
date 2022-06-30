@@ -259,18 +259,18 @@
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             >
-            <GridLayout
+            <androidx.gridlayout.widget.GridLayout
                 android:layout_width="match_parent"
                 android:layout_height="79dp"
-                android:rowCount="1"
-                android:columnCount="4"
+                app:rowCount="1"
+                app:columnCount="4"
                 >
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="79dp"
-                    android:layout_row="0"
-                    android:layout_column="0"
-                    android:layout_columnWeight="1"
+                    app:layout_row="0"
+                    app:layout_column="0"
+                    app:layout_columnWeight="1"
                     >
                     <GridLayout
                         android:layout_width="match_parent"
@@ -318,11 +318,11 @@
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="79dp"
-                    android:layout_row="0"
-                    android:layout_column="1"
+                    app:layout_row="0"
+                    app:layout_column="1"
                     android:rowCount="2"
                     android:columnCount="1"
-                    android:layout_columnWeight="1"
+                    app:layout_columnWeight="1"
                     >
                     <GridLayout
                         android:layout_width="match_parent"
@@ -368,11 +368,11 @@
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="79dp"
-                    android:layout_row="0"
-                    android:layout_column="2"
+                    app:layout_row="0"
+                    app:layout_column="2"
                     android:rowCount="2"
                     android:columnCount="1"
-                    android:layout_columnWeight="1"
+                    app:layout_columnWeight="1"
                     >
                     <GridLayout
                         android:layout_width="match_parent"
@@ -418,11 +418,11 @@
                 <FrameLayout
                     android:layout_width="wrap_content"
                     android:layout_height="79dp"
-                    android:layout_row="0"
-                    android:layout_column="3"
+                    app:layout_row="0"
+                    app:layout_column="3"
                     android:rowCount="2"
                     android:columnCount="1"
-                    android:layout_columnWeight="1"
+                    app:layout_columnWeight="1"
                     >
                     <GridLayout
                         android:layout_width="match_parent"
@@ -465,17 +465,17 @@
 
                     </GridLayout>
                 </FrameLayout>
-            </GridLayout>
+            </androidx.gridlayout.widget.GridLayout>
         </androidx.cardview.widget.CardView>   
         
-        <GridLayout
+        <androidx.gridlayout.widget.GridLayout
             android:layout_width="250dp"
             android:layout_height="58dp"
 
             android:layout_marginTop="-24dp"
 
-            android:columnCount="3"
-            android:rowCount="1"
+            app:columnCount="3"
+            app:rowCount="1"
 
             app:layout_constraintStart_toStartOf="@id/main_card"
             app:layout_constraintEnd_toEndOf="@id/main_card"
@@ -491,9 +491,10 @@
                 style="@style/Style.PocketChinese.Button.TextButton.Secondary.Small"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_row="0"
-                android:layout_column="0"
-                android:layout_columnWeight="1"
+                app:layout_row="0"
+                app:layout_column="0"
+                app:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
 
                 android:text="@string/clear_statistic"
                 app:icon="@drawable/ic_back_time"
@@ -503,10 +504,11 @@
             android:layout_width="1dp"
             android:layout_height="0dp"
             android:orientation="vertical"
-            android:layout_row="0"
-            android:layout_column="1"
-            android:layout_gravity="fill_vertical"
+                app:layout_row="0"
+                app:layout_column="1"
+                app:layout_gravity="fill_vertical"
             android:paddingVertical="6dp"
+                app:layout_columnWeight="0"
 
             >
             <View
@@ -528,13 +530,13 @@
                 android:text="@string/add_word"
                 app:icon="@drawable/ic_plus"
                 app:iconGravity="textTop"
-
-                android:layout_row="0"
-                android:layout_column="2"
-                android:layout_columnWeight="1"
+                app:layout_gravity="center_vertical"
+                app:layout_row="0"
+                app:layout_column="2"
+                app:layout_columnWeight="1"
                 />
 
-        </GridLayout>
+        </androidx.gridlayout.widget.GridLayout>
         
     </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -22,6 +22,7 @@
     <color name ="green_dark">#152C07</color>
 
     <color name="inactive_button_nav">@color/gray_light</color>
+    <color name="error_color">@color/app_red_shaded</color>
 
     <color name="blue">#0098DD</color>
     <color name="text_color">#FF000000</color>

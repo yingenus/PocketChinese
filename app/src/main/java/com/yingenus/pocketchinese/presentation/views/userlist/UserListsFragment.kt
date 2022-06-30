@@ -2,6 +2,7 @@ package com.yingenus.pocketchinese.presentation.views.userlist
 
 import android.annotation.SuppressLint
 import android.content.Context
+import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -294,7 +295,13 @@ class StudyListAdapter : HeadersRecyclerViewAdapter<UserListViewHolder>(
             TAG_NEW ->{
                 val textView = holder.itemView.findViewById<TextView>(R.id.title)
                 textView.text = holder.itemView.context.getString(R.string.need_repeat_list)
-                 UtilsVariantParams.apply { textView.setTextColor( holder.itemView.context.resolveColorAttr(android.R.attr.colorError)) }
+                 UtilsVariantParams.apply { if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                     textView.setTextColor( holder.itemView.context.getColor(R.color.error_color))
+                 }
+                 else{
+                     textView.setTextColor( holder.itemView.context.resources.getColor(R.color.error_color))
+                 }
+                 }
             }
             TAG_OTHER -> holder.itemView.findViewById<TextView>(R.id.title).text =
                 holder.itemView.context.getString(R.string.user_lists_other)
