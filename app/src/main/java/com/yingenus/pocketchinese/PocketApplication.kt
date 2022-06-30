@@ -17,6 +17,7 @@ import com.yingenus.pocketchinese.functions.search.*
 import com.yingenus.pocketchinese.background.notifications.*
 import com.yingenus.pocketchinese.presentation.dialogs.LoadingDialog
 import com.yingenus.pocketchinese.background.workers.*
+import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.data.local.SqliteProxyRepositoryInitialize
 import com.yingenus.pocketchinese.data.proxy.ProxyRepositoryInitialize
 import com.yingenus.pocketchinese.data.proxy.ProxyRepositoryProviderImpl
@@ -50,6 +51,7 @@ class PocketApplication: Application(), Configuration.Provider {
         private val proxySearcherProvider = ProxySearcherProviderImpl()
         private val proxyRepositoryProvider = ProxyRepositoryProviderImpl()
         private val sqliteDatabaseManager: SqliteDatabaseManager = InAssetsSqliteDatabaseManager()
+
 
         fun getAppComponent(): AppComponent {
             return appComponent
@@ -255,8 +257,12 @@ class SetUpDbIndexInstallation( next : SetupChain?): SetupChain(next){
     private fun isLongInit(context: PocketApplication): Boolean{
 
         val databaseManager : SqliteDatabaseManager = InAssetsSqliteDatabaseManager()
+        val indexManager : IndexManager = IndexManagerImpl()
         return ! (databaseManager.isActualVersion(ExamplesDBHelper::class.java.name, context) &&
-                databaseManager.isActualVersion(DictionaryDBHelper::class.java.name, context))
+                databaseManager.isActualVersion(DictionaryDBHelper::class.java.name, context) &&
+                indexManager.checkIndex(Language.RUSSIAN, databaseManager.getDatabaseVersion(DictionaryDBHelper::class.java.name,context),context) &&
+                indexManager.checkIndex(Language.PINYIN,databaseManager.getDatabaseVersion(DictionaryDBHelper::class.java.name,context),context))
+
     }
 }
 

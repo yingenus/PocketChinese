@@ -90,19 +90,30 @@ class InAssetsSqliteDatabaseManager() : SqliteDatabaseManager, DictionaryDatabas
         when (class_name){
             ExamplesDBHelper::class.java.name -> {
                 if (examplesDbVersion == null){
-                    initExampleDb(context)
+                    val name = appFileOf(ExamplesDBHelper::class.java.name)
+                    val database : File = context.getDatabasePath(name)
+                    if ( database.exists() && database.length() > 0)
+                        versionCheckFile.getVersion(context, name)
+                    else
+                        -1
                 }
-                examplesDbVersion!!
+                else
+                    examplesDbVersion!!
             }
             DictionaryDBHelper::class.java.name -> {
                if (dictionaryDbVersion == null){
-                   initDictionaryDb(context)
+                   val name = appFileOf(DictionaryDBHelper::class.java.name)
+                   val database : File = context.getDatabasePath(name)
+                   if ( database.exists() && database.length() > 0)
+                       versionCheckFile.getVersion(context, name)
+                   else
+                       -1
                }
-               dictionaryDbVersion!!
+               else
+                   dictionaryDbVersion!!
             }
             else -> throw IllegalAccessException("unsupported class : $class_name")
         }
-
 
     override fun getExampleDatabase(context: Context): ExamplesDBHelper {
         if (examplesDbHelper == null){
