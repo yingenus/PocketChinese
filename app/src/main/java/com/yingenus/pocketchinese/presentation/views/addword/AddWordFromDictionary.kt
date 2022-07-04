@@ -208,7 +208,7 @@ class AddWordFromDictionary( val item : DictionaryItem)
             if (isNew){
 
                 viewModel.checkUseName(chooseListFragment!!.getNewListName()!!).observe(viewLifecycleOwner){
-                    if (!it){
+                    if (it){
                         chooseListFragment!!.editError = getString(R.string.notifi_busy_list_name)
                     }
                     else{
