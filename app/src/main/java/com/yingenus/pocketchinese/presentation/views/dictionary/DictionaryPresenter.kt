@@ -7,10 +7,7 @@ import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
 
 import com.yingenus.pocketchinese.common.Result
-import com.yingenus.pocketchinese.Settings
-import com.yingenus.pocketchinese.AppSettings
 import com.yingenus.pocketchinese.ISettings
-import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryInterface
 import com.yingenus.pocketchinese.controller.logErrorMes
 import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.domain.repository.DictionaryItemRepository
@@ -35,19 +32,13 @@ class DictionaryPresenter @AssistedInject constructor(
         fun create(view: DictionaryInterface) : DictionaryPresenter
     }
 
-    //private val searcher = DictionarySearch()
-
     private var searchType = WordsSearchUseCase.SearchParams.SearchType.FUZZY
 
-    private lateinit var typeChangedPublisher : PublishSubject<WordsSearchUseCase.SearchParams.SearchType>
+    private var typeChangedPublisher : PublishSubject<WordsSearchUseCase.SearchParams.SearchType>
+        = PublishSubject.create<WordsSearchUseCase.SearchParams.SearchType>()
     private lateinit var searchObservable: Observable<Pair<WordsSearchUseCase.SearchParams.SearchType,String>>
 
     fun onCreate(){
-
-        //searcher.initDictionary(dictionaryItemRepository, context)
-
-        typeChangedPublisher = PublishSubject.create<WordsSearchUseCase.SearchParams.SearchType>()
-
         registerSubscribers()
         updateHistory()
     }
