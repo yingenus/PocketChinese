@@ -267,6 +267,7 @@
     <string name="radical">Ключивые знаки</string>
     <string name="characters">Иерогифы</string>
 
+    <string name="long_init_msg">(Это может занять несколько минут)</string>
 
     <string name = "CopyDbWorker_info_start_copy">Копирование базы данных</string>
     <string name = "CopyDbWorker_info_finish_copy">Завершено копироваение базы данных</string>
