@@ -219,7 +219,7 @@ class InAssetsSqliteDatabaseManager() : SqliteDatabaseManager, DictionaryDatabas
     private fun copyDB(context: Context, name : String, assets_name : String){
 
 
-        val dbFile = context.getDatabasePath(name)!!
+        var dbFile = context.getDatabasePath(name)!!
 
         if (!dbFile.exists()){
             val  path = dbFile.parentFile!!
@@ -228,6 +228,10 @@ class InAssetsSqliteDatabaseManager() : SqliteDatabaseManager, DictionaryDatabas
             }
             dbFile.createNewFile()
 
+        }else{
+            context.deleteDatabase(name)
+            dbFile = context.getDatabasePath(name)!!
+            dbFile.createNewFile()
         }
 
         val dbAssets = context.assets.open(assets_name);
