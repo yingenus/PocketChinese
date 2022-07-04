@@ -41,6 +41,11 @@ std::vector<std::pair<std::string, Word*>> *WordIndexer::getAllWords(std::string
 			break;
 		}
 
+        if (lenght == 0x0000FFFF)
+		{
+			break;
+		}
+
 		if (lenght >= 250 -8)
 		{
 			throw DecodingException((char*)"cant decode correctly");

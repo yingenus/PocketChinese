@@ -257,7 +257,7 @@ class SetUpDbIndexInstallation( next : SetupChain?): SetupChain(next){
     private fun isLongInit(context: PocketApplication): Boolean{
 
         val databaseManager : SqliteDatabaseManager = InAssetsSqliteDatabaseManager()
-        val indexManager : IndexManager = IndexManagerImpl()
+        val indexManager : IndexManager = IndexManagerFactory.create()
         return ! (databaseManager.isActualVersion(ExamplesDBHelper::class.java.name, context) &&
                 databaseManager.isActualVersion(DictionaryDBHelper::class.java.name, context) &&
                 indexManager.checkIndex(Language.RUSSIAN, databaseManager.getDatabaseVersion(DictionaryDBHelper::class.java.name,context),context) &&

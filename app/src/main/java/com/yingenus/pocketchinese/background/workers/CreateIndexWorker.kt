@@ -13,7 +13,7 @@ import com.yingenus.pocketchinese.data.local.db.sqlite.InAssetsSqliteDatabaseMan
 import com.yingenus.pocketchinese.data.local.db.sqlite.SqliteDatabaseManager
 import com.yingenus.pocketchinese.data.local.sqlite.DictionaryDBHelper
 import com.yingenus.pocketchinese.functions.search.IndexManager
-import com.yingenus.pocketchinese.functions.search.IndexManagerImpl
+import com.yingenus.pocketchinese.functions.search.IndexManagerFactory
 import java.lang.Exception
 
 class CreateIndexWorker(
@@ -24,7 +24,7 @@ class CreateIndexWorker(
     @SuppressLint("RestrictedApi")
     override fun doWork(): Result {
         try {
-            val indexManager : IndexManager = IndexManagerImpl()
+            val indexManager : IndexManager = IndexManagerFactory.create()
             val databaseManager : SqliteDatabaseManager = InAssetsSqliteDatabaseManager()
 
             val helper : DictionaryDBHelper = databaseManager.getDictionaryDatabase(applicationContext)

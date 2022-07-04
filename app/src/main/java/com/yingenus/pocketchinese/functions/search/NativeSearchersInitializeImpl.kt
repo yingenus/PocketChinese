@@ -8,7 +8,7 @@ import com.yingenus.pocketchinese.domain.entities.dictionarysearch.ProxySearcher
 class NativeSearchersInitializeImpl(private val proxySearcherProvider: ProxySearcherProvider, private val context : Context) :
     NativeSearchersInitialize{
 
-    private val indexManager = IndexManagerImpl()
+    private val indexManager = IndexManagerFactory.create()
 
     override fun initializePinyin() {
 

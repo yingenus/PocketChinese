@@ -7,8 +7,9 @@ import java.nio.file.Path
 
 interface IndexManager {
 
+    // return list of supported languages
     fun supportLanguage(): List<Language>
-
+    // return : Boolean - true if file is exist and checksum is good
     fun checkIndex(language : Language, version : Int, context: Context) : Boolean
 
     fun getIndexAbsolutePath(language: Language, version : Int, context: Context) : String

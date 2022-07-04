@@ -7,10 +7,6 @@ import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.yingenus.pocketchinese.PocketApplication
 import com.yingenus.pocketchinese.R
-import com.yingenus.pocketchinese.common.Language
-import com.yingenus.pocketchinese.functions.search.IndexManagerImpl
-import com.yingenus.pocketchinese.functions.search.NativeSearcher
-import com.yingenus.pocketchinese.functions.search.PrefixSearcher
 
 class InitNativeSearchers (
     context: Context,
