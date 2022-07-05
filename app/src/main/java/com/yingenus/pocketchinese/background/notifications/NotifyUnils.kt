@@ -9,6 +9,7 @@ import com.yingenus.pocketchinese.R
 
 object Channels{
     const val REMIND_CHANNEL = "com.yingenus.pocketchinese.notifychannel.remind"
+    const val BACKGROUND_WORK_CHANNEL = "com.yingenus.pocketchinese.notifychannel.backgroundworkchannel"
 }
 
 
@@ -23,7 +24,14 @@ fun getNotificationsChannels(context: Context): List<NotificationChannel>{
     val remindChannel = NotificationChannel(Channels.REMIND_CHANNEL, remindName,remindImportance)
         .also { it.description = remindDescription }
 
+    val backgroundName = context.getString(R.string.background_work_name)
+    val backgroundDescription = context.getString(R.string.background_work_description)
+    val backgroundImportance = NotificationManager.IMPORTANCE_DEFAULT
+    val backgroundChannel = NotificationChannel(Channels.BACKGROUND_WORK_CHANNEL, backgroundName, backgroundImportance)
+        .also { it.description = backgroundDescription }
+
     channels.add(remindChannel)
+    channels.add(backgroundChannel)
 
     return channels
 }

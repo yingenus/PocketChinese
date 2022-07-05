@@ -252,6 +252,8 @@
     <string name="no_info">Нет данных</string>
     <string name="remind_channel_name">Напоминания</string>
     <string name="remind_channel_description">Напоминает о том, что нужно повторить слова</string>
+    <string name="background_work_name">Фоновые процессы</string>
+    <string name="background_work_description">Уведомляет, что протекает какой-то важный процесс</string>
     <string name="repeatable_lists_title">Можно повторить</string>
     <string name="remind_notify_title">Можно повторить слова</string>
     <string name="remind_notify_text">Доступно %1$s в %2$s</string>
@@ -272,14 +274,18 @@
     <string name = "CopyDbWorker_info_start_copy">Копирование базы данных</string>
     <string name = "CopyDbWorker_info_finish_copy">Завершено копироваение базы данных</string>
 
+    <string name = "CreateIndexWorker_info_start">Проверка индекса</string>
     <string name = "CreateIndexWorker_info_start_crete_rus_index">Создание индекса русского языка</string>
     <string name = "CreateIndexWorker_info_finish_crete_rus_index">Завершение создания индекса русского языка</string>
     <string name = "CreateIndexWorker_info_start_crete_pin_index">Создание индекса раманизации</string>
     <string name = "CreateIndexWorker_info_finish_crete_pin_index">Завершение создания индекса раманизации</string>
 
+    <string name= "InitNativeSearchers_info_start">Извлечение индекса</string>
     <string name = "InitNativeSearchers_info_start_extract_rus_index">Извлечение индекса русского языка</string>
     <string name = "InitNativeSearchers_info_finish_extract_rus_index">Завершение ивлечения индекса русского языка</string>
     <string name = "InitNativeSearchers_info_start_extract_pin_index">Извлечение индекса раманизации</string>
     <string name = "InitNativeSearchers_info_finish_extract_pin_index">Завершение ивлечения индекса раманизации</string>
+
+    <string name= "InitDatabase_info_start">Инициализация базы данных</string>
 
 </resources>

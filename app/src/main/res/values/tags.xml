@@ -6,5 +6,6 @@
     <item name="user_answer" type="id"/>
     <item name="was_disclosed" type="id"/>
     <item name="repeat_words_notification" type="id"/>
+    <item name="background_work_notification" type="id"/>
     <item name = "radical_search_dialog_item_decorator_tag" type="id"/>
 </resources>
