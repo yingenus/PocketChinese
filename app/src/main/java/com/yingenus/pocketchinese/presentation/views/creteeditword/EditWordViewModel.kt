@@ -7,15 +7,16 @@ import androidx.lifecycle.ViewModelProvider
 import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
-import com.yingenus.pocketchinese.domain.usecase.ModifyStudyListUseCase
-import com.yingenus.pocketchinese.domain.usecase.ModifyStudyWordUseCase
-import com.yingenus.pocketchinese.domain.usecase.StudyListInfoUseCase
-import com.yingenus.pocketchinese.domain.usecase.WordInfoUseCase
+import com.yingenus.pocketchinese.domain.usecase.*
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 import javax.inject.Named
 
@@ -46,7 +47,8 @@ class EditWordViewModel @AssistedInject constructor(
     private val studyWordInfoUseCase: WordInfoUseCase,
     private val studyListInfoUseCase: StudyListInfoUseCase,
     private val modifyStudyListUseCase: ModifyStudyListUseCase,
-    private val modifyStudyWordUseCase: ModifyStudyWordUseCase
+    private val modifyStudyWordUseCase: ModifyStudyWordUseCase,
+    private val findDictionaryItemForStudyWord: FindDictionaryItemForStudyWord
 ): ViewModel() {
 
     @AssistedFactory
@@ -100,6 +102,37 @@ class EditWordViewModel @AssistedInject constructor(
     val error : LiveData<String>
         get() = _error
 
+    private val chinesePublish : PublishSubject<String> = PublishSubject.create()
+    private val disposables : CompositeDisposable = CompositeDisposable()
+
+    init {
+        val disposable = chinesePublish
+            .observeOn(Schedulers.computation())
+            .debounce(500, TimeUnit.MILLISECONDS)
+            .flatMapSingle { chinese ->
+                checkChinese(chinese)
+                    .map { error -> chinese to error }
+            }
+            .filter { it.second == WordsError.NOTHING }
+            .flatMapSingle {
+                findDictionaryItemForStudyWord.findDictionaryItem(it.first, Language.CHINESE)
+                    .subscribeOn(Schedulers.io())
+            }
+            .retry()
+            .withLatestFrom( chinesePublish){ dicItem : DictionaryItem, chinese : String ->
+                dicItem to findDictionaryItemForStudyWord.canInsert(chinese,dicItem, Language.CHINESE)
+            }
+            .filter { it.second }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe({onNext ->
+                tryInsertSuggestWord(onNext.first, Language.CHINESE)
+            }, {onError ->
+                //to do nothing
+            })
+
+        disposables.add(disposable)
+    }
+
     fun updateView(){
         studyListInfoUseCase
             .getStudyList(studyListId)
@@ -121,15 +154,18 @@ class EditWordViewModel @AssistedInject constructor(
     fun onChineseTextChanged( newText : String){
         Single
             .just(newText)
+            .doOnSuccess { _chinese.postValue(newText) }
             .flatMap { checkChinese(it) }
             .subscribe { error ->
                 _errorChinese.postValue(error)
             }
+        //chinesePublish.onNext(newText) // autofill do not working for edit view
     }
 
     fun onPinyinTextChanged( newText : String){
         Single
             .just(newText)
+            .doOnSuccess { _pinyin.postValue(newText) }
             .flatMap { checkPinyin(it) }
             .subscribe { error ->
                 _errorPinyin.postValue(error)
@@ -139,6 +175,7 @@ class EditWordViewModel @AssistedInject constructor(
     fun onTranslationTextChanged( newText : String){
         Single
             .just(newText)
+            .doOnSuccess { _translation.postValue(newText) }
             .flatMap { checkTranslation(it) }
             .subscribe { error ->
                 _errorTranslation.postValue(error)
@@ -181,6 +218,26 @@ class EditWordViewModel @AssistedInject constructor(
             }
 
         return isSuccess
+    }
+
+    override fun onCleared() {
+        super.onCleared()
+        disposables.dispose()
+    }
+
+    private fun tryInsertSuggestWord( dictionaryItem: DictionaryItem, language: Language){
+        val word = when( language){
+            Language.CHINESE -> chinese.value.orEmpty()
+            Language.PINYIN -> pinyin.value.orEmpty()
+            Language.RUSSIAN -> translation.value.orEmpty()
+        }
+
+        if (findDictionaryItemForStudyWord.canInsert(word,dictionaryItem,language)){
+            _chinese.postValue(dictionaryItem.chinese)
+            _pinyin.postValue(dictionaryItem.pinyin)
+            _translation.postValue(dictionaryItem.translation.first())
+        }
+
     }
 
     private fun checkChinese(chinese : String): Single<WordsError>{

@@ -1,6 +1,7 @@
 package com.yingenus.pocketchinese.presentation.views.addword
 
 import android.annotation.SuppressLint
+import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.InputType
@@ -8,7 +9,9 @@ import android.text.TextWatcher
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.autofill.AutofillValue
 import android.widget.EditText
+import androidx.core.widget.doAfterTextChanged
 import androidx.fragment.app.Fragment
 import com.google.android.material.textfield.TextInputLayout
 import com.yingenus.pocketchinese.R
@@ -17,7 +20,7 @@ import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.controller.hideKeyboard
 import com.yingenus.pocketchinese.view.utils.KeyboardCallbackInterface
 
-class CreateEditFragment : Fragment(R.layout.create_edit_layout), TextWatcher, View.OnFocusChangeListener {
+class CreateEditFragment : Fragment(R.layout.create_edit_layout), View.OnFocusChangeListener {
 
     interface Callback{
         fun afterTextChanged(language: Language, text : String)
@@ -46,26 +49,22 @@ class CreateEditFragment : Fragment(R.layout.create_edit_layout), TextWatcher, V
     private var pinyinText: String = ""
     private var translationText: String = ""
 
-    override fun afterTextChanged(s: Editable?) {
-        when (requireActivity().window.currentFocus) {
-            editChn!!.editText -> {
+    private fun afterTextChanged(s: Editable?, language: Language) {
+        when (language) {
+            Language.CHINESE -> {
                 chineseText = s.toString()
                 callback?.afterTextChanged(Language.CHINESE, s.toString())
             }
-            editPin!!.editText -> {
+            Language.PINYIN -> {
                 pinyinText = s.toString()
                 callback?.afterTextChanged(Language.PINYIN, s.toString())
             }
-            editTrn!!.editText ->{
+            Language.RUSSIAN ->{
                 translationText = s.toString()
                 callback?.afterTextChanged(Language.RUSSIAN, s.toString())
             }
-
         }
-
     }
-    override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
-    override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {}
 
     override fun onFocusChange(v: View?, hasFocus: Boolean) {
         if(v==editChn){
@@ -97,13 +96,13 @@ class CreateEditFragment : Fragment(R.layout.create_edit_layout), TextWatcher, V
         editPin!!.hint = getString(STANDARDHINT.pin)
         editTrn!!.hint = getString(STANDARDHINT.trn)
 
-        editChn!!.editText?.addTextChangedListener(this)
-        editPin!!.editText?.addTextChangedListener(this)
-        editTrn!!.editText?.addTextChangedListener(this)
-
         editChn!!.editText!!.setText(chineseText)
         editPin!!.editText!!.setText(pinyinText)
         editTrn!!.editText!!.setText(translationText)
+
+        editChn!!.editText?.doAfterTextChanged { afterTextChanged(it, Language.CHINESE) }
+        editPin!!.editText?.doAfterTextChanged { afterTextChanged(it, Language.PINYIN) }
+        editTrn!!.editText?.doAfterTextChanged { afterTextChanged(it, Language.RUSSIAN) }
 
         editChn!!.editText?.onFocusChangeListener = this
         editPin!!.editText?.onFocusChangeListener = this
@@ -159,15 +158,25 @@ class CreateEditFragment : Fragment(R.layout.create_edit_layout), TextWatcher, V
         when(language){
             Language.RUSSIAN -> {
                 translationText = text
-                editTrn?.editText?.setText(translationText)
+                editTrn?.editText?.let {
+                    if(it.text.toString() != text)
+                        it.setText(text)
+                }
             }
             Language.PINYIN -> {
                 pinyinText = text
-                editPin?.editText?.setText(pinyinText)
+                editPin?.editText?.let {
+                    if (it.text.toString() != text)
+                        it.setText(text)
+
+                }
             }
             Language.CHINESE -> {
                 chineseText = text
-                editChn?.editText?.setText(chineseText)
+                editChn?.editText?.let {
+                    if (it.text.toString() != text)
+                        it.setText(text)
+                }
             }
         }
 

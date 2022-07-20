@@ -7,21 +7,28 @@ import androidx.lifecycle.ViewModelProvider
 import com.yingenus.pocketchinese.common.Language
 import com.yingenus.pocketchinese.domain.dto.DictionaryItem
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyList
+import com.yingenus.pocketchinese.domain.usecase.FindDictionaryItemForStudyWord
 import com.yingenus.pocketchinese.domain.usecase.ModifyStudyListUseCase
 import com.yingenus.pocketchinese.domain.usecase.ModifyStudyWordUseCase
 import com.yingenus.pocketchinese.domain.usecase.StudyListInfoUseCase
 import dagger.assisted.Assisted
 import dagger.assisted.AssistedFactory
 import dagger.assisted.AssistedInject
+import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Single
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.DisposableContainer
 import io.reactivex.rxjava3.schedulers.Schedulers
+import io.reactivex.rxjava3.subjects.PublishSubject
+import java.util.concurrent.TimeUnit
 import javax.inject.Inject
 
 class CreateWordForStudyListViewModel @AssistedInject constructor(
     @Assisted private val studyListId: Long,
     private val studyListInfoUseCase: StudyListInfoUseCase,
     private val modifyStudyListUseCase: ModifyStudyListUseCase,
-    private val modifyStudyWordUseCase: ModifyStudyWordUseCase
+    private val modifyStudyWordUseCase: ModifyStudyWordUseCase,
+    private val findDictionaryItemForStudyWord: FindDictionaryItemForStudyWord
 ): ViewModel() {
 
     @AssistedFactory
@@ -75,6 +82,33 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
     val error : LiveData<String>
         get() = _error
 
+    private val chineseTextPublisher : PublishSubject<String> = PublishSubject.create()
+    private val disposables : CompositeDisposable = CompositeDisposable()
+
+    init {
+        val disposable = chineseTextPublisher
+            .observeOn(Schedulers.computation())
+            .debounce(500, TimeUnit.MILLISECONDS)
+            .flatMapSingle { chinese ->
+                checkChinese(chinese)
+                    .map { error -> chinese to error  }
+            }
+            .filter { it.second == WordsError.NOTHING }
+            .flatMapSingle {
+                findDictionaryItemForStudyWord.findDictionaryItem(it.first, Language.CHINESE)
+                    .subscribeOn(Schedulers.io())
+            }
+            .retry()
+            .withLatestFrom( chineseTextPublisher) { dicItem : DictionaryItem, chinese : String ->
+                findDictionaryItemForStudyWord.canInsert(chinese,dicItem,Language.CHINESE) to dicItem
+            }
+            .filter { it.first }
+            .observeOn(AndroidSchedulers.mainThread())
+            .subscribe( {onSuccess -> tryInsertSuggestWord(onSuccess.second,Language.CHINESE)}, { onError -> })
+
+        disposables.add(disposable)
+    }
+
     fun updateStudyList(){
         studyListInfoUseCase
             .getStudyList(studyListId)
@@ -87,15 +121,18 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
     fun onChineseTextChanged( newText : String){
         Single
             .just(newText)
+            .doOnSuccess { _chinese.postValue(newText) }
             .flatMap { checkChinese(it) }
             .subscribe { error ->
                 _errorChinese.postValue(error)
             }
+        chineseTextPublisher.onNext(newText)
     }
 
     fun onPinyinTextChanged( newText : String){
         Single
             .just(newText)
+            .doOnSuccess { _pinyin.postValue(newText) }
             .flatMap { checkPinyin(it) }
             .subscribe { error ->
                 _errorPinyin.postValue(error)
@@ -105,10 +142,26 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
     fun onTranslationTextChanged( newText : String){
         Single
             .just(newText)
+            .doOnSuccess { _translation.postValue(newText) }
             .flatMap { checkTranslation(it) }
             .subscribe { error ->
                 _errorTranslation.postValue(error)
             }
+    }
+
+    private fun tryInsertSuggestWord( dictionaryItem: DictionaryItem, language: Language){
+        val word = when( language){
+            Language.CHINESE -> chinese.value.orEmpty()
+            Language.PINYIN -> pinyin.value.orEmpty()
+            Language.RUSSIAN -> translation.value.orEmpty()
+        }
+
+        if (findDictionaryItemForStudyWord.canInsert(word,dictionaryItem,language)){
+            _chinese.postValue(dictionaryItem.chinese)
+            _pinyin.postValue(dictionaryItem.pinyin)
+            _translation.postValue(dictionaryItem.translation.first())
+        }
+
     }
 
     fun add( chinese : String, pinyin : String, translation : String) : LiveData<AddResult> {
@@ -151,12 +204,17 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
         return isSuccess
     }
 
+    override fun onCleared() {
+        super.onCleared()
+        disposables.dispose()
+    }
+
     private fun checkChinese(chinese : String): Single<WordsError>{
         return Single
             .just(chinese)
             .observeOn(Schedulers.computation())
             .map {
-                if (it.length> MAX_CHINESE) WordsError.TOO_LONG
+                if (it.length > MAX_CHINESE) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
                 else if (!modifyStudyWordUseCase.checkCorrect(it,Language.CHINESE)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING
@@ -169,7 +227,7 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
             .just(pinyin)
             .observeOn(Schedulers.computation())
             .map {
-                if (it.length> MAX_CHINESE) WordsError.TOO_LONG
+                if (it.length > MAX_PINYIN) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
                 else if (!modifyStudyWordUseCase.checkCorrect(it,Language.PINYIN)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING
@@ -181,7 +239,7 @@ class CreateWordForStudyListViewModel @AssistedInject constructor(
             .just(translation)
             .observeOn(Schedulers.computation())
             .map {
-                if (it.length> MAX_CHINESE) WordsError.TOO_LONG
+                if (it.length > MAX_TRANSLATION) WordsError.TOO_LONG
                 else if (it.isEmpty()) WordsError.ZERO_LENGTH
                 else if (!modifyStudyWordUseCase.checkCorrect(it,Language.RUSSIAN)) WordsError.INVALID_CHARS
                 else WordsError.NOTHING

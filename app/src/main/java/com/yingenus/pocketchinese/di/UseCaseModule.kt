@@ -27,5 +27,7 @@ abstract class UseCaseModule {
     abstract fun provideTrainedWordsUseCase(trainingWordsUseCaseImpl: TrainedWordsUseCaseImpl): TrainedWordsUseCase
     @Binds
     abstract fun provideClearWordsRepeatStatistics( clearWordsRepeatStatisticsImpl: ClearWordsRepeatStatisticsImpl): ClearWordsRepeatStatistics
+    @Binds
+    abstract fun provideFindDictionaryItemForStudyWord( findDictionaryItemForStudyWord : FindDictionaryItemForStudyWordImpl): FindDictionaryItemForStudyWord
 
 }

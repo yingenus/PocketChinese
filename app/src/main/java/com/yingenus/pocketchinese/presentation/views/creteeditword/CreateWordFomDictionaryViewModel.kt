@@ -118,6 +118,7 @@ class CreateWordFomDictionaryViewModel @AssistedInject constructor(
     fun onTranslationTextChanged( newText : String){
         Single
             .just(newText)
+            .doOnSuccess { _translation.postValue(newText) }
             .flatMap { checkTranslation(it) }
             .subscribe { error ->
                 _errorTranslation.postValue(error)
