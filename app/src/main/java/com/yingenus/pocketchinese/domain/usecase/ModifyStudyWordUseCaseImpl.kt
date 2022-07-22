@@ -1,10 +1,12 @@
 package com.yingenus.pocketchinese.domain.usecase
 
 import com.yingenus.pocketchinese.common.Language
+import com.yingenus.pocketchinese.domain.dto.StudyList
 import com.yingenus.pocketchinese.domain.dto.StudyWord
 import com.yingenus.pocketchinese.domain.entities.namestandards.StudyWordsStandards
 import com.yingenus.pocketchinese.domain.entities.studystatictic.UserStatistics
 import com.yingenus.pocketchinese.domain.repository.StudyRepository
+import com.yingenus.pocketchinese.domain.repository.TrainingRepository
 import io.reactivex.rxjava3.core.Completable
 import io.reactivex.rxjava3.core.Single
 import java.util.*
@@ -13,7 +15,8 @@ import javax.inject.Inject
 class ModifyStudyWordUseCaseImpl @Inject constructor(
     private val studyRepository: StudyRepository,
     private val studyWordsStandards: StudyWordsStandards,
-    private val userStatistics: UserStatistics
+    private val userStatistics: UserStatistics,
+    private val trainingRepository: TrainingRepository
 ): ModifyStudyWordUseCase{
     override fun checkCorrect(text: String, language: Language): Boolean {
         return studyWordsStandards.isCorrectField(text,language)
@@ -99,6 +102,29 @@ class ModifyStudyWordUseCaseImpl @Inject constructor(
                     Completable.error(Throwable("translation is out from standards"))
                 }
             }
+    }
+
+    override fun moveStudyWord(
+        studyWord: Long,
+        toStudyList: Long,
+        clearStatistics: Boolean
+    ): Completable {
+        val clearStatCompletable = if (clearStatistics)
+                trainingRepository.deleteTrainingCondForWord(studyWord)
+            else
+                Completable.complete()
+
+        val moveWordCompletable = studyRepository
+            .getStudyWord(studyWord)
+            .zipWith( studyRepository.getStudyListById(toStudyList))
+            { _studyWord : StudyWord, _studyList : StudyList ->
+                _studyList to _studyWord
+            }
+            .flatMapCompletable {
+                studyRepository.moveStudyWord(it.second, it.first)
+            }
+
+        return clearStatCompletable.andThen(moveWordCompletable)
     }
 
     override fun deleteStudyWords(ids: List<Long>): Completable {

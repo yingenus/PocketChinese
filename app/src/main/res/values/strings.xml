@@ -20,6 +20,7 @@
     <string name="learn_words_my">Изучение</string>
     <string name="learn_words_sorting">Сортировка</string>
     <string name="delete">Удалить</string>
+    <string name="move_word">Переместить</string>
     <string name="clear_statistic_msg">Вся статистика будет удалена, продолжить ?</string>
     <string name="edit_name">Переименовать</string>
     <string name="edit">Изменить</string>
@@ -133,6 +134,9 @@
     <string name="study_list_count">Всего слов</string>
     <string name="study_list_need">Нужно \n повторить</string>
     <string name="rumanizetion">Романизация</string>
+    <string name="what_todo_statistic">Статистика</string>
+    <string name="save_statistic">Сохранить статистику</string>
+    <string name="clear_statistic_on_move">Сбросить статистику</string>
     <string name="edit_word">Редактировать</string>
     <string name="optionse">Дополнительно</string>
     <string name="enter_name">Имя</string>

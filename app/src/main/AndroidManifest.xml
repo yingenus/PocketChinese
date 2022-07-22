@@ -53,6 +53,11 @@
             android:windowSoftInputMode="adjustPan"
             android:screenOrientation="portrait"/>
         <activity
+            android:name="com.yingenus.pocketchinese.presentation.views.moveword.MoveWordActivity"
+            android:theme="@style/Theme.PocketChinese.Default.NoActionBar.SurfaceStatusBar"
+            android:windowSoftInputMode="adjustPan"
+            android:screenOrientation="portrait"/>
+        <activity
             android:name="com.yingenus.pocketchinese.presentation.views.addword.AddWordFromDictionaryActivity"
             android:theme="@style/Theme.PocketChinese.Default.NoActionBar.SurfaceStatusBar"
             android:windowSoftInputMode="adjustPan"

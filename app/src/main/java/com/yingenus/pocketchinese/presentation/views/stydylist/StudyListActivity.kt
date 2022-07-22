@@ -36,12 +36,12 @@ import com.yingenus.pocketchinese.domain.dto.RepeatRecomend
 import com.yingenus.pocketchinese.domain.dto.ShowedStudyWord
 import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams
 import com.yingenus.pocketchinese.domain.entitiys.UtilsVariantParams.resolveColorAttr
-import com.yingenus.pocketchinese.presentation.dialogs.ActioneSheetDialog
 import com.yingenus.pocketchinese.presentation.dialogs.RenameDialog
 import com.yingenus.pocketchinese.presentation.dialogs.StartTrainingSheetDialog
 import com.yingenus.pocketchinese.presentation.dialogs.UserListRenameDialog
 import com.yingenus.pocketchinese.presentation.views.addword.CreateWordForList
 import com.yingenus.pocketchinese.presentation.views.addword.EditWordActivity
+import com.yingenus.pocketchinese.presentation.views.moveword.MoveWordActivity
 import com.yingenus.pocketchinese.presentation.views.userlist.StudyListAdapter
 import com.yingenus.pocketchinese.view.HeadersRecyclerViewAdapter
 import com.yingenus.pocketchinese.view.holders.ViewViewHolder
@@ -354,6 +354,11 @@ class StudyListActivity : AppCompatActivity(),WordAdapter.OnWordClicked,WordAdap
 
             override fun onRename() {
                 val intent = EditWordActivity.getIntent(studyListId,showedStudyWord.id,this@StudyListActivity)
+                startActivity(intent)
+            }
+
+            override fun onMove() {
+                val intent = MoveWordActivity.getIntent(this@StudyListActivity,showedStudyWord)
                 startActivity(intent)
             }
         }

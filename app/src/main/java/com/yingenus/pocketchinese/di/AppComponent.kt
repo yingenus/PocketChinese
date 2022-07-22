@@ -13,6 +13,7 @@ import com.yingenus.pocketchinese.presentation.views.addword.CreateWordForListFr
 import com.yingenus.pocketchinese.presentation.views.character.CharacterSheetDialog
 import com.yingenus.pocketchinese.presentation.views.dictionary.DictionaryFragment
 import com.yingenus.pocketchinese.presentation.views.grammar.GrammarCaseActivity
+import com.yingenus.pocketchinese.presentation.views.moveword.MoveWordActivity
 import com.yingenus.pocketchinese.presentation.views.settings.SettingsFragment
 import com.yingenus.pocketchinese.presentation.views.stydylist.StudyListActivity
 import com.yingenus.pocketchinese.presentation.views.suggestist.SuggestListsFragment
@@ -64,4 +65,5 @@ interface AppComponent {
     fun injectCheckRepeatableWordsWorker(checkRepeatableWordsWorker : CheckRepeatableWordsWorker)
     fun injectSuggestListsFragment(suggestListsFragment : SuggestListsFragment)
     fun injectRepeatableUserListsActivity(repeatableUserListsActivity : RepeatableUserListsActivity)
+    fun injectMoveWordActivity(moveWordActivity : MoveWordActivity)
 }

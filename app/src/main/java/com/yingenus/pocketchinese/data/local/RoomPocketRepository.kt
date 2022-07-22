@@ -57,6 +57,17 @@ class RoomPocketRepository @Inject constructor(private val pocketDb: PocketDb) :
         }
     }
 
+    override fun getStudyListOfWord(studyWord: StudyWord): Maybe<StudyList> {
+        return Maybe.defer{
+            Maybe.create<StudyList> {
+                val result = studyListDao.getByWord(studyWord.id)
+                if (result != null) it.onSuccess(result.toStudyList())
+                else it.onComplete()
+            }
+        }
+            .subscribeOn(Schedulers.io())
+    }
+
     override fun createStudyList(studyList: StudyList): Completable {
         return Completable.defer {
                 Completable.create {
@@ -163,7 +174,16 @@ class RoomPocketRepository @Inject constructor(private val pocketDb: PocketDb) :
         }.subscribeOn(Schedulers.io())
     }
 
-    override fun addStudyWords(studyList: StudyList ,studyWords: List<StudyWord>): Completable {
+    override fun moveStudyWord(studyWord: StudyWord, toStudyList: StudyList): Completable {
+        return Completable.defer {
+            Completable.create {
+                studyWordDao.updateStudyWord(RoomStudyWord.fromStudyWord(toStudyList.id,studyWord))
+                it.onComplete()
+            }
+        }.subscribeOn(Schedulers.io())
+    }
+
+    override fun addStudyWords(studyList: StudyList, studyWords: List<StudyWord>): Completable {
         return Completable.defer {
             Completable.create {
                 val words = studyWords.map { RoomStudyWord.fromStudyWord(studyList.id,it) }

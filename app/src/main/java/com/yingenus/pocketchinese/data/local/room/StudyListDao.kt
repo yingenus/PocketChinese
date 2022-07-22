@@ -16,6 +16,9 @@ interface StudyListDao {
     @Query("SELECT * FROM study_list WHERE id = :id")
     fun getById(id : Long): StudyList?
 
+    @Query("SELECT study_list.* FROM study_list INNER JOIN study_words ON study_list.id == study_words.study_list WHERE study_words.id == :id")
+    fun getByWord(id : Long): StudyList?
+
     @Insert
     fun creteStudyList(studyList: StudyList)
 

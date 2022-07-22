@@ -12,6 +12,7 @@ interface StudyRepository {
     fun getAllStudyList(): Single<List<StudyList>>
     fun getStudyListById(id: Long): Maybe<StudyList>
     fun getStudyListByName(name: String): Maybe<StudyList>
+    fun getStudyListOfWord( studyWord : StudyWord): Maybe<StudyList>
 
     fun createStudyList(studyList: StudyList) : Completable
     fun updateStudyList(studyList: StudyList) : Completable
@@ -27,6 +28,7 @@ interface StudyRepository {
     fun addStudyWordWithID(studyList: StudyList ,studyWord: StudyWord) : Single<Long>
     fun updateStudyWord(studyWord: StudyWord) : Completable
     fun deleteStudyWord(studyWord: StudyWord) : Completable
+    fun moveStudyWord(studyWord: StudyWord, toStudyList: StudyList): Completable
 
     fun addStudyWords(studyList: StudyList ,studyWords: List<StudyWord>) : Completable
     fun addStudyWordsWithID(studyList: StudyList ,studyWords: List<StudyWord>) : Single<List<Long>>
