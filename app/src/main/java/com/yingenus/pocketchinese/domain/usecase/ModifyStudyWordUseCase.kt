@@ -11,6 +11,7 @@ interface ModifyStudyWordUseCase {
     fun changePinyin( studyWord: Long, pinyin: String): Completable
     fun changeTranslation( studyWord: Long, translation: String): Completable
     fun changeAll(studyWord: Long, chinese: String, pinyin: String, translation: String): Completable
+    fun moveStudyWord(studyWord : Long, toStudyList : Long, clearStatistics : Boolean): Completable
     fun deleteStudyWord( studyWord: StudyWord): Completable
     fun deleteStudyWords( studyWord: List<Long>): Completable
     fun deleteStudyWord( id: Long): Completable

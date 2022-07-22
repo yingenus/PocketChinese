@@ -51,6 +51,15 @@ class StudyListInfoUseCaseImpl @Inject constructor(
             }
     }
 
+    override fun getStudyListOfWord(studyWordId: Long): Maybe<ShowedStudyList> {
+        return studyRepository
+            .getStudyWord(studyWordId)
+            .flatMap { studyRepository.getStudyListOfWord(it) }
+            .flatMap { list ->
+                listStatistic.getShortStatistic(list).map { showedStudyList(list, it) }.toMaybe()
+            }
+    }
+
     override fun getStudyListStatistic(name: String): Maybe<StudyListStatistic> {
         return studyRepository.getStudyListByName(name)
             .flatMap { list ->

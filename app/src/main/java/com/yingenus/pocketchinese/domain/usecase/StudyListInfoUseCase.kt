@@ -9,6 +9,7 @@ interface StudyListInfoUseCase {
     fun getAllStudyLists(): Single<List<ShowedStudyList>>
     fun getStudyList( name : String): Maybe<ShowedStudyList>
     fun getStudyList( id: Long): Maybe<ShowedStudyList>
+    fun getStudyListOfWord( studyWordId : Long): Maybe<ShowedStudyList>
     fun getStudyListStatistic( name: String): Maybe<StudyListStatistic>
     fun getStudyListStatistic( id: Long): Maybe<StudyListStatistic>
 }

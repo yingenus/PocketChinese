@@ -36,17 +36,17 @@ class ListStatisticImpl @Inject constructor(
                 words = words.size,
                 lastRepeat = getLastRepeatDate(trenings),
                 nextRepeat = getNextRepeatDate(trenings),
-                successChn = if(trenings.isNotEmpty())
-                    (((trenings.map { it.chineseLevel.level }.reduce { acc, i -> acc + i }.toFloat() / trenings.size)* 100) / KnownLevel.maxLevel.level).toInt()
+                successChn = if(trenings.isNotEmpty() && words.isNotEmpty())
+                    (((trenings.map { it.chineseLevel.level }.reduce { acc, i -> acc + i }.toFloat() / words.size)* 100) / KnownLevel.maxLevel.level).toInt()
                 else 0,
-                successPin = if(trenings.isNotEmpty())
-                    (((trenings.map { it.pinyinLevel.level }.reduce { acc, i -> acc + i }.toFloat() / trenings.size)* 100) / KnownLevel.maxLevel.level).toInt()
+                successPin = if(trenings.isNotEmpty() && words.isNotEmpty())
+                    (((trenings.map { it.pinyinLevel.level }.reduce { acc, i -> acc + i }.toFloat() / words.size)* 100) / KnownLevel.maxLevel.level).toInt()
                 else 0,
-                successTrn = if(trenings.isNotEmpty())
-                    (((trenings.map { it.translationLevel.level }.reduce { acc, i -> acc + i }.toFloat() / trenings.size)* 100) / KnownLevel.maxLevel.level).toInt()
+                successTrn = if(trenings.isNotEmpty() && words.isNotEmpty())
+                    (((trenings.map { it.translationLevel.level }.reduce { acc, i -> acc + i }.toFloat() / words.size)* 100) / KnownLevel.maxLevel.level).toInt()
                 else 0,
                 repeat = if(trenings.size < words.size) RepeatRecomend.FIRST else getRepeatRecomend(trenings),
-                percentComplete = getPercentComplete(trenings),
+                percentComplete = getPercentComplete(trenings,words.size),
                 repeatedWords = getRepeatedWords(ststistics,words),
                 addedWords = getAddedWord(ststistics,words)
             )
@@ -61,7 +61,7 @@ class ListStatisticImpl @Inject constructor(
             StudyListStatisticShort(
                 words = words.size,
                 repeat = if(trenings.size < words.size) RepeatRecomend.FIRST else getRepeatRecomend(trenings),
-                percentComplete = getPercentComplete(trenings),
+                percentComplete = getPercentComplete(trenings, words.size),
                 nextRepeat = getNextRepeatDate(trenings),
                 lastRepeat = getLastRepeatDate(trenings)
             )
@@ -166,18 +166,25 @@ class ListStatisticImpl @Inject constructor(
         else RepeatRecomend.DONT_NEED
     }
 
-    private fun getPercentComplete(trainingConds : List<TrainingCond>) : Int{
+    private fun getPercentComplete(trainingConds : List<TrainingCond>, words : Int) : Int{
         val levls = mutableListOf<Int>()
+        var allWords : Int = 0
 
-        if (!repeatType.ignoreCHN)
+        if (!repeatType.ignoreCHN){
             levls.addAll(trainingConds.map { it.chineseLevel.level })
-        if (!repeatType.ignorePIN)
+            allWords += words
+        }
+        if (!repeatType.ignorePIN) {
             levls.addAll(trainingConds.map { it.pinyinLevel.level })
-        if (!repeatType.ignoreTRN)
+            allWords += words
+        }
+        if (!repeatType.ignoreTRN) {
             levls.addAll(trainingConds.map { it.translationLevel.level })
+            allWords += words
+        }
 
-        return if (levls.isNotEmpty())
-            (levls.reduce { acc, i -> acc + i }.toDouble()*10 / levls.size).toInt()
+        return if (levls.isNotEmpty() && words > 0 && allWords > 0)
+            (levls.reduce { acc, i -> acc + i }.toDouble()*10 / allWords).toInt()
         else
             0
     }
