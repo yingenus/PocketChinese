@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.content.Context
 import android.os.Build
 import androidx.appcompat.app.AppCompatDelegate
+import androidx.fragment.app.DialogFragment
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.Observer
 import androidx.work.*
@@ -195,8 +196,11 @@ class PocketApplication: Application(), Configuration.Provider {
         val loadingDialog = LoadingDialog()
         loadingDialog.registerObserver(commonObservable)
         val fm = activity.supportFragmentManager
+        val otherDialog = fm.findFragmentByTag("loading_dialog")
+        if (otherDialog != null && otherDialog is DialogFragment){
+            otherDialog.dismiss()
+        }
         loadingDialog.show(fm,"loading_dialog")
-
 
         return commonObservable.ignoreElements()
     }

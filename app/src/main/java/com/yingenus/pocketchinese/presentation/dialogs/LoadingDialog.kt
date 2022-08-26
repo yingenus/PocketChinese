@@ -13,11 +13,14 @@ import com.google.android.material.progressindicator.CircularProgressIndicator
 import com.yingenus.pocketchinese.R
 import io.reactivex.rxjava3.android.schedulers.AndroidSchedulers
 import io.reactivex.rxjava3.core.Observable
+import io.reactivex.rxjava3.disposables.CompositeDisposable
+import io.reactivex.rxjava3.disposables.DisposableContainer
 
 class LoadingDialog : DialogFragment() {
 
     private lateinit var textView : TextView
     private lateinit var progressIndicator: CircularProgressIndicator
+    private val disposables = CompositeDisposable()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -36,22 +39,27 @@ class LoadingDialog : DialogFragment() {
     }
 
     fun registerObserver( observer: Observable<Pair<Int,String>>){
-        observer
-            .subscribeOn(AndroidSchedulers.mainThread()).subscribe(
+        disposables.add(observer
+            .subscribeOn(AndroidSchedulers.mainThread())
+            .subscribe(
                 {next ->
                     textView.text = next.second
                     progressIndicator.progress = next.first
                 },{error ->
                     Log.d("LoadingDialog","error occurred : ${error.localizedMessage}")
-                    this.dismiss()
+                    if (!parentFragmentManager.isStateSaved)
+                        this.dismiss()
                 },{
-                    this.dismiss()
+                    if (!parentFragmentManager.isStateSaved)
+                        this.dismiss()
                 }
             )
+        )
     }
 
     override fun onDestroyView() {
         progressIndicator.hide()
         super.onDestroyView()
+        disposables.dispose()
     }
 }
