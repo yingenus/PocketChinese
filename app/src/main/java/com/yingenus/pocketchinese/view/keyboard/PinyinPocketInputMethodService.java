@@ -82,7 +82,7 @@ public class PinyinPocketInputMethodService extends InputMethodService implement
 
     private void updateCandidatesView(){
         CharSequence text=getCurrentInputConnection().getTextBeforeCursor(1,0);
-        if (text.length()!=0){
+        if (text != null && text.length() != 0){
 
             char ch= Character.toLowerCase(text.charAt(0));
 
