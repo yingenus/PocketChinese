@@ -167,10 +167,9 @@ public class MainActivity  extends AppCompatActivity {
             case STUDY_F_TAG:{
                 return R.id.study;
             }
-            /**
-            case GRAMMAR_F_TAG: {
-                return R.id.grammar;
-            }*/
+            case WORDS_F_TAG: {
+                return R.id.suggest;
+            }
             case SETTINGS_F_TAG:{
                 return R.id.settings;
             }
