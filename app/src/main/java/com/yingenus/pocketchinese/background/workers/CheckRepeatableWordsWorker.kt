@@ -49,7 +49,10 @@ class CheckRepeatableWordsWorker( context: Context, workerParameters: WorkerPara
             builder.setContentText(context.getString(R.string.remind_notify_text, words, lists))
             builder.priority = NotificationCompat.PRIORITY_DEFAULT
 
-            val pIntent = PendingIntent.getActivity(context,0, RepeatableUserListsActivity.getIntent(context), PendingIntent.FLAG_UPDATE_CURRENT)
+            val pIntent = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                PendingIntent.getActivity(context,0,RepeatableUserListsActivity.getIntent(context),PendingIntent.FLAG_IMMUTABLE)
+            else
+                PendingIntent.getActivity(context,0, RepeatableUserListsActivity.getIntent(context), PendingIntent.FLAG_UPDATE_CURRENT)
 
             builder.setContentIntent(pIntent)
             builder.setAutoCancel(true)
