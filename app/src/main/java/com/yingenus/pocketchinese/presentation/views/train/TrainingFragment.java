@@ -153,15 +153,9 @@ public class TrainingFragment extends Fragment{
     }
 
     @Override
-    public void onPause() {
-        super.onPause();
-        //repeatManager.safe();
-    }
-    @Override
-    public void onResume() {
-        super.onResume();
+    public void onStart() {
+        super.onStart();
         viewModel.startTraining();
-
     }
 
     private void subscribeViewModel(){

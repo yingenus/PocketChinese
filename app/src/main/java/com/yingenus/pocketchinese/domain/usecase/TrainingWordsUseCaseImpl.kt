@@ -95,6 +95,10 @@ class TrainingWordsUseCaseImpl @Inject constructor(
             }.ignoreElement()
     }
 
+    override fun isInitialized(): Boolean {
+        return ::trainingConf.isInitialized
+    }
+
     override fun getTrainingWords(): Single<List<StudyWord>> {
         check(::trainingConf.isInitialized){ " TrainingConf must be set"}
         return Single.defer {

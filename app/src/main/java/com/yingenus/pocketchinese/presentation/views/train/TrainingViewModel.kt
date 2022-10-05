@@ -17,6 +17,7 @@ import io.reactivex.rxjava3.core.Single
 import io.reactivex.rxjava3.disposables.CompositeDisposable
 import io.reactivex.rxjava3.disposables.Disposable
 import io.reactivex.rxjava3.schedulers.Schedulers
+import java.util.concurrent.atomic.AtomicBoolean
 import javax.inject.Inject
 
 class TrainingViewModel @AssistedInject constructor(
@@ -58,7 +59,7 @@ class TrainingViewModel @AssistedInject constructor(
         get() = _start
 
     private var canAccept = true
-
+    private var trainingWasStarted : AtomicBoolean = AtomicBoolean(false)
 
     private var trainedWords : MutableList<Pair<Boolean,StudyWord>> = mutableListOf()
     private var showedWord : StudyWord? = null
@@ -67,32 +68,39 @@ class TrainingViewModel @AssistedInject constructor(
     private var adds : CompositeDisposable = CompositeDisposable()
 
     fun startTraining(){
-        trainingWordsUseCase
-            .init(trainingConf)
-            .toSingle {
-                trainingWordsUseCase.getTrainingWords()
+
+        if (!trainingWasStarted.get()){
+            Completable.defer {
+                if (trainingWordsUseCase.isInitialized()) Completable.complete()
+                else trainingWordsUseCase.init(trainingConf)
             }
-            .flatMap {
-                it
-            }
-            .observeOn(Schedulers.single())
-            .doOnSuccess {
-                trainedWords = it.map { false to it }.toMutableList()
-            }
-            .ignoreElement()
-            .observeOn(Schedulers.computation())
-            .doOnComplete {
-                adds.add(
-                    trainingWordsUseCase.getTrainingStatistic().subscribe {
-                        _all.postValue(it.all)
-                        _bed.postValue(it.bed)
-                        _good.postValue(it.good)
-                        _residue.postValue(it.all - it.good)
-                    }
-                )
-                goNext().subscribe()
-            }
-            .subscribe()
+                .toSingle {
+                    trainingWordsUseCase.getTrainingWords()
+                }
+                .flatMap {
+                    it
+                }
+                .observeOn(Schedulers.single())
+                .doOnSuccess {
+                    trainedWords = it.map { false to it }.toMutableList()
+                }
+                .ignoreElement()
+                .observeOn(Schedulers.computation())
+                .doOnComplete {
+                    adds.add(
+                        trainingWordsUseCase.getTrainingStatistic().subscribe {
+                            _all.postValue(it.all)
+                            _bed.postValue(it.bed)
+                            _good.postValue(it.good)
+                            _residue.postValue(it.all - it.good)
+                        }
+                    )
+                    goNext().subscribe()
+                }
+                .subscribe {
+                    trainingWasStarted.set(true)
+                }
+        }
     }
 
     fun skipWord(studyWord: StudyWord){
@@ -202,4 +210,7 @@ class TrainingViewModel @AssistedInject constructor(
             }
     }
 
+    override fun onCleared() {
+        super.onCleared()
+    }
 }

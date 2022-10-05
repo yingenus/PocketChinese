@@ -14,4 +14,5 @@ interface TrainingWordsUseCase {
     fun getTrainingStatistic(): Observable<TrainingStatistic>
     fun showAnswer( studyWord: StudyWord) : Single<String>
     fun postAnswer( answer : String, studyWord: StudyWord): Single<Boolean>
+    fun isInitialized(): Boolean
 }
