@@ -20,62 +20,7 @@ class FuzzySearchEngine @Inject constructor(
     @Named("pinyin_searcher") val pinSearcher : Searcher,
     @Named("russian_searcher") val rusSearcher : Searcher,
     val dictionaryItemRepository: DictionaryItemRepository
-        //private val dictionaryItemRepository: DictionaryItemRepository,
-       // rusNgramRepository: NgramM3Repository<Int>,
-        //pinNgramRepository: NgramM3Repository<Int>,
-        //chnN1gramRepository: NgramRepository<VariantWord>,
-        //chnN2gramRepository: NgramRepository<VariantWord>
-        //rusUnitWordRepository: UnitWordRepository,
-        //pinUnitWordRepository: UnitWordRepository
         ) : SearchEngine {
-
-    //private val rusSearcher : Searcher
-    //private val pinSearcher : Searcher
-    //private val chnSearcher : Searcher
-
-    private companion object{
-        //val lengthPinThreshold = listOf( 0 to 0 , 3 to 1, 4 to 2, 6 to 3 , 8 to 4 )
-        //val lengthRusThreshold = listOf( 0 to 0 , 4 to 1, 6 to 2 , 10 to 3 )
-    }
-
-    init{
-
-        //val rusUnitWordRepository = BruteUnitWordsRepository(rusUnitWordRepository)
-        //val rusNgramM3Search = NgramM3Search<Int>( rusNgramRepository, 3, object : NgramM3Search.Params{
-        //    override fun getThreshold(query: String): Int {
-        //        var threshold : Int = 0
-        //        for (i in lengthRusThreshold){
-        //            if ( query.length >= i.first){
-        //                threshold = i.second
-        //            }
-        //        }
-//
-        //        return threshold
-        //    }
-       // })
-
-        //rusSearcher = NComSearch(rusUnitWordRepository,rusNgramM3Search, LevenshteinComparator(lengthRusThreshold.toSet()))
-
-        //val pinUnitWordRepository = BruteUnitWordsRepository(pinUnitWordRepository)
-        //val pinNgramM3Search = NgramM3Search<Int>( pinNgramRepository, 3, object : NgramM3Search.Params{
-        //    override fun getThreshold(query: String): Int {
-        //        var threshold : Int = 0
-        //        for (i in lengthPinThreshold){
-        //            if ( query.length >= i.first){
-        //                threshold = i.second
-        //            }
-        //        }
-//
-        //        return threshold
-        //    }
-        //})
-
-        //pinSearcher = NComSearch(pinUnitWordRepository,pinNgramM3Search, LevenshteinComparator(lengthPinThreshold.toSet()))
-
-        //chnSearcher = TwoNgramsSearch(NgramM1Search(chnN1gramRepository,1),NgramM1Search(chnN2gramRepository,2))
-
-    }
-
 
     override fun find(query: String): Observable<DictionaryItem> {
 

@@ -87,7 +87,11 @@ class DictionaryPresenter @AssistedInject constructor(
         filtered
                 .debounce(150, TimeUnit.MILLISECONDS)
                 .switchMap { query ->
-                    val results = wordsSearchUseCase.search(query.second, WordsSearchUseCase.SearchParams(query.first)).publish().autoConnect(3)
+                    val results = wordsSearchUseCase
+                        .search(query.second, WordsSearchUseCase.SearchParams(query.first))
+                        .subscribeOn(Schedulers.single())
+                        .publish()
+                        .autoConnect(3)
                     val indexes = results.scan( 0){ acc , _ -> acc + 1 }
                     val count = results.count().filter { it!! == 0L }.map { Result.Empty<Pair<Int,DictionaryItem>>() }
 

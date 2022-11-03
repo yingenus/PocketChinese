@@ -38,6 +38,12 @@ public class PrefixSearcher {
         setLanguage(languageCode,nativePointer);
     }
 
+    @Override
+    protected void finalize() throws Throwable {
+        super.finalize();
+        deleteNative(nativePointer);
+    }
+
     public int[] find(byte[] query){
         return find(query,nativePointer);
     }
